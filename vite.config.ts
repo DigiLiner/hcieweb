@@ -6,8 +6,8 @@ export default defineConfig(({ mode }) => {
   const isWeb = mode === 'web';
 
   return {
-    // Set base for GitHub Pages if needed, or leave as '/' for root domains
-    base: process.env.VITE_BASE_URL || '/',
+    // Relative base path is the most portable for varied deployment scenarios
+    base: process.env.VITE_BASE_URL || './',
     
     // Single-page app — entry is index.html at root
     root: '.',
