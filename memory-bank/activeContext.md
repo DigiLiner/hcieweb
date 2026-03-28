@@ -4,11 +4,12 @@
 Phase 8: Web Deployment Configuration. Ensuring the application is fully functional and deployable in a standard browser environment.
 
 ## Recent Achievements
-- **Web Deployment Configuration:**
-    - Updated `vite.config.ts` with dual-target build support (`dist-web` vs `tauri-dist`).
-    - Added comprehensive web scripts to `package.json`.
-    - Implemented a GitHub Actions workflow for automated deployment to GitHub Pages.
-    - Updated `src/window_controls.ts` to gracefully handle non-Tauri environments (hiding desktop-only controls).
+- **Web Deployment Configuration (Phase 8 Complete):**
+    - Successfully deployed the live application to `https://digiliner.github.io/hcieweb/`.
+    - Resolved GitHub Actions build errors by fixing the `package-lock.json` dependency.
+    - Eliminated deployment conflicts by removing the raw static-file workflow.
+    - Standardized `base: './'` and transitioned `index.html` to relative paths for universal hosting support.
+    - Fixed massive 404 icon breaks by standardizing paths to `resources/themes/ie_color/`.
 - **Tauri v2 Migration:** Successfully transitioned from Electron to Tauri v2.
     - Added support for **AppImage** bundle target for portable Linux distribution.
 - **Theme Manager:** Implemented manual dark/light mode toggle with persistence.

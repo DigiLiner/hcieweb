@@ -35,10 +35,13 @@
         - [x] Added a premium rainbow icon and checkbox to the Properties panel.
         - [x] Integrated `hslToHex` for smooth, high-quality transitions.
 - [x] **Phase 8: Web Deployment Configuration**
-    - [x] Updated `vite.config.ts` to support dual-target builds (`dist-web` vs `tauri-dist`).
-    - [x] Configured `package.json` with dedicated web scripts (`web:build`, `web:preview`).
+    - [x] Updated `vite.config.ts` to support dual-target builds (`dist-web` vs `tauri-dist`) with `base: './'` for portability.
+    - [x] Configured `package.json` with dedicated web scripts (`web:build`, `web:preview`, `web:serve`).
     - [x] Implemented platform-aware UI logic to hide Tauri-specific window controls in browser environments.
-    - [x] Created a GitHub Actions workflow (`deploy.yml`) for automated deployment to GitHub Pages.
+    - [x] Created and debugged GitHub Actions workflow (`deploy.yml`) for automated deployment.
+    - [x] **FIXED:** Resolved 404 icon paths in `index.html` by migrating to theme-based resource paths.
+    - [x] **FIXED:** Resolved GitHub Actions failure by removing `package-lock.json` dependency in the build step.
+    - [x] **FIXED:** Resolved deployment conflict by removing `static.yml` which was serving raw source code.
 
 ### Current Status
 - Modern, type-safe ESM architecture is fully established.
