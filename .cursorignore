@@ -1,0 +1,109 @@
+# =================================================================
+# 1. PROJE ÖZEL KURALLARI (agents.md UYUMLU)
+# =================================================================
+# Core kaynak koduna dokunulmaması için engellendi
+packages/core/src/
+
+# Sadece index.d.ts referans alınmalı; JS ve Map dosyaları engellendi
+packages/core/dist/**/*.js
+packages/core/dist/**/*.map
+
+# =================================================================
+# 2. VERSİYON KONTROL VE SİSTEM (Git, OS)
+# =================================================================
+.git/
+.gitignore
+.gitattributes
+.svn/
+.hg/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =================================================================
+# 3. IDE VE EDİTÖR ÖZEL (WebStorm, Cursor, VS Code)
+# =================================================================
+# JetBrains / WebStorm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code & Cursor
+.vscode/
+.cursor/
+.history/
+*.code-workspace
+
+# Genel Editör Dosyaları
+*.swp
+*.swo
+*~
+
+# =================================================================
+# 4. DİL VE ÇALIŞMA ORTAMLARI (Node.js, Python)
+# =================================================================
+# Node.js
+node_modules/
+**/node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+
+# Python (Antigravity & Genel)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =================================================================
+# 5. BUILD, CACHE VE ÇIKTI DOSYALARI
+# =================================================================
+dist/
+build/
+out/
+target/
+.next/
+.nuxt/
+.cache/
+.turbo/
+tmp/
+temp/
+
+# =================================================================
+# 6. LOGLAR VE MEDYA
+# =================================================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+coverage/
+.nyc_output/
+
+# Medya ve Arşiv
+*.pdf
+*.zip
+*.tar.gz
+*.rar
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+
+# =================================================================
+# 7. VERİ VE YAPILANDIRMA İSTİSNALARI
+# =================================================================
+*.sqlite
+*.db
+*.json
+!package.json
+!composer.json
+!manifest.json

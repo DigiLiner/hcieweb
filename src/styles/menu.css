@@ -1,0 +1,169 @@
+/* ─── Application Menu Bar ─────────────────────────── */
+.app-menu-bar {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to bottom, var(--bg-hover), var(--bg-panel));
+    border-bottom: 1px solid var(--border-light);
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 13px;
+    height: 32px;
+    width: 100%;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: visible; /* Allow dropdowns to overflow */
+}
+
+/* ─── Menu Items (top-level) ─────────────────────────── */
+.menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    -webkit-app-region: no-drag;
+}
+
+.menu-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.menu-item:hover > .menu-label {
+    color: #4cc2ff;
+}
+
+.menu-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: color 0.15s;
+    white-space: nowrap;
+}
+
+/* ─── Dropdown ─────────────────────────── */
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--bg-panel);
+    min-width: 220px;
+    box-shadow: 0 4px 12px var(--shadow-inset);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 0;
+    z-index: 10000;
+    margin-top: 0;
+}
+
+.menu-item:hover > .menu-dropdown {
+    display: block;
+}
+
+/* ─── Dropdown Options ─────────────────────────── */
+.menu-option {
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+    transition: background-color 0.1s;
+}
+
+.menu-option-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-option:hover {
+    background-color: #0078d7;
+    color: #ffffff;
+}
+
+.menu-option:hover .shortcut {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.menu-option:hover .menu-icon {
+    opacity: 1;
+    filter: brightness(0) invert(1);
+}
+
+.menu-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    opacity: 0.7;
+}
+
+.menu-divider {
+    height: 1px;
+    background-color: var(--border-light);
+    margin: 4px 10px;
+}
+
+.shortcut {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: 20px;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+/* ─── Center Title (Drag Region) ─────────────────────────── */
+.app-title-drag {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    -webkit-app-region: drag;
+}
+
+/* ─── Window Control Buttons ─────────────────────────── */
+.window-controls {
+    display: none; /* Hide HTML controls when using native decorations */
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.window-control-btn {
+    width: 46px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: background-color 0.1s;
+    color: var(--text-secondary);
+    -webkit-app-region: no-drag;
+}
+
+.window-control-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.window-control-btn.close:hover {
+    background-color: #e81123;
+    color: white;
+}
+
+.window-control-btn svg {
+    pointer-events: none;
+}
+
+/* ─── Dark Mode Icons ─────────────────────────── */
+[data-theme="dark"] .menu-icon {
+    filter: invert(1) brightness(2);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .menu-icon {
+        filter: invert(1) brightness(2);
+    }
+}

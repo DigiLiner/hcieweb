@@ -1,0 +1,11 @@
+[Icon Theme]
+Name=ie_light
+Comment=An example icon theme
+Directories=
+
+[]
+Size=32
+Type=Scalable
+Minsize=24
+MaxSize=64
+Context=Applications
