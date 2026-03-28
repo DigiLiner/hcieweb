@@ -20,6 +20,7 @@
     "web:dev": "vite --mode web",
     "web:build": "vite build --mode web",
     "web:preview": "vite preview --mode web",
+    "web:serve": "npm run serve",
     "serve": "npx http-server ./dist-web -p 8000 -o"
   },
   "dependencies": {

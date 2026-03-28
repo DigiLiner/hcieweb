@@ -3,5 +3,9 @@
 /.vs/
 /.idea/
 /dist/
-/.idea/
+/dist-web/
+/tauri-dist/
 /.history/
+/.cursor/
+# Tauri build artifacts
+/src-tauri/target/
