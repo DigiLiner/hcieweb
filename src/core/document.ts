@@ -16,6 +16,7 @@ export class ImageDocument implements DocumentState {
     scrollLeft: number;
     scrollTop: number;
     modified: boolean;
+    filepath: string;
     selectionActive: boolean = false;
     selectionMask: any = null;
     selectionBorder: any[] = [];
@@ -25,6 +26,7 @@ export class ImageDocument implements DocumentState {
     constructor(name = "Untitled", width = 500, height = 500) {
         this.id = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         this.name = name;
+        this.filepath = '';
         this.width = width;
         this.height = height;
         this.layers = [new LayerClass("Background", width, height)];
@@ -52,6 +54,7 @@ export function initDocuments() {
         doc.layers = [...layers];
         doc.activeLayerIndex = g.activeLayerIndex;
         doc.zoom = g.zoom;
+        doc.filepath = g.filepath;
         g.documents.push(doc);
         (g as any).activeDocumentIndex = 0;
     }
@@ -97,6 +100,7 @@ export function saveCurrentDocumentState() {
     doc.layers = [...layers];
     doc.activeLayerIndex = g.activeLayerIndex;
     doc.zoom = g.zoom;
+    doc.filepath = g.filepath;
 
     const container = document.getElementById('canvasScrollArea');
     if (container) {
@@ -133,6 +137,7 @@ export function switchDocument(index: number) {
     g.zoom = doc.zoom;
     g.image_width = doc.width;
     g.image_height = doc.height;
+    g.filepath = doc.filepath || '';
 
     // Resize canvases to match the new document
     const can = document.getElementById('drawingCanvas') as HTMLCanvasElement;

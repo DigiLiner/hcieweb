@@ -2,9 +2,8 @@ import { g } from '../core/globals';
 import type { ToolPropConfig } from '../core/types';
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    initializePropertiesPanel();
-});
+// Removed DOMContentLoaded listener to avoid race conditions.
+// initializePropertiesPanel is now called explicitly from main.ts.
 
 export function initializePropertiesPanel() {
     console.log('Properties panel initializing...');

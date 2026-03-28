@@ -96,6 +96,11 @@ if (typeof (window as any).initPanels === 'function') {
     (window as any).initPanels();
 }
 
+if (typeof (window as any).initializePropertiesPanel === 'function') {
+    console.log("[INIT] Initializing Properties Panel...");
+    (window as any).initializePropertiesPanel();
+}
+
 if (typeof (window as any).initializeMenuBar === 'function') {
     console.log("[INIT] Initializing Menu Bar...");
     (window as any).initializeMenuBar();

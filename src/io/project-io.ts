@@ -13,7 +13,10 @@ interface SerializedLayer {
   opacity: number;
   blendMode: BlendMode;
   locked: boolean;
+  type: import('../core/types').LayerType;
   data: string; // base64 data URL
+  shapes?: import('../core/types').Shape[];
+  textData?: import('../core/types').TextData;
 }
 
 interface SerializedProject {
@@ -27,7 +30,7 @@ interface SerializedProject {
 export class ProjectIO {
   static async saveProject(): Promise<string> {
     const project: SerializedProject = {
-      version: 1,
+      version: 2, // Upgraded version for vector/text support
       width: g.image_width,
       height: g.image_height,
       backgroundColor: g.image_bg_color,
@@ -55,7 +58,10 @@ export class ProjectIO {
         opacity: layer.opacity,
         blendMode: layer.blendMode,
         locked: layer.locked,
+        type: layer.type,
         data: dataUrl,
+        shapes: layer.shapes,
+        textData: layer.textData,
       });
     }
 
@@ -69,6 +75,8 @@ export class ProjectIO {
       if (!project.width || !project.height || !project.layers) {
         throw new Error('Invalid project file format');
       }
+
+      console.log(`Loading Project v${project.version || 1}...`);
 
       g.image_width = project.width;
       g.image_height = project.height;
@@ -86,16 +94,26 @@ export class ProjectIO {
         newLayer.opacity = layerData.opacity;
         newLayer.blendMode = layerData.blendMode ?? 'source-over';
         newLayer.locked = layerData.locked ?? false;
+        newLayer.type = layerData.type ?? 'raster';
+        newLayer.shapes = layerData.shapes;
+        newLayer.textData = layerData.textData ?? {
+            text: '', x: 0, y: 0,
+            font: 'Roboto', size: 40, color: '#000000',
+            bold: false, italic: false,
+        };
 
-        await new Promise<void>((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            (newLayer.ctx as CanvasRenderingContext2D).drawImage(img, 0, 0);
-            resolve();
-          };
-          img.onerror = () => reject(new Error(`Failed to load layer image: ${layerData.name}`));
-          img.src = layerData.data;
-        });
+        // Load the raster content
+        if (layerData.data) {
+            await new Promise<void>((resolve, reject) => {
+              const img = new Image();
+              img.onload = () => {
+                (newLayer.ctx as CanvasRenderingContext2D).drawImage(img, 0, 0);
+                resolve();
+              };
+              img.onerror = () => reject(new Error(`Failed to load layer image: ${layerData.name}`));
+              img.src = layerData.data;
+            });
+        }
 
         layers.push(newLayer);
       }
@@ -107,6 +125,9 @@ export class ProjectIO {
       window.historyManager?.clear();
       window.renderLayers?.();
       window.updateLayerPanel?.();
+      
+      // If we have vector layers, we might want to ensure they are synchronized with the raster engine if needed.
+      // Usually, renderLayers handles the display of the canvas contents loaded from dataURL.
 
       console.log('Project loaded successfully');
       return true;
@@ -122,7 +143,6 @@ export class ProjectIO {
 declare global {
   interface Window {
     ProjectIO: typeof ProjectIO;
-    resizeCanvas?: (width: number, height: number) => void;
   }
 }
 window.ProjectIO = ProjectIO;

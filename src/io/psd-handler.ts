@@ -16,7 +16,7 @@ declare global {
   } | undefined;
   const psd: typeof PSD | undefined;
   const agPsd: {
-    writePsd(data: AgPsdData): Uint8Array;
+    writePsd(data: AgPsdData): ArrayBuffer | Uint8Array;
   } | undefined;
 
   interface Window {
@@ -72,20 +72,26 @@ interface AgPsdData {
 export async function loadPsdFile(arrayBuffer: ArrayBuffer): Promise<PSDInstance | null> {
   const Lib = typeof PSD !== 'undefined' ? PSD : (typeof psd !== 'undefined' ? psd : null);
   if (!Lib) {
-    console.error('psd.js library not loaded');
+    const msg = 'PSD library (psd.js) not loaded. Please check your internet connection or console.';
+    console.error(msg);
+    alert(msg);
     return null;
   }
   try {
     const uint8 = new Uint8Array(arrayBuffer);
     const psdObj = new Lib(uint8);
     if (!psdObj.parse()) {
-      console.error('PSD parsing failed');
+      const msg = 'PSD parsing failed. The file may be corrupt or an unsupported format.';
+      console.error(msg);
+      alert(msg);
       return null;
     }
     console.log('PSD loaded via psd.js');
     return psdObj;
   } catch (err) {
-    console.error('Error reading PSD:', err);
+    const msg = `Error reading PSD: ${(err as Error).message}`;
+    console.error(msg);
+    alert(msg);
     return null;
   }
 }
@@ -99,6 +105,38 @@ const PSD_BLEND_MAP: Record<string, BlendMode> = {
   'hue ': 'hue', 'sat ': 'saturation',
 };
 
+function getCleanName(node: PSDNode): string {
+  // Priority: 1. Unicode Name (luni), 2. Layer Name (nam ), 3. Node Name
+  const layer = (node as any).layer;
+  let rawName = node.name || layer?.name || 'Layer';
+
+  // Check additionalData for Unicode name if psd.js provides it
+  if (layer?.additionalData?.luni) {
+    rawName = layer.additionalData.luni;
+  } else if (layer?.additionalData?.['nam ']) {
+    rawName = layer.additionalData['nam '];
+  }
+
+  if (!rawName) return 'Layer';
+
+  // Sanitize: psd.js sometimes includes binary garbage like 8BIM signatures or blend mode keys
+  // if it miscalculates the Pascal string length.
+  let clean = String(rawName)
+    .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Strip control characters
+    .replace(/8BIM.*/g, '')              // Strip 8BIM and everything after (metadata header)
+    .replace(/unim.*/g, '')              // Strip unim (unicode indicator)
+    .trim();
+
+  // If we stripped too much or it's empty, fallback
+  if (!clean || clean.length < 1) {
+      // Try to extract the first part if it looks like binary mess
+      const match = String(rawName).match(/^[a-zA-Z0-0\s_\-]+/);
+      clean = match ? match[0].trim() : 'Layer';
+  }
+
+  return clean || 'Layer';
+}
+
 async function processNode(node: PSDNode, width: number, height: number): Promise<LayerClass[]> {
   if (node.isGroup()) {
     const groupChildren = node.children();
@@ -108,7 +146,9 @@ async function processNode(node: PSDNode, width: number, height: number): Promis
     return results.flat();
   }
 
-  const layer = new LayerClass(node.name ?? 'Layer', width, height);
+  const name = getCleanName(node);
+  
+  const layer = new LayerClass(name, width, height);
   layer.visible = node.visible();
 
   if (node.layer?.opacity != null) {
@@ -157,6 +197,26 @@ export async function convertPsdToLayers(psdObj: PSDInstance): Promise<LayerClas
 
 // ─── Save PSD ─────────────────────────────────────────────
 
+// PSD blend modes for writing
+const REVERSE_BLEND_MAP: Record<string, string> = {
+  'source-over': 'normal',
+  'multiply': 'multiply',
+  'screen': 'screen',
+  'overlay': 'overlay',
+  'darken': 'darken',
+  'lighten': 'lighten',
+  'color-dodge': 'color-dodge',
+  'color-burn': 'color-burn',
+  'hard-light': 'hard-light',
+  'soft-light': 'soft-light',
+  'difference': 'difference',
+  'exclusion': 'exclusion',
+  'hue': 'hue',
+  'saturation': 'saturation',
+  'color': 'color',
+  'luminosity': 'luminosity',
+};
+
 export async function savePsdFile(layerList: ILayer[]): Promise<Uint8Array | null> {
   if (typeof agPsd === 'undefined') {
     alert('PSD saving library (ag-psd) is not loaded. Please ensure ag-psd.js is available.');
@@ -170,15 +230,17 @@ export async function savePsdFile(layerList: ILayer[]): Promise<Uint8Array | nul
       canvas: null,
       children: layerList.map(layer => ({
         name: layer.name,
-        canvas: layer.canvas as HTMLCanvasElement | OffscreenCanvas,
+        canvas: layer.canvas as HTMLCanvasElement,
         opacity: layer.opacity,
         visible: layer.visible,
-        blendMode: layer.blendMode,
+        blendMode: REVERSE_BLEND_MAP[layer.blendMode] || 'normal',
         left: 0,
         top: 0,
       })),
     };
-    return agPsd.writePsd(psdData);
+    const result = agPsd.writePsd(psdData);
+    const bytes = result instanceof Uint8Array ? result : new Uint8Array(result);
+    return bytes;
   } catch (err) {
     console.error('Error creating PSD file:', err);
     alert(`Failed to create PSD file: ${(err as Error).message}`);
@@ -186,21 +248,35 @@ export async function savePsdFile(layerList: ILayer[]): Promise<Uint8Array | nul
   }
 }
 
+
 // ─── Browser globals ──────────────────────────────────────
 
 window.loadPsdFile = loadPsdFile;
 window.convertPsdToLayers = convertPsdToLayers;
 window.savePsdFile = async (ls) => savePsdFile(ls);
 
-// Apply PSD layers to canvas — called from io/api.ts
+// Apply PSD layers to canvas — called from ui/menu-handlers.ts
 window.applyPsdToCanvas = async (psdObj: PSDInstance) => {
-  const newLayers = await convertPsdToLayers(psdObj);
-  layers.length = 0;
-  newLayers.forEach(l => layers.push(l));
-  if (layers.length === 0) g.initDefaultLayer();
-  g.activeLayerIndex = Math.max(0, layers.length - 1);
-  window.resizeCanvas?.(g.image_width, g.image_height);
-  window.historyManager?.clear();
-  window.renderLayers?.();
-  window.updateLayerPanel?.();
+  try {
+    console.log('[PSD] Applying layers to canvas...');
+    const newLayers = await convertPsdToLayers(psdObj);
+    if (!newLayers || newLayers.length === 0) {
+      alert('No layers found in PSD or conversion failed.');
+      return;
+    }
+    
+    layers.length = 0;
+    newLayers.forEach(l => layers.push(l));
+    if (layers.length === 0) g.initDefaultLayer();
+    g.activeLayerIndex = Math.max(0, layers.length - 1);
+    
+    window.resizeCanvas?.(g.image_width, g.image_height);
+    window.historyManager?.clear();
+    window.renderLayers?.();
+    window.updateLayerPanel?.();
+    console.log('[PSD] Application complete.');
+  } catch (err) {
+    console.error('Error applying PSD to canvas:', err);
+    alert(`Failed to apply PSD: ${(err as Error).message}`);
+  }
 };

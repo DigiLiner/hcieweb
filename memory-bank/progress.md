@@ -77,7 +77,7 @@
 - [x] Phase 6: Project IO & Filter Migration
     - [x] Migrate `project_io.js` to TypeScript.
     - [x] Migrate `filters.js` to TypeScript.
-    - [x] Ensure PSD/HCIE saving/loading is fully typed and robust.
+    - [x] Ensure PSD/HCIE saving/loading is fully typed and robust. (Fixed ArrayBuffer serialization and blend mode mapping).
     - [ ] Clean up remaining `any` types in tool configurations.
 
 ## Pending

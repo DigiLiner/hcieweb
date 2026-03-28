@@ -232,6 +232,7 @@ export interface ToolConfig {
 export interface DocumentState {
   id: string;
   name: string;
+  filepath: string;
   width: number;
   height: number;
   layers: ILayer[];
@@ -261,10 +262,10 @@ export interface AppFileAPI {
   readFile(filePath: string): Promise<string | null>;
   readFileBinary(filePath: string): Promise<Uint8Array | null>;
   saveFile(
-    content: string | Uint8Array,
+    content: string | Uint8Array | ArrayBuffer,
     filePath: string | null,
     saveas: boolean,
-    type: 'png' | 'jpg' | 'psd' | 'hcie'
+    type: 'png' | 'jpg' | 'psd' | 'hcie' | 'gif'
   ): Promise<string | null>;
   onMenuOpen(cb: () => void): void;
   onMenuSave(cb: () => void): void;

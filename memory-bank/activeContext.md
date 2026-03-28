@@ -43,6 +43,8 @@ Phase 8: Web Deployment Configuration. Ensuring the application is fully functio
 5. **TypeScript Type Mismatch (src/io/api.ts):** Resolved `Uint8Array<ArrayBufferLike>` to `BlobPart` error in `Blob` constructor via explicit casting.
 6. **Missing Background Checker:** Corrected `build:tauri` script in `package.json` to copy `*.png` and other images to `tauri-dist`.
 7. **Selection Live Drawing Visibility:** Fixed HTML5 Canvas premultiplied alpha decay in `drawing_canvas.js` where `globalAlpha` applied with `destination-in` made live strokes inside selections invisible.
+8. **PSD Saving Failure:** Fixed serialization error where `ArrayBuffer` return from `ag-psd` was treated as a string, resulting in corrupted files. Also added blend mode mapping and enhanced Tauri v2 permissions (`fs:read-all`, `fs:write-all`).
+9. **PSD Opening Failure:** Resolved Web mode extension detection issue where Blob URLs caused the PSD parser to be bypassed. Added comprehensive alerts and logging for PSD loading.
 
 ## Next Steps
 - Replace remaining `alert()`/`confirm()` with `DialogHandler`.

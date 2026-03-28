@@ -44,9 +44,6 @@ export async function handleOpenFile() {
             // Assume it's an image
             const img = new Image();
             img.onload = () => {
-                // If it's a direct open, maybe we should create a new document with this image?
-                // For now, let's just add it to the active layer or create a new document.
-                // The current behavior of "Open" usually means "Open as New Project" in editors.
                 newDocument(filePath.split(/[/\\]/).pop() || 'Untitled', img.width, img.height);
                 const activeLayer = layers[g.activeLayerIndex];
                 if (activeLayer) {
@@ -58,13 +55,12 @@ export async function handleOpenFile() {
                 const el = document.getElementById('filePath');
                 if (el) el.innerText = filePath;
             };
-            // If it's a blob/data URL from web API, it's already set. 
-            // If it's a native path from Tauri, we need to read it as binary then blob URL for security.
+            // ... (rest of image loading logic)
             if (window.__TAURI__ && !filePath.startsWith('blob:') && !filePath.startsWith('data:')) {
                 api.readFileBinary(filePath).then(bytes => {
                     if (bytes) {
                         const ext = filePath.split('.').pop()?.toLowerCase() || 'png';
-                        const mime = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'image/png';
+                        const mime = ext === 'gif' ? 'image/gif' : (ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'image/png');
                         const blob = new Blob([bytes as any], { type: mime });
                         img.src = URL.createObjectURL(blob);
                     }
@@ -83,7 +79,7 @@ export async function handleOpenFile() {
 
 export async function handleSaveFile() {
     try {
-        if (!g.filepath || g.filepath.toLowerCase().endsWith('.png') || g.filepath.toLowerCase().endsWith('.jpg')) {
+        if (!g.filepath || g.filepath.toLowerCase().endsWith('.png') || g.filepath.toLowerCase().endsWith('.jpg') || g.filepath.toLowerCase().endsWith('.gif')) {
             // If no path or path is an image (can't save project as image directly), do Save As
             return handleSaveAsFile();
         }
@@ -104,11 +100,11 @@ export async function handleSaveFile() {
 export async function handleSaveAsFile() {
     try {
         // 1. Ask for Format
-        const format = await (window as any).DialogHandler.showFormatSelector() as 'hcie' | 'png' | 'psd' | null;
+        const format = await (window as any).DialogHandler.showFormatSelector() as 'hcie' | 'png' | 'psd' | 'gif' | null;
         if (!format) return; // User cancelled
 
         let content: string | Uint8Array;
-        let type: 'hcie' | 'png' | 'psd' | 'jpg' = format === 'png' ? 'png' : (format === 'psd' ? 'psd' : 'hcie');
+        let type: 'hcie' | 'png' | 'psd' | 'jpg' | 'gif' = format === 'png' ? 'png' : (format === 'psd' ? 'psd' : (format === 'gif' ? 'gif' : 'hcie'));
 
         // 2. Prepare Content based on format
         if (format === 'hcie') {
@@ -118,10 +114,11 @@ export async function handleSaveAsFile() {
             if (!bytes) return;
             content = bytes;
         } else {
-            // PNG (Export)
+            // PNG/GIF (Export)
             const activeLayer = layers[g.activeLayerIndex];
             if (!activeLayer) return;
-            content = (activeLayer.canvas as HTMLCanvasElement).toDataURL('image/png');
+            const mime = format === 'gif' ? 'image/gif' : 'image/png';
+            content = (activeLayer.canvas as HTMLCanvasElement).toDataURL(mime);
         }
 
         // 3. Save File (will trigger system dialog because saveas=true)

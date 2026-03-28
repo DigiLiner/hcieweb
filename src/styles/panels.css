@@ -25,7 +25,7 @@
 
 .panel.expanded {
     flex: 1;
-    min-height: 200px; /* Stronger min-height for expanded panels */
+    min-height: 150px; /* Reduced min-height to allow three panels to coexist better */
 }
 
 /* Panel header */

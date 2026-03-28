@@ -9,6 +9,16 @@
     "core:default",
     "core:window:default",
     "dialog:default",
-    "fs:default"
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "fs:default",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "fs:allow-desktop-read",
+    "fs:allow-desktop-write",
+    "fs:allow-document-read",
+    "fs:allow-document-write",
+    "fs:allow-download-read",
+    "fs:allow-download-write"
   ]
 }

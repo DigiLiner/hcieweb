@@ -39,9 +39,9 @@ function buildTauriApi(): AppFileAPI {
     openFile: async (): Promise<string | null> => {
       const result = await open({
         filters: [
-          { name: 'All Supported Files', extensions: ['hcie', 'png', 'jpg', 'jpeg', 'psd'] },
+          { name: 'All Supported Files', extensions: ['hcie', 'png', 'jpg', 'jpeg', 'psd', 'gif'] },
           { name: 'HCIE Project', extensions: ['hcie'] },
-          { name: 'Images (PNG, JPG)', extensions: ['png', 'jpg', 'jpeg'] },
+          { name: 'Images (PNG, JPG, GIF)', extensions: ['png', 'jpg', 'jpeg', 'gif'] },
           { name: 'Photoshop', extensions: ['psd'] }
         ],
       });
@@ -56,46 +56,66 @@ function buildTauriApi(): AppFileAPI {
       readFile(filePath),
 
     saveFile: async (
-      content: string | Uint8Array,
+      content: string | Uint8Array | ArrayBuffer,
       filePath: string | null,
       saveas: boolean,
-      type: 'png' | 'jpg' | 'psd' | 'hcie'
+      type: 'png' | 'jpg' | 'psd' | 'hcie' | 'gif'
     ): Promise<string | null> => {
-      const filterMap: Record<string, { name: string; extensions: string[] }[]> = {
-        hcie: [{ name: 'HC Image Editor Project', extensions: ['hcie', 'json'] }],
-        psd: [{ name: 'Photoshop Document', extensions: ['psd'] }],
-        png: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg'] }],
-        jpg: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg'] }],
-      };
-      const filters = filterMap[type] ?? filterMap['png'];
+      try {
+        const filterMap: Record<string, { name: string; extensions: string[] }[]> = {
+          hcie: [{ name: 'HC Image Editor Project', extensions: ['hcie'] }],
+          psd: [{ name: 'Photoshop Document', extensions: ['psd'] }],
+          png: [{ name: 'PNG Image', extensions: ['png'] }],
+          jpg: [{ name: 'JPEG Image', extensions: ['jpg'] }],
+          gif: [{ name: 'GIF Image', extensions: ['gif'] }],
+        };
+        const filters = filterMap[type] ?? filterMap['png'];
 
-      let targetPath = filePath;
-      if (saveas || !filePath) {
-        const ext = type === 'hcie' ? 'hcie' : type === 'psd' ? 'psd' : 'png';
-        targetPath = await save({ filters, defaultPath: filePath ?? `untitled.${ext}` });
-        if (!targetPath) return null;
-      }
-      if (!targetPath) return null;
-
-      if (type === 'hcie') {
-        await writeTextFile(targetPath, content as string);
-      } else {
-        let bytes: Uint8Array;
-        if (typeof content === 'string' && content.startsWith('data:')) {
-          const base64 = content.replace(/^data:image\/\w+;base64,/, '');
-          const binary = atob(base64);
-          bytes = new Uint8Array(binary.length);
-          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        } else if (content instanceof Uint8Array) {
-          bytes = content;
-        } else {
-          // If it's a string (e.g. project JSON), convert to bytes
-          const encoder = new TextEncoder();
-          bytes = encoder.encode(content as string);
+        let targetPath = filePath;
+        if (saveas || !filePath) {
+          const ext = type === 'hcie' ? 'hcie' : type === 'psd' ? 'psd' : type === 'jpg' ? 'jpg' : type === 'gif' ? 'gif' : 'png';
+          targetPath = await save({ filters, defaultPath: filePath ?? `untitled.${ext}` });
+          if (!targetPath) return null;
         }
-        await writeFile(targetPath, bytes);
+        if (!targetPath) return null;
+
+        // Auto-append extension if missing
+        const expectedExt = `.${type === 'hcie' ? 'hcie' : type === 'psd' ? 'psd' : type === 'jpg' ? 'jpg' : type === 'gif' ? 'gif' : 'png'}`;
+        if (!targetPath.toLowerCase().endsWith(expectedExt)) {
+            // Check if it already has another valid extension from the same type (like .jpeg for jpg)
+            const isJpeg = type === 'jpg' && targetPath.toLowerCase().endsWith('.jpeg');
+            if (!isJpeg) {
+                targetPath += expectedExt;
+            }
+        }
+
+        if (type === 'hcie') {
+          await writeTextFile(targetPath, content as string);
+        } else {
+          let bytes: Uint8Array;
+          if (typeof content === 'string' && content.startsWith('data:')) {
+            const base64 = content.replace(/^data:image\/\w+;base64,/, '');
+            const binary = atob(base64);
+            bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          } else if (content instanceof Uint8Array) {
+            bytes = content;
+          } else if (content instanceof ArrayBuffer) {
+            bytes = new Uint8Array(content);
+          } else {
+            // If it's a string (e.g. project JSON), convert to bytes
+            const encoder = new TextEncoder();
+            bytes = encoder.encode(content as string);
+          }
+          console.log(`[Tauri] Writing ${bytes.length} bytes to ${targetPath}`);
+          await writeFile(targetPath, bytes);
+        }
+        return targetPath;
+      } catch (err) {
+        console.error('[Tauri] saveFile failed:', err);
+        alert(`Tauri Save Error: ${(err as Error).message}\nPath: ${filePath}`);
+        throw err;
       }
-      return targetPath;
     },
 
     onMenuOpen: () => { /* Tauri menu events wired via main.ts */ },
@@ -118,7 +138,7 @@ function buildWebFallbackApi(): AppFileAPI {
           const file = input.files?.[0];
           if (!file) { resolve(null); return; }
           window.lastSelectedFile = file;
-          if (file.name.endsWith('.hcie')) {
+          if (file.name.endsWith('.hcie') || file.name.endsWith('.psd')) {
             resolve(file.name);
           } else {
             window.lastFileName = file.name;
@@ -147,7 +167,7 @@ function buildWebFallbackApi(): AppFileAPI {
     },
 
     saveFile: async (
-      content: string | Uint8Array,
+      content: string | Uint8Array | ArrayBuffer,
       filePath: string | null,
       _saveas: boolean,
       type: 'png' | 'jpg' | 'psd' | 'hcie'
@@ -155,9 +175,10 @@ function buildWebFallbackApi(): AppFileAPI {
       const a = document.createElement('a');
       let url: string;
 
-      if (content instanceof Uint8Array) {
+      if (content instanceof Uint8Array || content instanceof ArrayBuffer) {
+        const bytes = content instanceof Uint8Array ? content : new Uint8Array(content);
         const mimeMap = { psd: 'image/vnd.adobe.photoshop', hcie: 'application/json', png: 'image/png', jpg: 'image/jpeg' };
-        const blob = new Blob([content as unknown as BlobPart], { type: mimeMap[type] ?? 'application/octet-stream' });
+        const blob = new Blob([bytes as unknown as BlobPart], { type: mimeMap[type] ?? 'application/octet-stream' });
         url = URL.createObjectURL(blob);
       } else if (typeof content === 'string' && !content.startsWith('data:')) {
         const blob = new Blob([content], { type: 'application/json' });
