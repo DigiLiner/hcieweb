@@ -17,6 +17,7 @@ _Last updated: 2026-03-30 17:18 (UTC+3)_
 - **#1003**: **Drawing Tool Settings Persistence**. `localStorage` based auto-save/restore for brush settings. 🟡
 - **Polyrepo Migration Completion**: All sub-repositories linked via `file:`. Root reconnection and Vite/Tauri build pipes verified. 🟡
 - **#1051**: **Krita (.kra) Layered Support**. Fixed "tiled" image corruption in `krita-tiles.ts`. Implemented planar delta-decoding and header skip. 🟡
+- **GitHub Deployment Fix (#3000)**: Forced Node.js 24 for actions execution, updated `node-version` to 22, and resolved deprecation warnings. 🟡
 
 ---
 
