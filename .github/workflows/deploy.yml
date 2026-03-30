@@ -16,7 +16,46 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout root repo
+        uses: actions/checkout@v4
+        with:
+          path: hcie
+          
+      - name: Checkout hcie-core
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-core
+          path: hcie-core
+
+      - name: Checkout hcie-shared
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-shared
+          path: hcie-shared
+
+      - name: Checkout hcie-tools
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-tools
+          path: hcie-tools
+
+      - name: Checkout hcie-io
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-io
+          path: hcie-io
+
+      - name: Checkout hcie-canvas-ui
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-canvas-ui
+          path: hcie-canvas-ui
+
+      - name: Checkout hcie-ui-components
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/hcie-ui-components
+          path: hcie-ui-components
       
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,9 +63,11 @@ jobs:
           node-version: 22
           
       - name: Install dependencies
+        working-directory: hcie
         run: npm install
         
       - name: Build Web App
+        working-directory: hcie
         run: npm run web:build
         env:
           VITE_BASE_URL: /${{ github.event.repository.name }}/ # Adjust if not deploying to project root
@@ -37,7 +78,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist-web'
+          path: 'hcie/dist-web'
 
   deploy:
     needs: build

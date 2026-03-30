@@ -6,15 +6,16 @@ The GitHub Actions deployment was failing, and a deprecation warning for Node.js
 ## Actions Taken
 1.  Modified `.github/workflows/deploy.yml`:
     *   Added `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` environment variable to the `build` job.
-    *   Updated the Node.js version in `actions/setup-node@v4` from `20` to `22` (latest stable LTS).
-    *   Confirmed that `v4` of `actions/checkout` and `actions/setup-node` are the current major versions.
+    *   Updated the Node.js version in `actions/setup-node@v4` from `20` to `22`.
+    *   **NEW**: Implemented multiple checkout steps to pull sibling repositories (`hcie-core`, `hcie-shared`, etc.) into the runner's workspace, maintaining the relative directory structure (`../hcie-core`) expected by the build system.
+    *   **NEW**: Updated build steps to use `working-directory: hcie` and adjusted artifact upload paths.
+
+## Status
+- **🟡 Waiting to Confirm**: Deployment workflow updated with multi-repo checkout. Needs verification on GitHub.
 
 ## Technical Observation
 The project uses `file:../` links in `package.json` for internal dependencies (polyrepo structure). 
 If these sibling repositories (`hcie-core`, `hcie-shared`, etc.) are not checked out during the CI/CD run, the build will fail during `npm install` or `vite build`. 
 
 > [!WARNING]
-> If the build continues to fail, we may need to update the workflow to check out all required sibling repositories into the expected directory structure (e.g., using multiple checkout steps or a custom script).
-
-## Status
 - **🟡 Waiting to Confirm**: Deployment workflow updated. Needs verification on GitHub.
