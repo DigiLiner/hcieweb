@@ -1,19 +1,23 @@
 # System Patterns
-Established architectural patterns.
 
-## Orchestrator Pattern
-Agents act as high-level orchestrators. They use the `CoreEngine` export from `packages/core/` to perform image operations but manage state and UI independently.
+## Orchestration & Core
+- **Black Box Core**: `packages/core/src/` is read-only. Access via `@hcie/core` exports.
+- **Orchestrator Pattern**: UI logic and tool coordination live in `apps/` or root, using Core as a service.
 
-## Black Box Core
-`packages/core/src/` is read-only. Any required changes should be proposed to the user as potential library updates rather than edited directly.
+## Communication & State
+- **Event-Driven UI**: Panels sync via `CustomEvent` (`syncOpacity`, `toolChanged`).
+- **DialogHandler**: Centralized UI for prompts, alerts, and formatting to ensure premium feel.
 
-## UI Event Sync
-Panels communicate via `CustomEvent` (e.g., `syncOpacity`, `toolChanged`) for cross-panel synchronization.
+## Performance & Rendering
+- **Atomic Resize**: Central `resizeCanvas(w, h)` in `drawing_canvas.ts` ensures all layers and UI stay in sync.
+## UI Aesthetics & Themes
+- **Unified Monochromatic Icons**: Toolicons use a synchronized system of `grayscale(1) brightness(0) invert(var(--icon-invert))` to ensure a consistent, professional soft gray look in Dark Mode regardless of original SVG colors.
+- **CSS Variable Driven Themes**: All themeable properties (bg-surface, bg-panel, icon-filter) adhere to central variables in `global.css`.
 
-## Centralized UI Interaction (DialogHandler)
-All user prompts, alerts, and format selections are handled by the `DialogHandler` class. This ensures a consistent, premium look and prevents the use of blocking browser prompts.
+## Persistence & Configuration
+- **Structured Tool Settings**: Drawing tool settings (size, opacity, hardness) are stored in a structured JSON object in `localStorage` via `@hcie/shared`.
+- **Bidirectional Sync**: Shared settings are synced to/from the core `g` object upon tool change and manual input, ensuring old core logic remains functional without awareness of the storage structure.
+- **Auto-Restoration**: Tools retrieve their specific last-used settings immediately upon selection.
 
-## Atomic Resizing (resizeCanvas)
-Canvas dimension updates are handled by a single `resizeCanvas(w, h)` function in `drawing_canvas.ts`. This function ensures that `drawingCanvas`, `originalCanvas`, `tempCanvas`, and the UI wrappers stay in sync, preventing rendering artifacts or hidden content.
-## Unified CSS Variables & Theme Support
-Styles are driven by a centralized variable system in `:root` of `styles.css`. All component-specific styles (e.g., `menu.css`, `panels.css`) must consume these variables rather than hardcoding colors. Theme switching is handled by updating the `data-theme` attribute on `document.documentElement` or via `@media (prefers-color-scheme)`.
+## Project Structure
+- **Monorepo**: Logical separation into `@hcie/core`, `@hcie/tools`, `@hcie/ui`, `@hcie/io`, and `@hcie/shared`.

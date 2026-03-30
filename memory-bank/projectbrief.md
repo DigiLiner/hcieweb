@@ -2,7 +2,7 @@
 High-level overview of the project and its goals.
 
 ## Core Objective
-Migrate a Python-based image editor to a modern JavaScript/Tauri v2 application while preserving the "IE Style" aesthetics and specialized core algorithms.
+modern TypeScript/Tauri v2  image editor application 
 
 ## Black Box Architecture
 - Core algorithms and low-level canvas logic reside in `packages/core/src/`.

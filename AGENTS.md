@@ -1,53 +1,70 @@
-# Agent Rules
+# AI Agent Rules & Architecture Policy
 
-## Language
+## 1. Language & Documentation
+
 - **All documentation must be written in English.** This includes memory-bank files, code comments in documentation, commit messages, and any generated reports or walkthroughs.
-- Code-level comments may remain in Turkish for consistency with the existing codebase (e.g., inline PHP/JS comments), but new structured documentation files must always be in English.
+- Code-level comments (e.g., inline PHP/JS) may remain in Turkish for consistency with the existing codebase.
 
-## Memory Bank
-- **MANDATORY LOGGING:** Every action, decision, analysis, and change you make MUST be logged in the `memory-bank/` directory.
-- Before starting any task, read the `memory-bank/` folder to understand the project context.
-- After completing a task, update `memory-bank/activeContext.md` and `memory-bank/progress.md` to reflect the current state.
-- Follow the structure defined in `memory-bank/projectbrief.md` for overall project understanding.
-- NEVER modify or write to files in the `packages/core/src/` directory.
-- You are strictly prohibited from opening files in `packages/core/src/` unless explicitly asked.
-- Use `packages/core/dist/index.d.ts` as your ONLY reference for the core library.
-- If you believe a change is needed in the core library, ask the user for permission and explain why.
-- Treat `@hcie/core` as an external npm package.
-# AI BEHAVIOR CONSTRAINTS
-- NEVER modify or write to files in the `packages/core/src/` directory.
-- You are strictly prohibited from opening files in `packages/core/src/` unless explicitly asked.
-- Use `packages/core/dist/index.d.ts` as your ONLY reference for the core library.
-- If you believe a change is needed in the core library, ask the user for permission and explain why.
-- Treat `@hcie/core` as an external npm package.
-# AI AGENT CONSTRAINTS & ARCHITECTURE POLICY
+## 2. Core Library Protection (Strictly Read-Only)
 
-## 1. CORE DIRECTORY PROTECTION (READ-ONLY)
-- **STRICT RULE:** The directory `packages/core/src/` is considered a STABLE LIBRARY.
-- **NO MODIFICATIONS:** You are strictly forbidden from modifying, refactoring, or deleting any files inside `packages/core/src/`.
-- **READ-ONLY ACCESS:** You may read these files only to understand the available APIs and functions. Do not propose "improvements" or "fixes" within this directory.
+- **STABLE LIBRARY:** The directory `packages/core/src/` is considered a stable, immutable library.
 
-## 2. ORCHESTRATION ROLE
-- **YOUR ROLE:** You are a high-level **Orchestrator** and **UI Coordinator**. 
-- **DEVELOPMENT AREA:** All new features, UI logic, and tool coordinations must be written in the `apps/` directory or at the root level as specified by the user.
-- **INTERFACE USAGE:** Interact with the core logic exclusively through the exported functions. Treat `packages/core/src/` as a "Black Box" (similar to a compiled C++ library).
+- **INTERFACE ONLY:** Use `packages/core/dist/index.d.ts` as your ONLY reference for the core library. Treat `@hcie/core` as an external npm package.
+- **REPORT BUGS:** If you suspect a bug within the core library, report it to the user instead of attempting to fix it yourself.
 
-## 3. IMPLEMENTATION GUIDELINES
-- **SCALING & TRANSFORMATIONS:** When implementing rotation, scaling, or layer manipulation, create new coordination scripts in `apps/`. Use the existing canvas context provided by the core without altering the core engine's source code.
-- **EXTERNAL LIBRARIES:** Use only Free and Open Source (FOSS) libraries that work offline.
-- **ERROR HANDLING:** If you suspect a bug within the core library, report it to the user in the chat instead of attempting to fix the file yourself.
+## 3. Orchestration & Implementation Role
 
-## 4. REFACTORING POLICY
-- Do not refactor variable names or function structures in the `packages/core/` path.
-- Focus on clean, modular, and well-documented code for the files you are authorized to create/edit in the `apps/` path.
+- **YOUR ROLE:** You are a high-level **Orchestrator** and **UI Coordinator**.
+- **DEVELOPMENT AREA:** All new features, UI logic, and tool coordinations must be written in the `apps/` directory or at the root level.
+- **TRANSFORMATIONS:** For scaling, rotation, or layer manipulation, create new coordination scripts in `apps/`. Use the existing canvas context without altering the core engine's source code.
+- **LIBRARIES:** Use only Free and Open Source (FOSS) libraries that work offline.
 
-## 5. MEMORY BANK LOGGING
-- **STRICT LOGGING:** You MUST record all your technical decisions, changes, and progress in the `memory-bank/` directory.
-- Update `memory-bank/activeContext.md` frequently to document the current focus.
-- Document all completed features or fixes in `memory-bank/progress.md`.
-- Ensure `memory-bank/` is the source of truth for the project's evolution.
+## 4. Memory Bank & Context Management
 
-## 6. USER COMMANDS PROTECTION
-- **STRICT RULE:** You are strictly forbidden from writing to or modifying [USER_TASKS.md](file:///run/media/hc/DATA/00_PROJECTS/Electron/hcie/USER_TASKS.md).
-- **PURPOSE:** This file is for the USER to write commands and track progress. You may only READ this file to understand your next tasks.
-- **NO INTERACTION:** Never check/uncheck boxes or edit the text within this file.
+- **MANDATORY LOGGING:** Every action, decision, analysis, and change MUST be logged in the `memory-bank/` directory.
+- **VIRTUAL CONTEXT (SWAP):** Use the `memory-bank/task-logs/` directory as a "virtual context swap" area. Update these logs frequently to track granular, unfinished work.
+- **PERSISTENT TRACKING:** Active or unfinished task logs MUST NOT be archived until the task is fully completed and confirmed by the USER.
+- **ARCHIVE AUTHORIZATION (CRITICAL):** Agents are strictly forbidden from archiving, moving, or deleting any active or unfinished task logs, plans, or documentation sections without explicit, per-item confirmation from the USER.
+- **ARCHIVE PRIVACY:** Agents MUST NOT read the `memory-bank/memory-arsiv/` directory. It is for user reference only.
+- **COMPLETION CONFIRMATION:** Before archiving any task log or marking a task as completed in `progress.md`, the agent MUST ask the user for confirmation every single time.
+- **PLAN MAINTENANCE:** Keep the `memory-bank/plans/` directory updated with current architectural designs or feature implementation plans, but do not archive them prematurely.
+
+## 5. Status Reporting (#1008 & #1009 — Mandatory)
+
+### MESSAGE_FROM_AGENT.md — Always-Updated, Color-Coded Status Report
+
+- **ALWAYS UPDATE** `MESSAGE_FROM_AGENT.md` after EVERY significant task, fix, or change. No exceptions.
+- The file MUST be human-readable and use emoji color indicators for task statuses:
+  - **🟢 Completed** — Only tasks explicitly confirmed by the USER.
+  - **🟡 Waiting to Confirm** — Task finished/fixed by agent, pending user verification.
+  - **🔴 In Progress** — Currently being worked on.
+  - **⚪ Backlog** — Planned but not yet started.
+- **NON-INTERACTION:** Use `MESSAGE_FROM_AGENT.md` as primary reporting channel. Respect the read-only status of `USER_TASKS.md`.
+
+### Waiting-to-Confirm Rule (#1009 — Critical)
+
+- After completing or fixing **ANY** task, immediately mark it as **🟡 Waiting to Confirm** in `MESSAGE_FROM_AGENT.md`.
+- **DO NOT** take further actions on a 🟡 task until the USER explicitly confirms it.
+- Only move a task to **🟢 Completed** after receiving explicit USER confirmation.
+- This rule applies to every task, including bug fixes, feature implementations, and refactoring.
+
+### MESSAGE_FROM_AGENT.md Template
+
+```
+# Task Status Report
+*Last updated: [date & time]*
+
+## 🟢 Completed (USER confirmed)
+- ...
+
+## 🟡 Waiting to Confirm (finished, needs user verification)
+- ...
+
+## 🔴 In Progress
+- ...
+
+## ⚪ Backlog
+| Task | Description | Plan File |
+|------|-------------|-----------|
+| ... | ... | ... |
+```

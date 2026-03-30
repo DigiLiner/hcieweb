@@ -1,48 +1,11 @@
 {
-  "compilerOptions": {
-    /* Language and Environment */
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-
-    /* Modules */
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "paths": {
-      "@core/*": ["src/core/*"],
-      "@canvas/*": ["src/canvas/*"],
-      "@tools/*": ["src/tools/*"],
-      "@ui/*": ["src/ui/*"],
-      "@io/*": ["src/io/*"]
-    },
-
-    /* Emit */
-    "noEmit": true,
-
-    /* Interop Constraints */
-    "allowImportingTsExtensions": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-
-    /* Type Checking — Full Strict */
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Completeness */
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*.ts", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "src-tauri", "tauri-dist", "public"]
+  "files": [],
+  "references": [
+    { "path": "../hcie-core" },
+    { "path": "../hcie-canvas-ui" },
+    { "path": "../hcie-tools" },
+    { "path": "../hcie-ui-components" },
+    { "path": "../hcie-io" },
+    { "path": "../hcie-shared" }
+  ]
 }

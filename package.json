@@ -6,10 +6,6 @@
   "maintainer": "Halit Can <halitcan@example.com>",
   "license": "ISC",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -21,9 +17,17 @@
     "web:build": "vite build --mode web",
     "web:preview": "vite preview --mode web",
     "web:serve": "npm run serve",
-    "serve": "npx http-server ./dist-web -p 8000 -o"
+    "serve": "npx http-server ./dist-web -p 8000 -o",
+    "ts:build": "tsc -b",
+    "ts:clean": "tsc -b --clean"
   },
   "dependencies": {
+    "@hcie/canvas-ui": "file:../hcie-canvas-ui",
+    "@hcie/core": "file:../hcie-core",
+    "@hcie/io": "file:../hcie-io",
+    "@hcie/shared": "file:../hcie-shared",
+    "@hcie/tools": "file:../hcie-tools",
+    "@hcie/ui-components": "file:../hcie-ui-components",
     "ag-psd": "^30.1.0",
     "canvas": "^3.2.1",
     "psd.js": "^3.9.2"
@@ -33,9 +37,11 @@
     "@tauri-apps/cli": "^2.10.1",
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-fs": "^2.4.5",
+    "@types/jszip": "^3.4.0",
     "@types/node": "^25.5.0",
     "@vitejs/plugin-legacy": "^8.0.1",
     "eslint": "^10.0.3",
+    "jszip": "^3.10.1",
     "typescript": "^5.9.3",
     "vite": "^8.0.3"
   },

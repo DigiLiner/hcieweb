@@ -13,6 +13,18 @@ export default defineConfig(({ mode }) => {
     root: '.',
     publicDir: 'public',
 
+    resolve: {
+      alias: {
+        '@tauri-apps/api': resolve(__dirname, 'node_modules/@tauri-apps/api'),
+        '@hcie/core': resolve(__dirname, '../hcie-core/src/index.ts'),
+        '@hcie/shared': resolve(__dirname, '../hcie-shared/src/index.ts'),
+        '@hcie/tools': resolve(__dirname, '../hcie-tools/src/index.ts'),
+        '@hcie/io': resolve(__dirname, '../hcie-io/src/index.ts'),
+        '@hcie/canvas-ui': resolve(__dirname, '../hcie-canvas-ui/src/index.ts'),
+        '@hcie/ui-components': resolve(__dirname, '../hcie-ui-components/src/index.ts'),
+      }
+    },
+
     plugins: [
       {
         name: 'fix-mime-types',
@@ -31,15 +43,6 @@ export default defineConfig(({ mode }) => {
       }
     ],
 
-    resolve: {
-      alias: {
-        '@core': resolve(__dirname, 'src/core'),
-        '@canvas': resolve(__dirname, 'src/canvas'),
-        '@tools': resolve(__dirname, 'src/tools'),
-        '@ui': resolve(__dirname, 'src/ui'),
-        '@io': resolve(__dirname, 'src/io'),
-      },
-    },
 
     build: {
       outDir: isWeb ? 'dist-web' : 'tauri-dist',
@@ -47,7 +50,12 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
       rollupOptions: {
         input: resolve(__dirname, 'index.html'),
+        external: [/^@tauri-apps\/api/],
       },
+    },
+
+    optimizeDeps: {
+      exclude: ['@tauri-apps/api']
     },
 
     server: {
@@ -56,6 +64,10 @@ export default defineConfig(({ mode }) => {
       // Ensure 127.0.0.1 is used correctly
       host: '127.0.0.1', 
       open: false,
+      fs: {
+        // Allow serving files from sibling projects in the monorepo
+        allow: ['..']
+      }
     },
   };
 });
