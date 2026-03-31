@@ -22,9 +22,51 @@
 
     <title>HCIE - Advanced Online Image Editor & Layered Design Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>
+        // Automatic path fixer for static file:// opening
+        (function() {
+            if (window.location.protocol === 'file:') {
+                var fixPath = function(tag, attr) {
+                    var elements = document.getElementsByTagName(tag);
+                    for (var i = 0; i < elements.length; i++) {
+                        var val = elements[i].getAttribute(attr);
+                        if (val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('public/')) {
+                           if (val === 'ag-psd.js' || val.startsWith('resources/')) {
+                               elements[i].setAttribute(attr, './public/' + val);
+                           }
+                        }
+                    }
+                };
+                // Run immediately for any elements already parsed
+                fixPath('img', 'src');
+                fixPath('script', 'src');
+                fixPath('link', 'href');
+
+                // Also run on DOMContentLoaded for anything missed
+                window.addEventListener('DOMContentLoaded', function() {
+                    fixPath('img', 'src');
+                    fixPath('script', 'src');
+                    fixPath('link', 'href');
+                });
+            }
+        })();
+    </script>
+    <script>
+        // Static IIFE Fallback for file:// protocol (CORS bypass)
+        if (window.location.protocol === 'file:') {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'public/hcie.css';
+            document.head.appendChild(link);
+            console.log("Static Fallback: Loading CSS fallback");
+        }
+    </script>
 </head>
 
 <body>
+
+
     <!-- External Libraries -->
     <!-- External Libraries -->
     <!-- UMD Fix for psd.js in Electron -->
@@ -63,9 +105,14 @@
     </script>
 
     <!-- ag-psd for PSD Writing Support (Local) -->
-    <script src="/ag-psd.js"></script>
+    <script src="public/ag-psd.js"></script>
 
-    <script type="module" src="apps/web/src/main.ts"></script>
+    <script>
+        // Load main.ts only if NOT on file:// protocol (where it would fail with CORS)
+        if (window.location.protocol !== 'file:') {
+            document.write('<script type="module" src="apps/web/src/main.ts"><\/script>');
+        }
+    </script>
 
     <div id="appContainer" style="display: flex; flex-direction: column; width: 100%; height: 100vh; overflow: hidden;">
         <!-- Application Menu Bar (Web only, hidden in Electron) -->
@@ -76,14 +123,14 @@
                     <div class="menu-dropdown">
                         <div class="menu-option" onclick="newCanvas()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/new.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/new.svg" class="menu-icon">
                                 <span>New</span>
                             </div>
                             <span class="shortcut">Ctrl+N</span>
                         </div>
                         <div class="menu-option" onclick="openImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/open.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/open.svg" class="menu-icon">
                                 <span>Open</span>
                             </div>
                             <span class="shortcut">Ctrl+O</span>
@@ -91,21 +138,21 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="saveProject()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/save.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/save.svg" class="menu-icon">
                                 <span>Save</span>
                             </div>
                             <span class="shortcut">Ctrl+S</span>
                         </div>
                         <div class="menu-option" onclick="saveAsProject()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/save.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/save.svg" class="menu-icon">
                                 <span>Save As...</span>
                             </div>
                             <span class="shortcut">Ctrl+Shift+S</span>
                         </div>
                         <div class="menu-option" onclick="handleExportFile()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/file-download-svgrepo-com.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/file-download-svgrepo-com.svg" class="menu-icon">
                                 <span>Export</span>
                             </div>
                             <span class="shortcut">Ctrl+E</span>
@@ -113,7 +160,7 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="exitApp()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/exit.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/exit.svg" class="menu-icon">
                                 <span>Exit</span>
                             </div>
                             <span class="shortcut">Alt+F4</span>
@@ -125,21 +172,21 @@
                     <div class="menu-dropdown">
                         <div class="menu-option" onclick="cutSelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/cut.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/cut.svg" class="menu-icon">
                                 <span>Cut</span>
                             </div>
                             <span class="shortcut">Ctrl+X</span>
                         </div>
                         <div class="menu-option" onclick="copySelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/copy.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/copy.svg" class="menu-icon">
                                 <span>Copy</span>
                             </div>
                             <span class="shortcut">Ctrl+C</span>
                         </div>
                         <div class="menu-option" onclick="pasteSelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/paste.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/paste.svg" class="menu-icon">
                                 <span>Paste</span>
                             </div>
                             <span class="shortcut">Ctrl+V</span>
@@ -147,14 +194,14 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="undoImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/undo.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/undo.svg" class="menu-icon">
                                 <span>Undo</span>
                             </div>
                             <span class="shortcut">Ctrl+Z</span>
                         </div>
                         <div class="menu-option" onclick="redoImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/redo.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/redo.svg" class="menu-icon">
                                 <span>Redo</span>
                             </div>
                             <span class="shortcut">Ctrl+Y</span>
@@ -162,7 +209,7 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="clearCanvas()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/delete.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/menu/delete.svg" class="menu-icon">
                                 <span>Clear All</span>
                             </div>
                             <span class="shortcut">Delete</span>
@@ -174,58 +221,58 @@
                     <div class="menu-dropdown">
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/flip-horizontal-3.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/flip-horizontal-3.svg" class="menu-icon">
                                 <span>Flip Horizontal</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/flip-vertical-3.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/flip-vertical-3.svg" class="menu-icon">
                                 <span>Flip Vertical</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="applyFilter('negative')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/invert-colors.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/invert-colors.svg" class="menu-icon">
                                 <span>Negative / Invert</span>
                             </div>
                         </div>
                         <div class="menu-option" onclick="applyFilter('grayscale')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/BarChart.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/BarChart.svg" class="menu-icon">
                                 <span>Grayscale</span>
                             </div>
                         </div>
                         <div class="menu-option" onclick="applyFilter('sepia')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/RatingYellow.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/RatingYellow.svg" class="menu-icon">
                                 <span>Sepia</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/Reload.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/Reload.svg" class="menu-icon">
                                 <span>Rotate</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/crop.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/crop.svg" class="menu-icon">
                                 <span>Crop</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/icon_scale.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/icon_scale.svg" class="menu-icon">
                                 <span>Resize Image</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/rectangle.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/rectangle.svg" class="menu-icon">
                                 <span>Resize Canvas</span>
                             </div>
                         </div>
@@ -249,14 +296,14 @@
                         <div class="menu-option"><span>Soften</span></div>
                         <div class="menu-option" onclick="applyFilter('blur')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/blur.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/blur.svg" class="menu-icon">
                                 <span>Blur</span>
                             </div>
                         </div>
                         <div class="menu-option"><span>Sharpen</span></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/theme_palette.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/theme_palette.svg" class="menu-icon">
                                 <span>Emboss</span>
                             </div>
                         </div>
@@ -265,7 +312,7 @@
                         <div class="menu-option"><span>Add Noise</span></div>
                         <div class="menu-option" onclick="applyFilter('mosaic')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/pixelate.svg" class="menu-icon">
+                                <img src="public/resources/themes/ie_color/ui/pixelate.svg" class="menu-icon">
                                 <span>Mosaic</span>
                             </div>
                         </div>
@@ -323,7 +370,7 @@
                 <!-- Dedicated empty drag region spacer -->
                 <div class="app-title-drag" data-tauri-drag-region style="flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; cursor: default;">
                     <span style="font-size: 13px; font-weight: 500; color: var(--text-secondary); pointer-events: none; user-select: none; -webkit-user-select: none;">
-                        HC Image Editor
+                        HC Image Editor v4.0.0 Beta - Beta program, do not use on important files
                     </span>
                 </div>
 
@@ -346,31 +393,31 @@
             <div class="options-bar">
                 <!-- Action Icons (Moved from toolbar) -->
                 <button id="btn-new" onclick="newCanvas()" title="New" class="button">
-                    <img src="resources/themes/ie_color/menu/new.svg" alt="New" />
+                    <img src="public/resources/themes/ie_color/menu/new.svg" alt="New" />
                 </button>
                 <button id="btn-open" onclick="openImage()" title="Open" class="button">
-                    <img src="resources/themes/ie_color/menu/open.svg" alt="Open" />
+                    <img src="public/resources/themes/ie_color/menu/open.svg" alt="Open" />
                 </button>
                 <button id="btn-save" onclick="saveProject()" title="Save" class="button">
-                    <img src="resources/themes/ie_color/menu/save.svg" alt="Save" />
+                    <img src="public/resources/themes/ie_color/menu/save.svg" alt="Save" />
                 </button>
 
                 <div class="option-separator"></div>
 
                 <button id="btn-undo" onclick="undoImage()" title="Undo" class="button">
-                    <img src="resources/themes/ie_color/menu/undo.svg" alt="Undo" />
+                    <img src="public/resources/themes/ie_color/menu/undo.svg" alt="Undo" />
                 </button>
                 <button id="btn-redo" onclick="redoImage()" title="Redo" class="button">
-                    <img src="resources/themes/ie_color/menu/redo.svg" alt="Redo" />
+                    <img src="public/resources/themes/ie_color/menu/redo.svg" alt="Redo" />
                 </button>
 
                 <div class="option-separator"></div>
 
                 <button id="btn-zoom-in" onclick="zoomIn()" title="Zoom In" class="button">
-                    <img src="resources/themes/ie_color/ui/zoomin_blue.svg" alt="Zoom In" />
+                    <img src="public/resources/themes/ie_color/ui/zoomin_blue.svg" alt="Zoom In" />
                 </button>
                 <button id="btn-zoom-out" onclick="zoomOut()" title="Zoom Out" class="button">
-                    <img src="resources/themes/ie_color/ui/zoomout_blue.svg" alt="Zoom Out" />
+                    <img src="public/resources/themes/ie_color/ui/zoomout_blue.svg" alt="Zoom Out" />
                 </button>
 
                 <div class="option-separator"></div>
@@ -432,96 +479,96 @@
                         <div id="tools-tab" class="tab-pane active">
                             <div class="div-toolbox" id="leftToolbox">
                                 <button id="btn-pen" onclick="selectTool(Tool.Pen)" title="Pen" class="button">
-                                    <img src="resources/themes/ie_color/tools/pen.svg" alt="Pen" />
+                                    <img src="public/resources/themes/ie_color/tools/pen.svg" alt="Pen" />
                                 </button>
                                 <button id="btn-brush" onclick="selectTool(Tool.Brush)" title="Brush" class="button">
-                                    <img src="resources/themes/ie_color/tools/brush.svg" alt="Brush" />
+                                    <img src="public/resources/themes/ie_color/tools/brush.svg" alt="Brush" />
                                 </button>
 
                                 <button id="btn-eraser" onclick="selectTool(Tool.Eraser)" title="Eraser" class="button">
-                                    <img src="resources/themes/ie_color/tools/gui-eraser.svg" alt="Eraser" />
+                                    <img src="public/resources/themes/ie_color/tools/gui-eraser.svg" alt="Eraser" />
                                 </button>
 
                                 <button id="btn-spray" onclick="selectTool(Tool.Spray)" title="Spray" class="button">
-                                    <img src="resources/themes/ie_color/tools/spray-color.svg" alt="Spray" />
+                                    <img src="public/resources/themes/ie_color/tools/spray-color.svg" alt="Spray" />
                                 </button>
 
                                 <button id="btn-flood-fill" onclick="selectTool(Tool.Flood_Fill)" title="Flood Fill"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/fill.svg" alt="Flood Fill" />
+                                    <img src="public/resources/themes/ie_color/tools/fill.svg" alt="Flood Fill" />
                                 </button>
                                 <button id="btn-line" onclick="selectTool(Tool.Line)" title="Line" class="button">
-                                    <img alt="Line" src="resources/themes/ie_color/tools/line.svg" />
+                                    <img alt="Line" src="public/resources/themes/ie_color/tools/line.svg" />
                                 </button>
                                 <button id="btn-rect" onclick="selectTool(Tool.Rectangle)" title="Rectangle"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/rectangle.svg" alt="Rectangle" />
+                                    <img src="public/resources/themes/ie_color/tools/rectangle.svg" alt="Rectangle" />
                                 </button>
                                 <button id="btn-circle" onclick="selectTool(Tool.Circle)" title="Circle" class="button">
-                                    <img alt="Circle" src="resources/themes/ie_color/tools/circle.svg" />
+                                    <img alt="Circle" src="public/resources/themes/ie_color/tools/circle.svg" />
                                 </button>
                                 <button id="btn-eye-dropper" onclick="selectTool(Tool.Eye_Dropper)" title="Eye Dropper"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/eyedropper.svg" alt="Eye Dropper" />
+                                    <img src="public/resources/themes/ie_color/tools/eyedropper.svg" alt="Eye Dropper" />
                                 </button>
                                 <button id="btn-text" onclick="selectTool(Tool.Text)" title="Text" class="button">
-                                    <img src="resources/themes/ie_color/tools/text.svg" alt="Text" />
+                                    <img src="public/resources/themes/ie_color/tools/text.svg" alt="Text" />
                                 </button>
                                 <button id="btn-wand" onclick="selectTool(Tool.Wand)" title="Wand" class="button">
-                                    <img src="resources/themes/ie_color/tools/wand.svg" alt="Wand" />
+                                    <img src="public/resources/themes/ie_color/tools/wand.svg" alt="Wand" />
                                 </button>
 
                                 <!-- NEW TOOLS -->
                                 <button id="btn-rounded-rect" onclick="selectTool(Tool.Rounded_Rectangle)"
                                     title="Rounded Rectangle" class="button">
-                                    <img src="resources/themes/ie_color/tools/roundrectangle.svg" alt="Rounded Rect"
+                                    <img src="public/resources/themes/ie_color/tools/roundrectangle.svg" alt="Rounded Rect"
                                         style="width: 22px;" />
                                 </button>
                                 <button id="btn-ellipse" onclick="selectTool(Tool.Ellipse)" title="Ellipse"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/ellipse.svg" alt="Ellipse" />
+                                    <img src="public/resources/themes/ie_color/tools/ellipse.svg" alt="Ellipse" />
                                 </button>
                                 <button id="btn-vector-select" onclick="selectTool(Tool.VectorSelect)"
                                     title="Vector Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/vector-select.svg" alt="Vector Select" />
+                                    <img src="public/resources/themes/ie_color/selection/vector-select.svg" alt="Vector Select" />
                                 </button>
 
                                 <!-- 4 NEW REQUESTED BUTTONS (2 Rows) -->
                                 <button id="btn-rect-select" onclick="selectTool(Tool.RectSelect)"
                                     title="Rectangle Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionrectangle.svg" alt="Rect Select" />
+                                    <img src="public/resources/themes/ie_color/selection/selectionrectangle.svg" alt="Rect Select" />
                                 </button>
                                 <button id="btn-ellipse-select" onclick="selectTool(Tool.EllipseSelect)"
                                     title="Ellipse Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionellipse.svg" alt="Ellipse Select" />
+                                    <img src="public/resources/themes/ie_color/selection/selectionellipse.svg" alt="Ellipse Select" />
                                 </button>
                                 <button id="btn-poly-select" onclick="selectTool(Tool.PolySelect)"
                                     title="Polygon Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionpolygon.svg" alt="Poly Select" />
+                                    <img src="public/resources/themes/ie_color/selection/selectionpolygon.svg" alt="Poly Select" />
                                 </button>
                                 <button id="btn-lasso" onclick="selectTool(Tool.Lasso)" title="Lasso Select"
                                     class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionlasso.svg" alt="Lasso" />
+                                    <img src="public/resources/themes/ie_color/selection/selectionlasso.svg" alt="Lasso" />
                                 </button>
                                 <button id="btn-move-selection" onclick="selectTool(Tool.MoveSelection)"
                                     title="Move Selection Area" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectiondrag.svg" alt="Move Selection" />
+                                    <img src="public/resources/themes/ie_color/selection/selectiondrag.svg" alt="Move Selection" />
                                 </button>
                                 <button id="btn-move-content" onclick="selectTool(Tool.MoveContent)"
                                     title="Move Selected Pixels" class="button">
-                                    <img src="resources/themes/ie_color/selection/movecontent.svg" alt="Move Content" />
+                                    <img src="public/resources/themes/ie_color/selection/movecontent.svg" alt="Move Content" />
                                 </button>
 
                                 <button id="btn-crop" onclick="selectTool(Tool.Crop)" title="Crop Tool" class="button">
-                                    <img src="resources/themes/ie_color/tools/crop.svg" alt="Crop" />
+                                    <img src="public/resources/themes/ie_color/tools/crop.svg" alt="Crop" />
                                 </button>
                                 <button id="btn-pan" onclick="selectTool(Tool.Pan)" title="Pan Tool" class="button">
-                                    <img src="resources/themes/ie_color/tools/pan.svg" alt="Pan" />
+                                    <img src="public/resources/themes/ie_color/tools/pan.svg" alt="Pan" />
                                 </button>
 
 
                                 <button onclick="clearCanvas()" class="button" title="Clear Canvas">
-                                    <img src="resources/themes/ie_color/menu/delete.svg" alt="Clear" />
+                                    <img src="public/resources/themes/ie_color/menu/delete.svg" alt="Clear" />
                                 </button>
                             </div>
                         </div>
@@ -590,33 +637,33 @@
                     <div class="artistic-brushes-header">Artistic & Nature</div>
                     <div class="div-toolbox">
                         <button id="btn-brush-oil" onclick="selectArtisticBrush('oil')" title="Realistic Oil Paint" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_oil.svg" alt="Oil" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_oil.svg" alt="Oil" />
                         </button>
                         <button id="btn-brush-charcoal" onclick="selectArtisticBrush('charcoal')" title="Charcoal Stick" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_charcoal.svg" alt="Charcoal" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_charcoal.svg" alt="Charcoal" />
                         </button>
                         <button id="btn-brush-watercolor" onclick="selectArtisticBrush('watercolor')" title="Watercolor Wash" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_watercolor.svg" alt="Watercolor" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_watercolor.svg" alt="Watercolor" />
                         </button>
                         <button id="btn-brush-calligraphy" onclick="selectArtisticBrush('calligraphy')" title="Calligraphy Pen" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_calligraphy.svg" alt="Calligraphy" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_calligraphy.svg" alt="Calligraphy" />
                         </button>
                         <button id="btn-brush-marker" onclick="selectArtisticBrush('marker')" title="Felt Marker" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_marker.svg" alt="Marker" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_marker.svg" alt="Marker" />
                         </button>
                         
                         <!-- NEW NATURE BRUSHES -->
                         <button id="btn-brush-leaf" onclick="selectArtisticBrush('leaf')" title="Leaf Stamp" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_leaf.svg" alt="Leaf" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_leaf.svg" alt="Leaf" />
                         </button>
                         <button id="btn-brush-rock" onclick="selectArtisticBrush('rock')" title="Rock Texture" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_rock.svg" alt="Rock" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_rock.svg" alt="Rock" />
                         </button>
                         <button id="btn-brush-meadow" onclick="selectArtisticBrush('meadow')" title="Meadow/Grass" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_meadow.svg" alt="Meadow" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_meadow.svg" alt="Meadow" />
                         </button>
                         <button id="btn-brush-wood" onclick="selectArtisticBrush('wood')" title="Wood Grain" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_wood.svg" alt="Wood" />
+                            <img src="public/resources/themes/ie_color/brushes/brush_wood.svg" alt="Wood" />
                         </button>
                     </div>
 
@@ -892,6 +939,89 @@
             </div>
         </div>
     </div>
+    <!-- Risk Acceptance Modal (Initially hidden to prevent flicker, shown by script) -->
+    <div id="riskAcceptanceModal" class="modal risk-modal" style="display: none;">
+        <div class="modal-content risk-content">
+            <div class="modal-header risk-header">
+                <h3>⚠️ Beta Usage Warning</h3>
+            </div>
+            <div class="modal-body risk-body">
+                <p>This application is currently in the <strong>Beta</strong> stage.</p>
+                <p>To prevent potential data loss, please do not use it on <strong>important files</strong> without backing them up first.</p>
+                <p>By using this application, you acknowledge and accept all associated risks.</p>
+            </div>
+            <div class="modal-footer risk-footer">
+                <button class="btn-risk-accept" id="btnRiskAccept">I Accept the Risks and Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Consent (Web Only) -->
+    <div id="cookieConsent" class="cookie-banner" style="display: none;">
+        <div class="cookie-content">
+            <p>We use cookies to improve your experience and analyze our traffic.</p>
+            <button id="btnCookieAccept" class="btn-cookie">Got it!</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Risk Modal Logic (Persistent but with cool-down)
+            var riskModal = document.getElementById('riskAcceptanceModal');
+            var riskBtn = document.getElementById('btnRiskAccept');
+            
+            if (riskModal && riskBtn) {
+                var isLocal = window.location.hostname === 'localhost' || 
+                             window.location.hostname === '127.0.0.1' || 
+                             window.location.protocol === 'file:';
+                var riskAcceptedAt = localStorage.getItem('hcie_risk_accepted_at');
+                var now = new Date().getTime();
+                
+                // Show if:
+                // 1. Not accepted yet
+                // 2. OR 24-hour cooldown expired (for dev environment)
+                // 3. OR 7-day cooldown expired (for production/others)
+                var cooldown = isLocal ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+                
+                if (!riskAcceptedAt || (now - parseInt(riskAcceptedAt)) > cooldown) {
+                    riskModal.style.display = 'flex';
+                    riskModal.classList.add('active');
+                }
+
+                riskBtn.addEventListener('click', function() {
+                    localStorage.setItem('hcie_risk_accepted_at', new Date().getTime().toString());
+                    riskModal.style.display = 'none';
+                    riskModal.classList.remove('active');
+                });
+            }
+
+            // Cookie Consent Logic (Web Only)
+            var isTauri = !!(window.__TAURI__ || window.__TAURI_INTERNALS__);
+            if (!isTauri) {
+                var cookieBanner = document.getElementById('cookieConsent');
+                var cookieAccepted = localStorage.getItem('hcie_cookies_accepted');
+                if (cookieAccepted !== 'true') {
+                    cookieBanner.style.display = 'flex';
+                }
+                var cookieBtn = document.getElementById('btnCookieAccept');
+                if (cookieBtn) {
+                    cookieBtn.addEventListener('click', function() {
+                        localStorage.setItem('hcie_cookies_accepted', 'true');
+                        cookieBanner.style.display = 'none';
+                    });
+                }
+            }
+        })();
+    </script>
+    <script>
+        // Static IIFE Fallback for file:// protocol (Execute AFTER body is parsed)
+        if (window.location.protocol === 'file:') {
+            var script = document.createElement('script');
+            script.src = 'public/main.bundle.js';
+            document.body.appendChild(script);
+            console.log("Static Fallback Script Injected at Body End");
+        }
+    </script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 # Task Status Report
-*Last updated: 2026-03-31 15:03*
+*Last updated: 2026-03-31 16:15*
 
 ## 🟢 Completed (USER confirmed)
 - **#2000-2006**: Polyrepo migration and initial setup.
@@ -9,7 +9,8 @@
 - **#1050, #1051, #1052**: Core IO, Krita, and GIMP format basics restored and verified.
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
-- None.
+- **Debug index.html**: Resolved icon 404s and script path issues for static loading. Resolved 15+ console errors. CORS for `main.ts` is a browser limitation for `file://`.
+
 
 ## 🔴 In Progress
 - **Next Phase**: Continuing with remaining Phase 9 tasks (#1003, #1005, #1053).

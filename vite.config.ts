@@ -51,6 +51,12 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
       rollupOptions: {
         input: resolve(__dirname, 'index.html'),
+        output: isWeb ? {
+            // Ensure a stable filename for static loading support
+            entryFileNames: 'assets/[name].js',
+            chunkFileNames: 'assets/[name].js',
+            assetFileNames: 'assets/[name][extname]',
+        } : {},
         external: [/^@tauri-apps\/api/],
       },
     },

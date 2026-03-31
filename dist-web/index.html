@@ -22,11 +22,42 @@
 
     <title>HCIE - Advanced Online Image Editor & Layered Design Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-CIno5SNU.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-C00ky_F9.css">
+    <script>
+        // Automatic path fixer for static file:// opening
+        (function() {
+            if (window.location.protocol === 'file:') {
+                var fixPath = function(tag, attr) {
+                    var elements = document.getElementsByTagName(tag);
+                    for (var i = 0; i < elements.length; i++) {
+                        var val = elements[i].getAttribute(attr);
+                        if (val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('public/')) {
+                           if (val === 'ag-psd.js' || val.startsWith('resources/')) {
+                               elements[i].setAttribute(attr, './public/' + val);
+                           }
+                        }
+                    }
+                };
+                // Run immediately for any elements already parsed
+                fixPath('img', 'src');
+                fixPath('script', 'src');
+                fixPath('link', 'href');
+
+                // Also run on DOMContentLoaded for anything missed
+                window.addEventListener('DOMContentLoaded', function() {
+                    fixPath('img', 'src');
+                    fixPath('script', 'src');
+                    fixPath('link', 'href');
+                });
+            }
+        })();
+    </script>
+  <script type="module" crossorigin src="./assets/index-OLWM5Zaa.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BJsCiji9.css">
 </head>
 
 <body>
+
+
     <!-- External Libraries -->
     <!-- External Libraries -->
     <!-- UMD Fix for psd.js in Electron -->
@@ -65,7 +96,7 @@
     </script>
 
     <!-- ag-psd for PSD Writing Support (Local) -->
-    <script src="./ag-psd.js"></script>
+    <script src="public/ag-psd.js"></script>
 
 
     <div id="appContainer" style="display: flex; flex-direction: column; width: 100%; height: 100vh; overflow: hidden;">
@@ -77,14 +108,14 @@
                     <div class="menu-dropdown">
                         <div class="menu-option" onclick="newCanvas()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/new.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-6%20-4%2032%2032'%20version='1.1'%20id='svg4'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='New'%3e%3cg%20id='g1'%3e%3cpath%20d='M19,%204L7,%204C6.4,%204%206,%204.4%206,%205L6,%2027C6,%2027.6%206.4,%2028%207,%2028L25,%2028C25.6,%2028%2026,%2027.6%2026,%2027L26,%2011L19,%204zM24,%2026L8,%2026L8,%206L18,%206L18,%2011C18,%2011.6%2018.4,%2012%2019,%2012L24,%2012L24,%2026z'%20class='Black'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g4'%20transform='translate(-6,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='g3'%3e%3cg%20id='g2'%3e%3cpolygon%20style='stroke:%20rgb(0,%200,%200);%20fill:%20rgb(203,%20203,%20203);'%20points='7.528%205.026%2018.598%204.899%2025.002%2011.048%2024.96%2027.08%207.231%2027.123'/%3e%3cpath%20d='M19,%204L7,%204C6.4,%204%206,%204.4%206,%205L6,%2027C6,%2027.6%206.4,%2028%207,%2028L25,%2028C25.6,%2028%2026,%2027.6%2026,%2027L26,%2011L19,%204zM24,%2026L8,%2026L8,%206L18,%206L18,%2011C18,%2011.6%2018.4,%2012%2019,%2012L24,%2012L24,%2026z'%20class='Black'%20id='path2'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>New</span>
                             </div>
                             <span class="shortcut">Ctrl+N</span>
                         </div>
                         <div class="menu-option" onclick="openImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/open.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='FolderOpen'%3e%3cg%20class='st0'%3e%3cpath%20d='M2.2,%2025.2L7.7,%2015.2C8,%2014.5%208.7,%2014%209.5,%2014L24,%2014L24,%2011C24,%2010.4%2023.6,%2010%2023,%2010L12,%2010L12,%207C12,%206.4%2011.6,%206%2011,%206L3,%206C2.4,%206%202,%206.5%202,%207L2,%2025C2,%2025.2%202,%2025.3%202.1,%2025.4C2.1,%2025.4%202.2,%2025.3%202.2,%2025.2z'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-2.00000011920929,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='FolderOpen'%3e%3cpath%20d='M29.3,%2016L9.6,%2016L4,%2026L23.8,%2026C24.3,%2026%2024.9,%2025.8%2025.1,%2025.4L30,%2016.5C30.1,%2016.2%2029.8,%2016%2029.3,%2016z'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Open</span>
                             </div>
                             <span class="shortcut">Ctrl+O</span>
@@ -92,21 +123,21 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="saveProject()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/save.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20version='1.1'%20id='svg13'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='5.571'%20width='17.05'%20height='8.624'%20style='fill:%20rgb(227,%20227,%20227);'/%3e%3crect%20x='4.51'%20y='12.823'%20width='19.043'%20height='11.833'%20style='fill:%20rgb(226,%20218,%2014);'/%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g1'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='8'%20y='1'%20width='3'%20height='3'%20rx='0'%20ry='0'%20id='rect1'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g5'%20transform='translate(-2,%20-2)'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g4'%3e%3cg%20id='g3'%3e%3cg%20id='g2'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g9'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g8'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g7'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g6'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path5'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g11'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g10'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='9'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect9'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g13'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g12'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='11'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect11'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Save</span>
                             </div>
                             <span class="shortcut">Ctrl+S</span>
                         </div>
                         <div class="menu-option" onclick="saveAsProject()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/save.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20version='1.1'%20id='svg13'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='5.571'%20width='17.05'%20height='8.624'%20style='fill:%20rgb(227,%20227,%20227);'/%3e%3crect%20x='4.51'%20y='12.823'%20width='19.043'%20height='11.833'%20style='fill:%20rgb(226,%20218,%2014);'/%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g1'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='8'%20y='1'%20width='3'%20height='3'%20rx='0'%20ry='0'%20id='rect1'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g5'%20transform='translate(-2,%20-2)'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g4'%3e%3cg%20id='g3'%3e%3cg%20id='g2'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g9'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g8'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g7'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g6'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path5'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g11'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g10'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='9'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect9'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g13'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g12'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='11'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect11'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Save As...</span>
                             </div>
                             <span class="shortcut">Ctrl+Shift+S</span>
                         </div>
                         <div class="menu-option" onclick="handleExportFile()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/file-download-svgrepo-com.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-8)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Cloudy_1_'%3e%3cpath%20d='M27,%2018C26.6,%2018%2026.2,%2018.1%2025.8,%2018.2C25.9,%2017.8%2026,%2017.4%2026,%2017C26,%2014.2%2023.8,%2012%2021,%2012C20.5,%2012%2019.9,%2012.1%2019.4,%2012.3C18.4,%209.8%2015.9,%208%2013,%208C9.1,%208%206,%2011.1%206,%2015C6,%2015.3%206,%2015.7%206.1,%2016C6.1,%2016%206,%2016%206,%2016C3.8,%2016%202,%2017.8%202,%2020C2,%2022.2%203.8,%2024%206,%2024L27,%2024C28.7,%2024%2030,%2022.7%2030,%2021C30,%2019.3%2028.7,%2018%2027,%2018z'%20fill='%23039C23'%20class='Green'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(6,%208)'%20style='enable-background:new%200%200%2016%2016'%3e%3cg%20id='Arrow1Down'%3e%3cpolygon%20points='6,0%2010,0%2010,8%2016,8%208,16%200,8%206,8%20'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Export</span>
                             </div>
                             <span class="shortcut">Ctrl+E</span>
@@ -114,7 +145,7 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="exitApp()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/exit.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-3.0775%20-2%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4.3083,%20-2.1539)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(1.0769,%200,%200,%201.0769,%200,%200)'%3e%3cpath%20d='M20,%204.7L20,%209.1C22.4,%2010.5%2024,%2013.1%2024,%2016C24,%2020.4%2020.4,%2024%2016,%2024C11.6,%2024%208,%2020.4%208,%2016C8,%2013%209.6,%2010.5%2012,%209.1L12,%204.7C7.3,%206.3%204,%2010.8%204,%2016C4,%2022.6%209.4,%2028%2016,%2028C22.6,%2028%2028,%2022.6%2028,%2016C28,%2010.8%2024.7,%206.3%2020,%204.7z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-4.3083,%20-2.1539)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(1.0769,%200,%200,%201.0769,%200,%200)'%3e%3cpath%20d='M17,%2014L15,%2014C14.4,%2014%2014,%2013.6%2014,%2013L14,%203C14,%202.4%2014.4,%202%2015,%202L17,%202C17.6,%202%2018,%202.4%2018,%203L18,%2013C18,%2013.6%2017.6,%2014%2017,%2014z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Exit</span>
                             </div>
                             <span class="shortcut">Alt+F4</span>
@@ -126,21 +157,21 @@
                     <div class="menu-dropdown">
                         <div class="menu-option" onclick="cutSelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/cut.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-4%20-4%2032%2032'%20version='1.1'%20id='svg4'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Cut'%3e%3cpath%20d='M9,%2018C6.2,%2018%204,%2020.2%204,%2023C4,%2025.8%206.2,%2028%209,%2028C11.8,%2028%2014,%2025.8%2014,%2023C14,%2020.2%2011.8,%2018%209,%2018zM9,%2026C7.3,%2026%206,%2024.7%206,%2023C6,%2021.3%207.3,%2020%209,%2020C10.7,%2020%2012,%2021.3%2012,%2023C12,%2024.7%2010.7,%2026%209,%2026z'%20class='Black'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g2'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='g1'%3e%3cpolygon%20points='20.7,14.8%2026,4%2017.4,11.6%20'%20class='Black'%20id='polygon1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g4'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='g3'%3e%3cpath%20d='M23,%2018C22.4,%2018%2021.8,%2018.1%2021.3,%2018.3L6,%204L13,%2018L16,%2018L18.6,%2020.6C18.2,%2021.3%2018,%2022.1%2018,%2023C18,%2025.8%2020.2,%2028%2023,%2028C25.8,%2028%2028,%2025.8%2028,%2023C28,%2020.2%2025.8,%2018%2023,%2018zM23,%2026C21.3,%2026%2020,%2024.7%2020,%2023C20,%2021.3%2021.3,%2020%2023,%2020C24.7,%2020%2026,%2021.3%2026,%2023C26,%2024.7%2024.7,%2026%2023,%2026z'%20class='Black'%20id='path2'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Cut</span>
                             </div>
                             <span class="shortcut">Ctrl+X</span>
                         </div>
                         <div class="menu-option" onclick="copySelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/copy.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-4%20-2%2032%2032'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpolygon%20style='stroke:%20rgb(0,%200,%200);%20fill:%20rgb(152,%20152,%20152);'%20points='16.844%201.34%207.174%201.34%207.174%2021.401%2022.869%2021.401%2022.869%207.509'/%3e%3cpolygon%20style='stroke:%20rgb(0,%200,%200);%20fill:%20rgb(203,%20203,%20203);'%20points='10.738%206.97%201.068%206.97%201.068%2027.031%2016.763%2027.031%2016.763%2013.139'/%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-2)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Copy'%3e%3cpath%20d='M21,%202L11,%202C10.5,%202%2010,%202.5%2010,%203L10,%208L5,%208C4.5,%208%204,%208.5%204,%209L4,%2029C4,%2029.5%204.5,%2030%205,%2030L21,%2030C21.5,%2030%2022,%2029.5%2022,%2029L22,%2024L27,%2024C27.5,%2024%2028,%2023.5%2028,%2023L28,%209L21,%202zM20,%2028L6,%2028L6,%2010L14,%2010L14,%2015C14,%2015.5%2014.5,%2016%2015,%2016L20,%2016L20,%2028zM26,%2022L22,%2022L22,%2015L15,%208L12,%208L12,%204L20,%204L20,%209C20,%209.5%2020.5,%2010%2021,%2010L26,%2010L26,%2022z'%20class='Black'%20id='path1'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Copy</span>
                             </div>
                             <span class="shortcut">Ctrl+C</span>
                         </div>
                         <div class="menu-option" onclick="pasteSelection()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/paste.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(0,%200)'%20id='g2'%20style='fill:%23FFFFFF;fill-opacity:1'%3e%3cg%20transform='matrix(0.0546874962747097,%200,%200,%200.0546874962747097,%200,%200)'%20id='g1'%20style='fill:%23FFFFFF;fill-opacity:1'%3e%3cpath%20d='M104.6,%2048L64,%2048C28.7,%2048%200,%2076.7%200,%20112L0,%20384C0,%20419.3%2028.7,%20448%2064,%20448L160,%20448L160,%20400L64,%20400C55.2,%20400%2048,%20392.8%2048,%20384L48,%20112C48,%20103.2%2055.2,%2096%2064,%2096L80,%2096C80,%20113.7%2094.3,%20128%20112,%20128L184.4,%20128C202,%20108.4%20227.6,%2096%20256,%2096L318,%2096C310.9,%2068.4%20285.8,%2048%20256,%2048L215.4,%2048C211.6,%2020.9%20188.2,%200%20160,%200C131.8,%200%20108.4,%2020.9%20104.6,%2048zM144,%2056A16%2016%200%201%201%20176,%2056A16%2016%200%201%201%20144,%2056zM448,%20464L256,%20464C247.2,%20464%20240,%20456.8%20240,%20448L240,%20192C240,%20183.2%20247.2,%20176%20256,%20176L396.1,%20176L464,%20243.9L464,%20448C464,%20456.8%20456.8,%20464%20448,%20464zM256,%20512L448,%20512C483.3,%20512%20512,%20483.3%20512,%20448L512,%20243.9C512,%20231.2%20506.9,%20219%20497.9,%20210L430,%20142.1C421,%20133.1%20408.8,%20128%20396.1,%20128L256,%20128C220.7,%20128%20192,%20156.7%20192,%20192L192,%20448C192,%20483.3%20220.7,%20512%20256,%20512z'%20id='path1'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Paste</span>
                             </div>
                             <span class="shortcut">Ctrl+V</span>
@@ -148,14 +179,14 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="undoImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/undo.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-6.375%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Undo'%20transform='translate(0,%20-3.5)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.875,%200,%200,%200.875,%200,%200)'%3e%3cpath%20d='M32,%2026C32,%2026%2032,%2018%2016,%2018L16,%2024L0,%2014L16,%204L16,%2010C32,%2010%2032,%2026%2032,%2026z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Undo</span>
                             </div>
                             <span class="shortcut">Ctrl+Z</span>
                         </div>
                         <div class="menu-option" onclick="redoImage()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/redo.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-4%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Redo'%3e%3cpath%20d='M28,%2016L18,%206L18,%209.6L18,%2012C10.3,%2012%204,%2018.3%204,%2026C4,%2022.7%2010.3,%2020%2018,%2020L18,%2026L28,%2016z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Redo</span>
                             </div>
                             <span class="shortcut">Ctrl+Y</span>
@@ -163,7 +194,7 @@
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="clearCanvas()">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/menu/delete.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-6%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Delete'%3e%3cg%3e%3cpath%20d='M18.8,%2016L25.7,%209.1C26.1,%208.7%2026.1,%208.1%2025.7,%207.7L24.3,%206.3C23.9,%205.9%2023.3,%205.9%2022.9,%206.3L16,%2013.2L9.1,%206.3C8.7,%205.9%208.1,%205.9%207.7,%206.3L6.3,%207.7C5.9,%208.1%205.9,%208.7%206.3,%209.1L13.2,%2016L6.3,%2022.9C5.9,%2023.3%205.9,%2023.9%206.3,%2024.3L7.7,%2025.7C8.1,%2026.1%208.7,%2026.1%209.1,%2025.7L16,%2018.8L22.9,%2025.7C23.3,%2026.1%2023.9,%2026.1%2024.3,%2025.7L25.7,%2024.3C26.1,%2023.9%2026.1,%2023.3%2025.7,%2022.9L18.8,%2016z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Delete'%3e%3cg%3e%3cpath%20d='M18.8,%2016L25.7,%209.1C26.1,%208.7%2026.1,%208.1%2025.7,%207.7L24.3,%206.3C23.9,%205.9%2023.3,%205.9%2022.9,%206.3L16,%2013.2L9.1,%206.3C8.7,%205.9%208.1,%205.9%207.7,%206.3L6.3,%207.7C5.9,%208.1%205.9,%208.7%206.3,%209.1L13.2,%2016L6.3,%2022.9C5.9,%2023.3%205.9,%2023.9%206.3,%2024.3L7.7,%2025.7C8.1,%2026.1%208.7,%2026.1%209.1,%2025.7L16,%2018.8L22.9,%2025.7C23.3,%2026.1%2023.9,%2026.1%2024.3,%2025.7L25.7,%2024.3C26.1,%2023.9%2026.1,%2023.3%2025.7,%2022.9L18.8,%2016z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Clear All</span>
                             </div>
                             <span class="shortcut">Delete</span>
@@ -175,58 +206,58 @@
                     <div class="menu-dropdown">
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/flip-horizontal-3.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-2.9334%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-1.83105477447043E-08,%20-1.86666733665466)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cpath%20d='M16,%206L14,%206L14,%202L16,%202L16,%206zM16,%208L14,%208L14,%2012L16,%2012L16,%208zM16,%2014L14,%2014L14,%2018L16,%2018L16,%2014zM16,%2020L14,%2020L14,%2024L16,%2024L16,%2020zM16,%2026L14,%2026L14,%2030L16,%2030L16,%2026z'%20fill='%23727272'%20class='Black'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(0,%20-1.86666736602783)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cg%20class='st0'%3e%3cpolygon%20points='10,6%2010,26%200,16%20'%20fill='%23727272'%20opacity='0.5'%20class='Black'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(3.63159180949424E-07,%20-1.86666736602783)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cpolygon%20points='20,6%2020,26%2030,16%20'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Flip Horizontal</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/flip-vertical-3.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2.9334%20-2%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-1.86666733665466,%20-1.83105477447043E-08)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cpath%20d='M14,%2014L18,%2014L18,%2016L14,%2016L14,%2014zM8,%2016L12,%2016L12,%2014L8,%2014L8,%2016zM2,%2016L6,%2016L6,%2014L2,%2014L2,%2016zM20,%2016L24,%2016L24,%2014L20,%2014L20,%2016zM26,%2014L26,%2016L30,%2016L30,%2014L26,%2014z'%20fill='%23727272'%20class='Black'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-1.86666736602783,%200)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cg%20class='st0'%3e%3cpolygon%20points='16,0%206,10%2026,10%20'%20fill='%23727272'%20opacity='0.5'%20class='Black'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-1.86666736602783,%203.63159180949424E-07)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.933333694934845,%200,%200,%200.933333694934845,%200,%200)'%3e%3cpolygon%20points='6,20%2016,30%2026,20%20'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Flip Vertical</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option" onclick="applyFilter('negative')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/invert-colors.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'%20standalone='no'?%3e%3csvg%20height='32'%20viewBox='0%200%2032%2032'%20width='32'%20version='1.1'%20id='svg2'%20sodipodi:docname='invert-colors.svg'%20inkscape:version='1.4%20(86a8ad7,%202024-10-11)'%20xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape'%20xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:svg='http://www.w3.org/2000/svg'%3e%3cdefs%20id='defs2'%20/%3e%3csodipodi:namedview%20id='namedview2'%20pagecolor='%23000000'%20bordercolor='%23FFFFFF'%20borderopacity='0.24705882'%20inkscape:showpageshadow='true'%20inkscape:pageopacity='0.0'%20inkscape:pagecheckerboard='false'%20inkscape:deskcolor='%23d1d1d1'%20showgrid='true'%20inkscape:zoom='15.291667'%20inkscape:cx='16.446866'%20inkscape:cy='13.144414'%20inkscape:window-width='1920'%20inkscape:window-height='996'%20inkscape:window-x='-9'%20inkscape:window-y='-9'%20inkscape:window-maximized='1'%20inkscape:current-layer='svg2'%20showborder='true'%20inkscape:antialias-rendering='true'%3e%3cinkscape:grid%20id='grid2'%20units='px'%20originx='0'%20originy='0'%20spacingx='1'%20spacingy='1'%20empcolor='%230099e5'%20empopacity='0.30196078'%20color='%230099e5'%20opacity='0.14901961'%20empspacing='5'%20enabled='true'%20visible='true'%20/%3e%3c/sodipodi:namedview%3e%3cpath%20d='M%2023.546667,10.573333%2016,3.0266667%208.4533333,10.573333%20c%20-4.16,4.16%20-4.16,10.92%200,15.08%202.0799997,2.08%204.8133337,3.12%207.5466667,3.12%202.733333,0%205.466667,-1.04%207.546667,-3.12%204.16,-4.16%204.16,-10.92%200,-15.08%20z%20M%2016,26.12%20c%20-2.133333,0%20-4.146667,-0.826667%20-5.653333,-2.346667%20C%208.8266667,22.253333%208,20.253333%208,18.12%208,15.986667%208.8266667,13.973333%2010.346667,12.466667%20L%2016,6.8%20Z'%20id='path2'%20style='stroke-width:1.33333;fill:%23ffffff;fill-opacity:1'%20/%3e%3c/svg%3e" class="menu-icon">
                                 <span>Negative / Invert</span>
                             </div>
                         </div>
                         <div class="menu-option" onclick="applyFilter('grayscale')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/BarChart.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='BarChart'%3e%3crect%20x='2'%20y='16'%20width='8'%20height='12'%20rx='0'%20ry='0'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='BarChart'%3e%3crect%20x='12'%20y='10'%20width='8'%20height='18'%20rx='0'%20ry='0'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='BarChart'%3e%3crect%20x='22'%20y='4'%20width='8'%20height='24'%20rx='0'%20ry='0'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Grayscale</span>
                             </div>
                         </div>
                         <div class="menu-option" onclick="applyFilter('sepia')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/RatingYellow.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-3.4%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-3.4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Rating_1_'%3e%3cpolygon%20points='16,4%2019.9,11.9%2028.6,13.2%2022.3,19.3%2023.8,28%2016,23.9%208.2,28%209.7,19.3%203.4,13.2%2012.1,11.9%20'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Sepia</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/Reload.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-4%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Reload_1_'%3e%3cpath%20d='M16,%204C19.3,%204%2022.3,%205.3%2024.5,%207.5L28,%204L28,%2014L27.8,%2014L23.7,%2014L18,%2014L21.6,%2010.4C20.2,%208.9%2018.2,%208%2016,%208C11.6,%208%208,%2011.6%208,%2016C8,%2020.4%2011.6,%2024%2016,%2024C19.7,%2024%2022.8,%2021.4%2023.7,%2018L27.8,%2018C26.8,%2023.7%2021.9,%2028%2016,%2028C9.4,%2028%204,%2022.6%204,%2016C4,%209.4%209.4,%204%2016,%204z'%20fill='%23039C23'%20class='Green'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Rotate</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/crop.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2.0025%20-2.0025%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-0.0021,%20-0.0021)'%3e%3cg%20transform='matrix(0.0546875037252903,%200,%200,%200.0546875037252903,%200,%200)'%3e%3cpath%20d='M128,%2032C128,%2014.3%20113.7,%200%2096,%200C78.3,%200%2064,%2014.3%2064,%2032L64,%2064L32,%2064C14.3,%2064%200,%2078.3%200,%2096C0,%20113.7%2014.3,%20128%2032,%20128L64,%20128L64,%20384C64,%20419.3%2092.7,%20448%20128,%20448L352,%20448L352,%20384L128,%20384L128,%2032zM384,%20480C384,%20497.7%20398.3,%20512%20416,%20512C433.7,%20512%20448,%20497.7%20448,%20480L448,%20448L480,%20448C497.7,%20448%20512,%20433.7%20512,%20416C512,%20398.3%20497.7,%20384%20480,%20384L448,%20384L448,%20128C448,%2092.7%20419.3,%2064%20384,%2064L160,%2064L160,%20128L384,%20128L384,%20480z'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Crop</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/icon_scale.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-2)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Scale'%3e%3cpath%20d='M29,%202L3,%202C2.5,%202%202,%202.5%202,%203L2,%2029C2,%2029.5%202.5,%2030%203,%2030L29,%2030C29.5,%2030%2030,%2029.5%2030,%2029L30,%203C30,%202.5%2029.5,%202%2029,%202zM28,%2028L4,%2028L4,%204L28,%204L28,%2028zM18,%2018L6,%2018L6,%206L18,%206L18,%2018zM26,%2018L26,%2026L18,%2026L21,%2023L18,%2020L20,%2018L23,%2021L26,%2018z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Resize Image</span>
                             </div>
                         </div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/rectangle.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-5.4009%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-1.5048977350235,%20-4.9878532699585)'%20id='g2'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3cg%20transform='matrix(0.0623481683433056,%200,%200,%200.0623481683433056,%200,%200)'%20id='g1'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3crect%20x='44.137'%20y='100'%20width='409.091'%20height='300'%20rx='0'%20ry='0'%20id='rect1'%20style='stroke:%20rgb(17,%20119,%20215);%20stroke-width:%2048.1169px;%20paint-order:%20fill;%20fill:%20rgb(211,%20224,%20255);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Resize Canvas</span>
                             </div>
                         </div>
@@ -250,14 +281,14 @@
                         <div class="menu-option"><span>Soften</span></div>
                         <div class="menu-option" onclick="applyFilter('blur')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/blur.svg" class="menu-icon">
+                                <img src="./assets/blur-KJE5Nbdz.svg" class="menu-icon">
                                 <span>Blur</span>
                             </div>
                         </div>
                         <div class="menu-option"><span>Sharpen</span></div>
                         <div class="menu-option">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/theme_palette.svg" class="menu-icon">
+                                <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(0,%200)'%3e%3cg%20transform='matrix(0.875,%200,%200,%200.875,%200,%200)'%3e%3cg%20transform='translate(0,%200)'%3e%3cg%20transform='matrix(1.1429,%200,%200,%201.1429,%200,%200)'%3e%3cg%20id='Layer_1'%20transform='translate(-1.8666,%20-1.8666)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.9333,%200,%200,%200.9333,%200,%200)'%3e%3cg%20id='MoreColors'%3e%3cpath%20d='M32,%2015.2C31.5,%207.8%2025,%202%2017,%202C8.7,%202%202,%208.3%202,%2016C2,%2024.8%208.7,%2032%2017,%2032C18.7,%2032%2020,%2030.7%2020,%2029C20,%2027.9%2019.4,%2027%2018.6,%2026.4C18.2,%2026.2%2018,%2025.8%2018,%2025.3C18,%2024.6%2018.6,%2024%2019.3,%2024L19.3,%2024L24,%2024C28.4,%2024%2032,%2020.4%2032,%2016C32,%2015.7%2032,%2015.4%2032,%2015.2zM8,%2016C6.9,%2016%206,%2015.1%206,%2014C6,%2012.9%206.9,%2012%208,%2012C9.1,%2012%2010,%2012.9%2010,%2014C10,%2015.1%209.1,%2016%208,%2016zM15,%2012C13.3,%2012%2012,%2010.7%2012,%209C12,%207.3%2013.3,%206%2015,%206C16.7,%206%2018,%207.3%2018,%209C18,%2010.7%2016.7,%2012%2015,%2012zM24,%2018C21.8,%2018%2020,%2016.2%2020,%2014C20,%2011.8%2021.8,%2010%2024,%2010C26.2,%2010%2028,%2011.8%2028,%2014C28,%2016.2%2026.2,%2018%2024,%2018z'%20class='Black'%20style='fill:%20rgb(167,%20163,%20205);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" class="menu-icon">
                                 <span>Emboss</span>
                             </div>
                         </div>
@@ -266,7 +297,7 @@
                         <div class="menu-option"><span>Add Noise</span></div>
                         <div class="menu-option" onclick="applyFilter('mosaic')">
                             <div class="menu-option-content">
-                                <img src="resources/themes/ie_color/ui/pixelate.svg" class="menu-icon">
+                                <img src="./assets/pixelate-DmzfpzmJ.svg" class="menu-icon">
                                 <span>Mosaic</span>
                             </div>
                         </div>
@@ -324,7 +355,7 @@
                 <!-- Dedicated empty drag region spacer -->
                 <div class="app-title-drag" data-tauri-drag-region style="flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; cursor: default;">
                     <span style="font-size: 13px; font-weight: 500; color: var(--text-secondary); pointer-events: none; user-select: none; -webkit-user-select: none;">
-                        HC Image Editor
+                        HC Image Editor v4.0.0 Beta - Beta program, do not use on important files
                     </span>
                 </div>
 
@@ -347,31 +378,31 @@
             <div class="options-bar">
                 <!-- Action Icons (Moved from toolbar) -->
                 <button id="btn-new" onclick="newCanvas()" title="New" class="button">
-                    <img src="resources/themes/ie_color/menu/new.svg" alt="New" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-6%20-4%2032%2032'%20version='1.1'%20id='svg4'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='New'%3e%3cg%20id='g1'%3e%3cpath%20d='M19,%204L7,%204C6.4,%204%206,%204.4%206,%205L6,%2027C6,%2027.6%206.4,%2028%207,%2028L25,%2028C25.6,%2028%2026,%2027.6%2026,%2027L26,%2011L19,%204zM24,%2026L8,%2026L8,%206L18,%206L18,%2011C18,%2011.6%2018.4,%2012%2019,%2012L24,%2012L24,%2026z'%20class='Black'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g4'%20transform='translate(-6,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='g3'%3e%3cg%20id='g2'%3e%3cpolygon%20style='stroke:%20rgb(0,%200,%200);%20fill:%20rgb(203,%20203,%20203);'%20points='7.528%205.026%2018.598%204.899%2025.002%2011.048%2024.96%2027.08%207.231%2027.123'/%3e%3cpath%20d='M19,%204L7,%204C6.4,%204%206,%204.4%206,%205L6,%2027C6,%2027.6%206.4,%2028%207,%2028L25,%2028C25.6,%2028%2026,%2027.6%2026,%2027L26,%2011L19,%204zM24,%2026L8,%2026L8,%206L18,%206L18,%2011C18,%2011.6%2018.4,%2012%2019,%2012L24,%2012L24,%2026z'%20class='Black'%20id='path2'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="New" />
                 </button>
                 <button id="btn-open" onclick="openImage()" title="Open" class="button">
-                    <img src="resources/themes/ie_color/menu/open.svg" alt="Open" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='FolderOpen'%3e%3cg%20class='st0'%3e%3cpath%20d='M2.2,%2025.2L7.7,%2015.2C8,%2014.5%208.7,%2014%209.5,%2014L24,%2014L24,%2011C24,%2010.4%2023.6,%2010%2023,%2010L12,%2010L12,%207C12,%206.4%2011.6,%206%2011,%206L3,%206C2.4,%206%202,%206.5%202,%207L2,%2025C2,%2025.2%202,%2025.3%202.1,%2025.4C2.1,%2025.4%202.2,%2025.3%202.2,%2025.2z'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-2.00000011920929,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='FolderOpen'%3e%3cpath%20d='M29.3,%2016L9.6,%2016L4,%2026L23.8,%2026C24.3,%2026%2024.9,%2025.8%2025.1,%2025.4L30,%2016.5C30.1,%2016.2%2029.8,%2016%2029.3,%2016z'%20fill='%23FFB115'%20class='Yellow'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Open" />
                 </button>
                 <button id="btn-save" onclick="saveProject()" title="Save" class="button">
-                    <img src="resources/themes/ie_color/menu/save.svg" alt="Save" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20version='1.1'%20id='svg13'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='5.571'%20width='17.05'%20height='8.624'%20style='fill:%20rgb(227,%20227,%20227);'/%3e%3crect%20x='4.51'%20y='12.823'%20width='19.043'%20height='11.833'%20style='fill:%20rgb(226,%20218,%2014);'/%3e%3cg%20id='Layer_1'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g1'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='8'%20y='1'%20width='3'%20height='3'%20rx='0'%20ry='0'%20id='rect1'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g5'%20transform='translate(-2,%20-2)'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g4'%3e%3cg%20id='g3'%3e%3cg%20id='g2'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path1'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g9'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g8'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g7'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20id='g6'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cpath%20d='M13,%201L12,%201L12,%205L4,%205L4,%201L1,%201L1,%2015L15,%2015L15,%203L13,%201zM12,%2013L4,%2013L4,%208L12,%208L12,%2013z'%20id='path5'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g11'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g10'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='9'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect9'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3cg%20id='g13'%20transform='translate(-2,%20-2)'%20style='fill:%23ffffff;fill-opacity:1'%3e%3cg%20transform='matrix(2,%200,%200,%202,%200,%200)'%20id='g12'%20style='fill:%23ffffff;fill-opacity:1'%3e%3crect%20x='5'%20y='11'%20width='6'%20height='1'%20rx='0'%20ry='0'%20id='rect11'%20style='fill-opacity:%201;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Save" />
                 </button>
 
                 <div class="option-separator"></div>
 
                 <button id="btn-undo" onclick="undoImage()" title="Undo" class="button">
-                    <img src="resources/themes/ie_color/menu/undo.svg" alt="Undo" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-2%20-6.375%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Undo'%20transform='translate(0,%20-3.5)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.875,%200,%200,%200.875,%200,%200)'%3e%3cpath%20d='M32,%2026C32,%2026%2032,%2018%2016,%2018L16,%2024L0,%2014L16,%204L16,%2010C32,%2010%2032,%2026%2032,%2026z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Undo" />
                 </button>
                 <button id="btn-redo" onclick="redoImage()" title="Redo" class="button">
-                    <img src="resources/themes/ie_color/menu/redo.svg" alt="Redo" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-4%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Redo'%3e%3cpath%20d='M28,%2016L18,%206L18,%209.6L18,%2012C10.3,%2012%204,%2018.3%204,%2026C4,%2022.7%2010.3,%2020%2018,%2020L18,%2026L28,%2016z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Redo" />
                 </button>
 
                 <div class="option-separator"></div>
 
                 <button id="btn-zoom-in" onclick="zoomIn()" title="Zoom In" class="button">
-                    <img src="resources/themes/ie_color/ui/zoomin_blue.svg" alt="Zoom In" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-4%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Zoom'%3e%3cpath%20d='M27.7,%2025.3L20.5,%2018C21.5,%2016.6%2022,%2014.8%2022,%2013C22,%208%2018,%204%2013,%204C8,%204%204,%208%204,%2013C4,%2018%208,%2022%2013,%2022C14.9,%2022%2016.6,%2021.4%2018,%2020.5L25.3,%2027.8C25.6,%2028.1%2026.2,%2028.1%2026.5,%2027.8L27.7,%2026.6C28.1,%2026.2%2028.1,%2025.6%2027.7,%2025.3zM6,%2013C6,%209.1%209.1,%206%2013,%206C16.9,%206%2020,%209.1%2020,%2013C20,%2016.9%2016.9,%2020%2013,%2020C9.1,%2020%206,%2016.9%206,%2013z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(2.38418579101563E-07,%202.38418579101563E-07)'%20style='enable-background:new%200%200%2016%2016'%3e%3cg%20id='AddCircled'%3e%3ccircle%20cx='9'%20cy='9'%20r='7'%20fill='Transparent'%20class='Transparent'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(0,%200)'%20style='enable-background:new%200%200%2016%2016'%3e%3cg%20id='AddCircled'%3e%3cpolygon%20points='14,8%2010,8%2010,4%208,4%208,8%204,8%204,10%208,10%208,14%2010,14%2010,10%2014,10%20'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Zoom In" />
                 </button>
                 <button id="btn-zoom-out" onclick="zoomOut()" title="Zoom Out" class="button">
-                    <img src="resources/themes/ie_color/ui/zoomout_blue.svg" alt="Zoom Out" />
+                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-4%20-4%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-4,%20-4)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Zoom'%3e%3cpath%20d='M27.7,%2025.3L20.5,%2018C21.5,%2016.6%2022,%2014.8%2022,%2013C22,%208%2018,%204%2013,%204C8,%204%204,%208%204,%2013C4,%2018%208,%2022%2013,%2022C14.9,%2022%2016.6,%2021.4%2018,%2020.5L25.3,%2027.8C25.6,%2028.1%2026.2,%2028.1%2026.5,%2027.8L27.7,%2026.6C28.1,%2026.2%2028.1,%2025.6%2027.7,%2025.3zM6,%2013C6,%209.1%209.1,%206%2013,%206C16.9,%206%2020,%209.1%2020,%2013C20,%2016.9%2016.9,%2020%2013,%2020C9.1,%2020%206,%2016.9%206,%2013z'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(2.38418579101563E-07,%202.38418579101563E-07)'%20style='enable-background:new%200%200%2016%2016'%3e%3cg%20id='RemoveCircled'%3e%3ccircle%20cx='9'%20cy='9'%20r='7'%20fill='Transparent'%20class='Transparent'%20/%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(0,%200)'%20style='enable-background:new%200%200%2016%2016'%3e%3cg%20id='RemoveCircled'%3e%3crect%20x='4'%20y='8'%20width='10'%20height='2'%20fill='%231177D7'%20class='Blue'%20/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Zoom Out" />
                 </button>
 
                 <div class="option-separator"></div>
@@ -433,96 +464,96 @@
                         <div id="tools-tab" class="tab-pane active">
                             <div class="div-toolbox" id="leftToolbox">
                                 <button id="btn-pen" onclick="selectTool(Tool.Pen)" title="Pen" class="button">
-                                    <img src="resources/themes/ie_color/tools/pen.svg" alt="Pen" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='100%25'%20height='100%25'%20viewBox='0%200%2033%2032'%20version='1.1'%20style='fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;'%20xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3clinearGradient%20gradientUnits='userSpaceOnUse'%20x1='13.347'%20y1='7.386'%20x2='13.347'%20y2='30'%20id='gradient-1'%20spreadMethod='pad'%3e%3cstop%20offset='0'%20style='stop-color:%20%23bada55'/%3e%3cstop%20offset='1'%20style='stop-color:%20%23758d29'/%3e%3c/linearGradient%3e%3c/defs%3e%3cg%20id='g2'%3e%3cg%20id='g1'%3e%3cg%20id='Layer_1'%3e%3cg%20id='Edit'%3e%3cpath%20id='path1'%20d='M29.478,7.184l-4.719,-4.719c-0.621,-0.621%20-1.738,-0.621%20-2.359,0l-3.104,3.104l7.202,7.202l3.104,-3.104c0.497,-0.745%200.497,-1.738%20-0.124,-2.483l0,-0Z'%20style='fill:%20rgb(255,%2035,%2035);%20fill-rule:%20nonzero;%20stroke:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g6'%3e%3cg%20id='g5'%3e%3cg%20id='g4'%3e%3cg%20id='g3'%3e%3cpath%20id='polygon1'%20d='M2.041,22.801l0,4.804l2.444,2.365l4.757,0.03l-7.201,-7.199Z'%20style='fill:%20rgb(255,%20191,%2064);%20fill-rule:%20nonzero;%20stroke:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='tip'%3e%3cpath%20id='tip1'%20d='M2.041,27.605l0,2.395l2.444,-0.03l-2.444,-2.365Z'%20style='fill:%20rgb(146,%2085,%2027);%20stroke:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3cg%20id='g10'%3e%3cg%20id='g9'%3e%3cg%20id='g8'%3e%3cg%20id='g7'%3e%3cpath%20id='rect2'%20d='M17.452,7.386l7.201,7.199l-15.411,15.415l-7.201,-7.199l15.411,-15.415Z'%20style='fill-rule:%20nonzero;%20stroke:%20rgb(17,%20119,%20215);%20fill:%20url(%23gradient-1);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='g13'%3e%3cg%20id='g12'%3e%3cg%20id='g11'%3e%3cpath%20id='rect21'%20d='M19.281,5.557l7.217,7.215l-1.828,1.829l-7.217,-7.215l1.828,-1.829Z'%20style='fill:%20rgb(247,%20227,%200);%20fill-rule:%20nonzero;%20stroke:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Pen" />
                                 </button>
                                 <button id="btn-brush" onclick="selectTool(Tool.Brush)" title="Brush" class="button">
-                                    <img src="resources/themes/ie_color/tools/brush.svg" alt="Brush" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='1em'%20height='1em'%20viewBox='0%200%2032%2032'%20class='bi%20bi-brush'%20fill='currentColor'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%20id='defs1'%3e%3cfilter%20style='color-interpolation-filters:sRGB'%20id='filter2'%20x='-0.058598499'%20y='-0.074647084'%20width='1.1171181'%20height='1.1494136'%3e%3cfeGaussianBlur%20stdDeviation='0.032040936'%20id='feGaussianBlur2'/%3e%3c/filter%3e%3c/defs%3e%3cg%20id='layer1'%20transform='matrix(0.85769537,0,0,0.86353624,2.1241392,1.9256237)'%3e%3cpath%20style='display:%20inline;%20fill:%20rgb(202,%2093,%2093);%20fill-opacity:%201;%20stroke-width:%201.50322;%20stroke-dasharray:%20none;%20stroke-opacity:%201;%20paint-order:%20normal;%20filter:%20url(%23filter2);%20stroke-linejoin:%20miter;%20stroke-linecap:%20round;%20stroke:%20rgb(17,%20119,%20215);'%20d='M%209.9117002,21.429319%20C%209.9897002,21.083319%209.695,20.016%209.828,19.562%20c%200.363,-1.233%200.964,-2.808%201.907,-4.02%203.879,-4.979%2011.494,-11.209%2017.316,-14.298%200.368,-0.195%200.908,-0.082%201.327,0.278%200.421,0.361%200.621,0.885%200.491,1.286%20-2.197,6.806%20-7.654,15.855%20-11.991,20.352%20-1.217,1.257%20-2.679247,1.413078%20-4.408277,2.223973'%20transform='matrix(0.91733221,0,0,0.92858849,0.0902633,2.1896622)'%20id='path3'/%3e%3cpath%20style='display:%20inline;%20stroke-width:%201.37732;%20stroke-linecap:%20round;%20stroke-dasharray:%20none;%20stroke-opacity:%201;%20paint-order:%20normal;%20filter:%20url(%23filter2);%20fill:%20rgb(211,%20224,%20255);%20stroke:%20rgb(17,%20119,%20215);'%20d='m%2014.174,25.656%20c%20-0.440868,0.206762%200.05243,1.126067%20-0.056,1.796%20-0.21657,1.338067%20-0.961573,2.946306%20-3.168,3.151%20C%208.8123292,30.801315%206.52319,30.546738%204.212,29.887%203.7801793,29.763735%203.3523883,29.600932%202.926,29.417%202.5363642,29.248922%202.1559447,29.024383%201.816,28.74%201.5869232,28.548365%201.3996288,28.313692%201.268,28.061%201.1006255,27.739686%201.0516667,27.404166%201.125,27.12%201.251667,26.629165%201.6914367,26.414163%201.986,26.307%202.78544,26.016162%203.2079624,25.544434%203.614,24.829%203.7709638,24.552431%203.918,24.257%204.085,23.918%20l%200.19,-0.384%20C%204.52,23.04%204.808,22.49%205.188,21.906%206.098,20.504%207.0344495,20.270595%208.2484495,20.509595%208.5284495,20.565595%2013.935,25.573%2014.174,25.656'%20transform='matrix(0.91733221,0,0,0.92858849,0.0902633,2.1896622)'%20id='path1'/%3e%3c/g%3e%3c/svg%3e" alt="Brush" />
                                 </button>
 
                                 <button id="btn-eraser" onclick="selectTool(Tool.Eraser)" title="Eraser" class="button">
-                                    <img src="resources/themes/ie_color/tools/gui-eraser.svg" alt="Eraser" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'%20standalone='no'?%3e%3csvg%20viewBox='0%200%2032%2032'%20version='1.1'%20id='svg5'%20sodipodi:docname='gui-eraser.svg'%20width='32'%20height='32'%20inkscape:version='1.4%20(e7c3feb100,%202024-10-09)'%20xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape'%20xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:svg='http://www.w3.org/2000/svg'%3e%3cdefs%20id='defs5'%20/%3e%3csodipodi:namedview%20id='namedview5'%20pagecolor='%23ffffff'%20bordercolor='%23000000'%20borderopacity='0.25'%20inkscape:showpageshadow='2'%20inkscape:pageopacity='0.0'%20inkscape:pagecheckerboard='0'%20inkscape:deskcolor='%23d1d1d1'%20showgrid='true'%20inkscape:zoom='18.536299'%20inkscape:cx='5.5296906'%20inkscape:cy='13.190335'%20inkscape:window-width='1920'%20inkscape:window-height='969'%20inkscape:window-x='0'%20inkscape:window-y='0'%20inkscape:window-maximized='1'%20inkscape:current-layer='svg5'%3e%3cinkscape:grid%20id='grid5'%20units='px'%20originx='0'%20originy='0'%20spacingx='1'%20spacingy='1'%20empcolor='%230099e5'%20empopacity='0.30196078'%20color='%230099e5'%20opacity='0.14901961'%20empspacing='5'%20enabled='true'%20visible='true'%20/%3e%3c/sodipodi:namedview%3e%3cpath%20d='m%2019.65256,3.5240774%208.387356,8.3873566%20c%200.565177,0.565177%200.565177,1.482651%200,2.047827%20L%2013.707685,28.290579%20c%20-0.565177,0.565999%20-1.482651,0.565999%20-2.047828,0%20L%203.2734152,19.903221%20c%20-0.5651765,-0.565175%20-0.5651765,-1.481827%200,-2.047003%20L%2017.604824,3.5240776%20c%200.565999,-0.5652683%201.482559,-0.5652683%202.047736,-2e-7%20z'%20fill='%2326a6d1'%20id='path1'%20style='stroke-width:2.13898'%20/%3e%3cpath%20d='m%2010.564816,10.564817%20-7.2914008,7.291401%20c%20-0.5651765,0.565176%20-0.5651765,1.481828%200,2.047003%20l%208.3873568,8.387358%20c%200.565176,0.565999%201.482651,0.565999%202.047828,0%20L%2021,21%20Z'%20fill='%23e2574c'%20id='path2'%20style='stroke-width:2.13898'%20/%3e%3cpath%20d='m%2012.363636,27.331712%2015.766498,0.07059%20-0.0068,1.365542%20-15.7665,-0.07059%200.007,-1.36554%20z'%20id='path3'%20style='stroke-width:2.13898'%20/%3e%3cpath%20d='m%206.5620152,14.567618%20-3.2886,3.2886%20c%20-0.5651765,0.565176%20-0.5651765,1.481828%200,2.047003%20l%208.3873568,8.387358%20c%200.565176,0.565999%201.482651,0.565999%202.047828,0%20l%203.288691,-3.28787%20z'%20fill='%23cb4e44'%20id='path4'%20style='stroke-width:2.13898'%20/%3e%3cpath%20d='M%204.7169119,16.415191%2015.149626,26.847904%2014.184032,27.813497%203.7513181,17.380785%20Z'%20fill='%23eae5e4'%20id='path5'%20style='stroke-width:2.13898'%20/%3e%3c/svg%3e" alt="Eraser" />
                                 </button>
 
                                 <button id="btn-spray" onclick="selectTool(Tool.Spray)" title="Spray" class="button">
-                                    <img src="resources/themes/ie_color/tools/spray-color.svg" alt="Spray" />
+                                    <img src="./assets/spray-color-CB28xhQH.svg" alt="Spray" />
                                 </button>
 
                                 <button id="btn-flood-fill" onclick="selectTool(Tool.Flood_Fill)" title="Flood Fill"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/fill.svg" alt="Flood Fill" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-3.5025%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-0.1208,%20-0.0013)'%20id='g2'%20style='stroke:%23FFFFFF;stroke-opacity:1;fill:%23FFFFFF;fill-opacity:1'%3e%3cg%20transform='matrix(0.0488209053874016,%200,%200,%200.0488209053874016,%200,%200)'%20id='g1'%20style='stroke:%23FFFFFF;stroke-opacity:1;fill:%23FFFFFF;fill-opacity:1'%3e%3cpath%20d='M41.4,%209.4C53.9,%20-3.1%2074.1,%20-3.1%2086.6,%209.4L168,%2090.7L221.1,%2037.6C249.2,%209.5%20294.8,%209.5%20322.9,%2037.6L474.3,%20189.1C502.4,%20217.2%20502.4,%20262.8%20474.3,%20290.9L283.9,%20481.4C246.4,%20518.9%20185.6,%20518.9%20148.1,%20481.4L30.6,%20363.9C-6.9,%20326.4%20-6.9,%20265.6%2030.6,%20228.1L122.7,%20136L41.4,%2054.6C28.9,%2042.1%2028.9,%2021.8%2041.4,%209.3zM217.4,%20230.7L168,%20181.3L75.9,%20273.4C71.7,%20277.6%2068.9,%20282.7%2067.5,%20288L386.7,%20288L429,%20245.7C432.1,%20242.6%20432.1,%20237.5%20429,%20234.4L277.7,%2082.9C274.6,%2079.8%20269.5,%2079.8%20266.4,%2082.9L213.3,%20136L262.7,%20185.4C275.2,%20197.9%20275.2,%20218.2%20262.7,%20230.7C250.2,%20243.2%20229.9,%20243.2%20217.4,%20230.7zM512,%20512C476.7,%20512%20448,%20483.3%20448,%20448C448,%20422.8%20480.6,%20368.4%20499.2,%20339.3C505.2,%20329.9%20518.7,%20329.9%20524.7,%20339.3C543.4,%20368.4%20576,%20422.8%20576,%20448C576,%20483.3%20547.3,%20512%20512,%20512z'%20id='path1'%20style='stroke-opacity:%201;%20stroke-width:%2020.483px;%20stroke:%20none;%20fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Flood Fill" />
                                 </button>
                                 <button id="btn-line" onclick="selectTool(Tool.Line)" title="Line" class="button">
-                                    <img alt="Line" src="resources/themes/ie_color/tools/line.svg" />
+                                    <img alt="Line" src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2.0025%20-2.0025%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-1.9116,%20-1.9116)'%20id='g2'%20style='fill:none;fill-opacity:1;stroke:%23FFFFFF;stroke-opacity:1'%3e%3cg%20transform='matrix(0.0636360123753548,%200,%200,%200.0636360123753548,%200,%200)'%20id='g1'%20style='fill:none;fill-opacity:1;stroke:%23FFFFFF;stroke-opacity:1'%3e%3cline%20x1='50'%20y1='450'%20x2='450'%20y2='50'%20transform='matrix(-1,%200,%200,%20-1,%20500,%20500)'%20stroke-linecap='round'%20id='line1'%20style='fill:%20none;%20fill-opacity:%201;%20stroke-opacity:%201;%20paint-order:%20fill%20markers;%20stroke:%20rgb(17,%20119,%20215);%20stroke-width:%2047.1431px;'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" />
                                 </button>
                                 <button id="btn-rect" onclick="selectTool(Tool.Rectangle)" title="Rectangle"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/rectangle.svg" alt="Rectangle" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-5.4009%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-1.5048977350235,%20-4.9878532699585)'%20id='g2'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3cg%20transform='matrix(0.0623481683433056,%200,%200,%200.0623481683433056,%200,%200)'%20id='g1'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3crect%20x='44.137'%20y='100'%20width='409.091'%20height='300'%20rx='0'%20ry='0'%20id='rect1'%20style='stroke:%20rgb(17,%20119,%20215);%20stroke-width:%2048.1169px;%20paint-order:%20fill;%20fill:%20rgb(211,%20224,%20255);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Rectangle" />
                                 </button>
                                 <button id="btn-circle" onclick="selectTool(Tool.Circle)" title="Circle" class="button">
-                                    <img alt="Circle" src="resources/themes/ie_color/tools/circle.svg" />
+                                    <img alt="Circle" src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Capa_1'%20transform='matrix(0.92887419,0,0,0.92012721,0.99195841,1.0770303)'%20style='fill:%23FFFFFF;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:0.99946959;stroke-dasharray:none'%3e%3cg%20transform='scale(0.96195179)'%20id='g2'%20style='fill:%23FFFFFF;fill-opacity:1;stroke:none;stroke-opacity:1;stroke-width:1.03900175;stroke-dasharray:none'%3e%3cellipse%20style='stroke-linecap:%20round;%20stroke-dasharray:%20none;%20stroke:%20rgb(17,%20119,%20215);%20paint-order:%20fill;%20stroke-width:%203.37334px;%20fill:%20rgb(211,%20224,%20255);'%20id='path1'%20cx='14.557998'%20cy='14.600277'%20rx='12.881395'%20ry='13.019702'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" />
                                 </button>
                                 <button id="btn-eye-dropper" onclick="selectTool(Tool.Eye_Dropper)" title="Eye Dropper"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/eyedropper.svg" alt="Eye Dropper" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20height='56'%20viewBox='0%200%2056%2056'%20width='56'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='m39.6485%2028.9024.6563-.7266c1.1484-1.1953%201.1953-2.6016-.0235-3.8203l-.7031-.6797c3.5859-3.2109%207.5703-3.6563%2010.0313-6.1641%203.492-3.5156%202.3438-8.4375-.0936-10.8984-2.4379-2.4844-7.3127-3.5391-10.8987-.0938-2.5312%202.4376-2.9531%206.4454-6.164%2010.0313l-.6797-.7032c-1.2187-1.2187-2.625-1.1718-3.8203-.0234l-.7266.6563c-1.4297%201.3828-1.1718%202.6015.0703%203.8437l.9844.9844-17.6953%2017.7188c-7.2422%207.2421-3.75%206.1171-7.6875%2011.6718l2.086%202.2266c5.3905-3.9141%204.664-.0703%2012-7.4063l17.8124-17.6953%201.0079%201.0078c1.2421%201.2422%202.4609%201.5%203.8437.0704zm-29.5313%2017.2265c-.8671-.9375-.7031-1.8281.2344-2.7656l19.9453-20.0391%202.5547%202.5547-20.039%2020.0156c-.8203.8438-1.8985%201.1016-2.6954.2344z'%20id='path1'%20style='stroke-width:%201.33333;%20fill-opacity:%201;%20fill:%20rgb(255,%20120,%2090);'/%3e%3c/svg%3e" alt="Eye Dropper" />
                                 </button>
                                 <button id="btn-text" onclick="selectTool(Tool.Text)" title="Text" class="button">
-                                    <img src="resources/themes/ie_color/tools/text.svg" alt="Text" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-3.1665%20-1.9998%2032%2032'%20version='1.1'%20id='svg8'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='matrix(0.96643453,0,0,0.92591904,-4.8039544,-2.3206938)'%20style='stroke:%23FFFFFF;stroke-opacity:1'%20id='g8'%3e%3cg%20transform='scale(2.3333)'%20id='g7'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3cg%20class='Black'%20transform='translate(1.5,-1)'%20id='g6'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3cg%20id='g5'%20style='stroke:%23FFFFFF;stroke-opacity:1'%3e%3cpath%20d='M%2011.643102,14.57168%20H%209.9015035%20L%208.5469269,11.293037%20H%204.0961751%20L%202.838354,14.57168%20H%201%20L%205.4507518,3%20H%207.1923503%20Z%20M%208.0631495,10.135869%206.321551,4.7357519%204.5799525,10.135869%20Z'%20id='path4'%20style='fill-opacity:%201;%20stroke:%20none;%20stroke-width:%200;%20stroke-opacity:%201;%20stroke-dasharray:%20none;%20fill:%20rgb(255,%20133,%20133);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Text" />
                                 </button>
                                 <button id="btn-wand" onclick="selectTool(Tool.Wand)" title="Wand" class="button">
-                                    <img src="resources/themes/ie_color/tools/wand.svg" alt="Wand" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='32'%20height='32'%20fill='currentColor'%20class='bi%20bi-magic'%20viewBox='0%200%2032%2032'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='m%2018.632458,7.197339%20a%200.8418775,0.84971561%200%201%200%201.683755,0%20V%204.0890806%20a%200.8418775,0.84971561%200%200%200%20-1.683755,0%20z%20m%207.576894,0.05948%20A%200.84187713,0.84971524%200%200%200%2025.018937,6.0553216%20l%20-2.177094,2.1973637%20a%200.84187713,0.84971524%200%201%200%201.190415,1.2014974%20z%20M%2014.916413,9.4541827%20A%200.84187713,0.84971524%200%201%200%2016.106827,8.2526853%20L%2013.929732,6.0553216%20a%200.84187713,0.84971524%200%200%200%20-1.190415,1.2014975%20z%20m%20-1.045611,4.2485763%20a%200.84187729,0.8497154%200%201%200%200,-1.69943%20h%20-3.079588%20a%200.84187729,0.8497154%200%201%200%200,1.69943%20z%20m%2014.286654,0%20a%200.84187729,0.8497154%200%201%200%200,-1.69943%20h%20-3.079587%20a%200.84187729,0.8497154%200%200%200%200,1.69943%20z%20m%20-3.138519,5.948007%20a%200.84187713,0.84971524%200%201%200%201.190415,-1.201497%20l%20-2.177094,-2.197365%20a%200.84187713,0.84971524%200%201%200%20-1.190415,1.201497%20z%20m%20-6.386479,1.966241%20a%200.8418775,0.84971561%200%200%200%201.683755,0%20v%20-3.108259%20a%200.8418775,0.84971561%200%200%200%20-1.683755,0%20z%20m%203.12168,-8.661997%20a%200.84187713,0.84971524%200%200%200%200,-1.199799%20l%20-1.192097,-1.203197%20a%200.84187713,0.84971524%200%200%200%20-1.190415,0%20l%20-2.177095,2.199064%20a%200.84187713,0.84971524%200%200%200%200,1.201498%20l%201.192099,1.203196%20a%200.84187713,0.84971524%200%200%200%201.190414,0%20l%202.177094,-2.197364%20z%20m%20-5.051263,5.09829%20a%200.84187713,0.84971524%200%200%200%200,-1.199797%20l%20-1.192097,-1.203196%20a%200.84187713,0.84971524%200%200%200%20-1.190414,0%20L%203.7244976,26.346521%20a%200.84187713,0.84971524%200%200%200%200,1.201499%20l%201.192098,1.203195%20a%200.84187713,0.84971524%200%200%200%201.1904143,0%20z'%20id='path1'%20style='stroke-width:%201.69157;%20fill-opacity:%201;%20fill:%20rgb(209,%20134,%2083);'/%3e%3c/svg%3e" alt="Wand" />
                                 </button>
 
                                 <!-- NEW TOOLS -->
                                 <button id="btn-rounded-rect" onclick="selectTool(Tool.Rounded_Rectangle)"
                                     title="Rounded Rectangle" class="button">
-                                    <img src="resources/themes/ie_color/tools/roundrectangle.svg" alt="Rounded Rect"
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='32px'%20version='1.1'%20style='fill-rule:evenodd;clip-rule:evenodd;'%20xmlns='http://www.w3.org/2000/svg'%20height='32px'%20viewBox='0%200%20137%20137'%3e%3cg%20id='svg2'%3e%3cg%20id='g2'%3e%3cg%20id='g1'%3e%3cpath%20id='path5'%20d='M32.722,22.502c-13.422,0%20-24.39,10.967%20-24.39,24.39l0,39.551c0,13.422%2010.967,24.39%2024.39,24.39l67.887,0c13.422,0%2024.39,-10.967%2024.39,-24.39l0,-39.551c0,-13.422%20-10.967,-24.39%20-24.39,-24.39l-67.887,0Z'%20style='fill-rule:%20nonzero;%20stroke:%20rgb(17,%20119,%20215);%20stroke-width:%2010.62px;%20fill:%20rgb(211,%20224,%20255);'/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Rounded Rect"
                                         style="width: 22px;" />
                                 </button>
                                 <button id="btn-ellipse" onclick="selectTool(Tool.Ellipse)" title="Ellipse"
                                     class="button">
-                                    <img src="resources/themes/ie_color/tools/ellipse.svg" alt="Ellipse" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-8.9127%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='matrix(1,%200,%200,%201,%20-1.952681,%20-8.745581)'%20id='g2'%20style='fill:%23ffffff;fill-opacity:0;stroke:%23ffffff;stroke-opacity:1'%3e%3cg%20transform='matrix(0.0653575137257576,%200,%200,%200.0653575137257576,%200,%200)'%20id='g1'%20style='fill:%23ffffff;fill-opacity:0;stroke:%23ffffff;stroke-opacity:1'%3e%3cellipse%20cx='244.068'%20cy='242.153'%20rx='194.068'%20ry='88.418'%20id='ellipse1'%20style='stroke-opacity:%201;%20stroke:%20rgb(17,%20119,%20215);%20stroke-width:%2045.9014px;%20fill-opacity:%201;%20fill:%20rgb(211,%20224,%20255);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Ellipse" />
                                 </button>
                                 <button id="btn-vector-select" onclick="selectTool(Tool.VectorSelect)"
                                     title="Vector Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/vector-select.svg" alt="Vector Select" />
+                                    <img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='currentColor'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3e%3cpath%20d='M12.034%2012.681a.498.498%200%200%201%20.647-.647l9%203.5a.5.5%200%200%201-.033.943l-3.444%201.068a1%201%200%200%200-.66.66l-1.067%203.443a.5.5%200%200%201-.943.033z'%20/%3e%3cpath%20d='M5%203a2%202%200%200%200-2%202'%20/%3e%3cpath%20d='M19%203a2%202%200%200%201%202%202'%20/%3e%3cpath%20d='M5%2021a2%202%200%200%201-2-2'%20/%3e%3cpath%20d='M9%203h1'%20/%3e%3cpath%20d='M9%2021h1'%20/%3e%3cpath%20d='M14%203h1'%20/%3e%3cpath%20d='M14%2021h1'%20/%3e%3cpath%20d='M3%209v1'%20/%3e%3cpath%20d='M21%209v1'%20/%3e%3cpath%20d='M3%2014v1'%20/%3e%3cpath%20d='M21%2014v1'%20/%3e%3cpath%20d='M19%2021a2%202%200%200%200%202-2'%20/%3e%3c/svg%3e" alt="Vector Select" />
                                 </button>
 
                                 <!-- 4 NEW REQUESTED BUTTONS (2 Rows) -->
                                 <button id="btn-rect-select" onclick="selectTool(Tool.RectSelect)"
                                     title="Rectangle Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionrectangle.svg" alt="Rect Select" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-1.9999%20-2.7367%2032%2032'%20version='1.1'%20id='svg2'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-4.42104959106445,%20-5.89473290176392)'%20id='g2'%20style='fill:%23FFFFFF;fill-opacity:1;stroke:none;stroke-opacity:1'%3e%3cg%20transform='matrix(1.47368323802948,%200,%200,%201.47368323802948,%200,%200)'%20id='g1'%20style='fill:%23FFFFFF;fill-opacity:1;stroke:none;stroke-opacity:1'%3e%3cpath%20d='M14,%2017L17,%2017L17,%2014L19,%2014L19,%2017L22,%2017L22,%2019L19,%2019L19,%2022L17,%2022L17,%2019L14,%2019zM12,%2017L12,%2019L9,%2019L9,%2017zM7,%2017L7,%2019L3,%2019L3,%2015L5,%2015L5,%2017zM3,%2013L3,%2010L5,%2010L5,%2013zM3,%208L3,%204L7,%204L7,%206L5,%206L5,%208zM9,%204L12,%204L12,%206L9,%206zM15,%204L19,%204L19,%208L17,%208L17,%206L15,%206zM19,%2010L19,%2012L17,%2012L17,%2010z'%20id='path1'%20style='fill-opacity:%201;%20stroke:%20none;%20stroke-opacity:%201;%20fill:%20rgb(209,%20134,%2083);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Rect Select" />
                                 </button>
                                 <button id="btn-ellipse-select" onclick="selectTool(Tool.EllipseSelect)"
                                     title="Ellipse Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionellipse.svg" alt="Ellipse Select" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20height='32'%20viewBox='0%200%2032%2032'%20width='32'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='m%208.0608586,27.650077%201.7052486,-2.240781%20c%201.2119948,0.803299%202.5790118,1.381111%204.0446808,1.677063%20l%20-0.38051,2.790407%20C%2011.471356,29.510349%209.6815494,28.70705%208.0608586,27.650077%20m%2014.2057074,-2.240781%201.705248,2.254874%20c%20-1.606598,1.085159%20-3.396404,1.846179%20-5.355326,2.212596%20l%20-0.38051,-2.790407%20c%201.465668,-0.295952%202.818593,-0.873764%204.030588,-1.677063%20m%204.8057,-7.145132%202.8045,0.38051%20C%2029.510349,20.603596%2028.70705,22.421588%2027.635985,24%20l%20-2.240782,-1.705249%20c%200.803299,-1.197901%201.381111,-2.564919%201.677063,-4.030587%20M%202.17,18.616488%204.9604067,18.235978%20c%200.2959522,1.465668%200.8737637,2.832686%201.6770626,4.04468%20L%204.3966882,23.985907%20C%203.3397159,22.365216%202.536417,20.57541%202.17,18.616488%20M%2025.409296,9.7661072%2027.650077,8.0608586%20c%201.099252,1.6206908%201.874365,3.4245904%202.226689,5.3976054%20l%20-2.790407,0.38051%20C%2026.790407,12.359212%2026.212595,10.978102%2025.409296,9.7661072%20M%2018.235978,4.9604067%2018.616488,2.17%20c%201.958922,0.366417%203.748728,1.1697159%205.369419,2.2266882%20L%2022.280658,6.6374693%20C%2021.068664,5.8341704%2019.701646,5.2563589%2018.235978,4.9604067%20M%209.7661072,6.6374693%208.0608586,4.3966882%20C%209.6815494,3.3397159%2011.471356,2.536417%2013.430278,2.17%20l%200.38051,2.7904067%20C%2012.345119,5.2563589%2010.978102,5.8341704%209.7661072,6.6374693%20M%204.9604067,13.810788%202.17,13.430278%20C%202.536417,11.471356%203.3397159,9.6815494%204.3966882,8.0608586%20L%206.6374693,9.7661072%20C%205.8341704,10.978102%205.2563589,12.345119%204.9604067,13.810788%20Z'%20id='path1'%20style='stroke-width:%201.33333;%20fill-opacity:%201;%20fill:%20rgb(215,%20141,%2091);'/%3e%3c/svg%3e" alt="Ellipse Select" />
                                 </button>
                                 <button id="btn-poly-select" onclick="selectTool(Tool.PolySelect)"
                                     title="Polygon Select" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionpolygon.svg" alt="Poly Select" />
+                                    <img src="data:image/svg+xml,%3csvg%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12%202L2%208L6%2020H18L22%208L12%202Z'%20stroke='%234a90e2'%20stroke-width='2'%20stroke-dasharray='2%202'%20/%3e%3ccircle%20cx='12'%20cy='2'%20r='2'%20fill='%234a90e2'/%3e%3ccircle%20cx='2'%20cy='8'%20r='2'%20fill='%234a90e2'/%3e%3ccircle%20cx='6'%20cy='20'%20r='2'%20fill='%234a90e2'/%3e%3ccircle%20cx='18'%20cy='20'%20r='2'%20fill='%234a90e2'/%3e%3ccircle%20cx='22'%20cy='8'%20r='2'%20fill='%234a90e2'/%3e%3c/svg%3e" alt="Poly Select" />
                                 </button>
                                 <button id="btn-lasso" onclick="selectTool(Tool.Lasso)" title="Lasso Select"
                                     class="button">
-                                    <img src="resources/themes/ie_color/selection/selectionlasso.svg" alt="Lasso" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='31.994951'%20height='32.000015'%20viewBox='32%2032%208.9386878%208.9401026'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='layer1'%20transform='translate(-201.51979,-235.5087)'%3e%3cellipse%20style='stroke-width:%200.58502;%20stroke-linecap:%20butt;%20stroke-dasharray:%20none;%20stroke-opacity:%201;%20paint-order:%20normal;%20fill:%20rgb(255,%20219,%20187);%20stroke:%20rgb(209,%20134,%2083);'%20id='path1'%20cx='360.982'%20cy='-15.825'%20rx='2.032'%20ry='3.066'%20transform='matrix(0.627491,%200.778624,%20-0.77617,%200.630536,%20-0.000088,%201.000084)'/%3e%3cellipse%20id='path5'%20style='stroke-width:%200.00478869;%20fill:%20rgb(255,%20219,%20187);%20stroke:%20rgb(209,%20134,%2083);'%20cx='236.77841'%20cy='272.81592'%20rx='0.00064945634'%20ry='0.00065205846'/%3e%3cpath%20style='stroke-width:%200.36375;%20stroke-linecap:%20square;%20stroke-linejoin:%20round;%20stroke-dasharray:%20none;%20stroke-opacity:%201;%20fill:%20rgb(255,%20219,%20187);%20stroke:%20rgb(209,%20134,%2083);%20paint-order:%20markers;'%20d='m%20237.41623,273.2039%20c%200,0%200.11229,-0.0331%200.13475,-0.21916%200.0226,-0.18608%200.0315,-0.21502%20-0.0628,-0.35563%20-0.0943,-0.14059%20-0.57488,-0.0166%20-0.57488,-0.0166%200,0%20-0.38986,0.1396%20-0.72759,0.43419%20-0.17067,0.14887%20-0.46709,0.459%20-0.44014,0.6823%200.0269,0.22329%200.0943,0.33081%200.26499,0.34322%200.17066,0.0124%200.51199,-0.0951%200.64224,-0.20676%200.13024,-0.11165%200.0988,0.0413%200.0988,0.0413%200,0%20-0.65075,0.5815%20-1.00604,0.85597%20-0.27894,0.21549%20-0.86233,0.612%20-0.8803,0.62441%20-0.018,0.0124%200.0943,0.11992%200.0943,0.11992%200,0%200.70962,-0.49208%201.11382,-0.83116%200.40423,-0.33908%200.91622,-0.82289%200.91622,-0.82289%200,0%200.0359,-0.0413%200,-0.12819%20-0.0359,-0.0869%20-0.15269,-0.0827%20-0.26049,-0.0413%20-0.10778,0.0413%20-0.18996,0.1093%20-0.41319,0.17781%20-0.12127,0.0372%20-0.28744,0.0744%20-0.3638,0.0208%20-0.0564,-0.0397%20-0.0982,-0.16547%20-0.0495,-0.26466%200.0512,-0.10406%200.0907,-0.15983%200.14796,-0.23259%200.0478,-0.0607%200.16194,-0.1685%200.16194,-0.1685%200,0%200.25151,-0.26879%200.56589,-0.40111%200.31439,-0.13233%200.47159,-0.11579%200.47159,-0.11579%200,0%200.13474,-0.005%200.16617,0.0992%200.0278,0.0917%200.006,0.21063%20-0.0359,0.27292%20-0.0816,0.12233%20-0.19726,0.15284%20-0.13923,0.20675%200.0426,0.0396%200.17516,-0.0744%200.17516,-0.0744%20z'%20id='path6'/%3e%3c/g%3e%3c/svg%3e" alt="Lasso" />
                                 </button>
                                 <button id="btn-move-selection" onclick="selectTool(Tool.MoveSelection)"
                                     title="Move Selection Area" class="button">
-                                    <img src="resources/themes/ie_color/selection/selectiondrag.svg" alt="Move Selection" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20height='32'%20viewBox='0%200%2032%2032'%20width='32'%20version='1.1'%20id='svg1'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='5.238'%20y='4.771'%20width='20.612'%20height='18.874'%20style='fill:%20rgb(255,%20219,%20187);'/%3e%3cpath%20d='m%2019.654321,22.086421%20h%204.148148%20v%20-4.14815%20h%202.765433%20v%204.14815%20h%204.148147%20v%202.76543%20H%2026.567902%20V%2029%20h%20-2.765433%20v%20-4.148149%20h%20-4.148148%20z%20m%20-2.765431,0%20v%202.76543%20h%20-4.148149%20v%20-2.76543%20z%20m%20-6.9135811,0%20v%202.76543%20H%204.4444444%20v%20-5.530864%20h%202.7654323%20v%202.765434%20z%20M%204.4444444,16.555556%20v%20-4.148149%20h%202.7654323%20v%204.148149%20z%20m%200,-6.9135815%20V%204.1111104%20H%209.9753089%20V%206.8765427%20H%207.2098767%20V%209.6419745%20Z%20M%2012.740741,4.1111104%20h%204.148149%20v%202.7654323%20h%20-4.148149%20z%20m%208.296296,0%20h%205.530865%20V%209.6419745%20H%2023.802469%20V%206.8765427%20h%20-2.765432%20z%20m%205.530865,8.2962966%20v%202.765432%20h%20-2.765433%20v%20-2.765432%20z'%20id='path1'%20style='stroke-width:%201.33333;%20fill-opacity:%201;%20fill:%20rgb(209,%20134,%2083);'/%3e%3c/svg%3e" alt="Move Selection" />
                                 </button>
                                 <button id="btn-move-content" onclick="selectTool(Tool.MoveContent)"
                                     title="Move Selected Pixels" class="button">
-                                    <img src="resources/themes/ie_color/selection/movecontent.svg" alt="Move Content" />
+                                    <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3c!--%20Dashed%20selection%20box%20background%20--%3e%3crect%20x='6'%20y='6'%20width='20'%20height='20'%20fill='rgba(17,%20119,%20215,%200.1)'%20stroke='%235b9bd5'%20stroke-width='1.5'%20stroke-dasharray='2,2'%20/%3e%3c!--%20Cardinal%20arrows%20(Move)%20--%3e%3cpath%20d='M16%204%20v24%20M4%2016%20h24%20M16%204%20l-4%204%20M16%204%20l%204%204%20M16%2028%20l-4%20-4%20M16%2028%20l%204%20-4%20M4%2016%20l%204%20-4%20M4%2016%20l%204%204%20M28%2016%20l-4%20-4%20M28%2016%20l-4%204'%20stroke='%231177d7'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'%20fill='none'/%3e%3c/svg%3e" alt="Move Content" />
                                 </button>
 
                                 <button id="btn-crop" onclick="selectTool(Tool.Crop)" title="Crop Tool" class="button">
-                                    <img src="resources/themes/ie_color/tools/crop.svg" alt="Crop" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2.0025%20-2.0025%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform='translate(-0.0021,%20-0.0021)'%3e%3cg%20transform='matrix(0.0546875037252903,%200,%200,%200.0546875037252903,%200,%200)'%3e%3cpath%20d='M128,%2032C128,%2014.3%20113.7,%200%2096,%200C78.3,%200%2064,%2014.3%2064,%2032L64,%2064L32,%2064C14.3,%2064%200,%2078.3%200,%2096C0,%20113.7%2014.3,%20128%2032,%20128L64,%20128L64,%20384C64,%20419.3%2092.7,%20448%20128,%20448L352,%20448L352,%20384L128,%20384L128,%2032zM384,%20480C384,%20497.7%20398.3,%20512%20416,%20512C433.7,%20512%20448,%20497.7%20448,%20480L448,%20448L480,%20448C497.7,%20448%20512,%20433.7%20512,%20416C512,%20398.3%20497.7,%20384%20480,%20384L448,%20384L448,%20128C448,%2092.7%20419.3,%2064%20384,%2064L160,%2064L160,%20128L384,%20128L384,%20480z'%20style='fill:%20rgb(17,%20119,%20215);'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Crop" />
                                 </button>
                                 <button id="btn-pan" onclick="selectTool(Tool.Pan)" title="Pan Tool" class="button">
-                                    <img src="resources/themes/ie_color/tools/pan.svg" alt="Pan" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20viewBox='-2%20-2.855%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Layer_1'%20transform='translate(0,%200.0196)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20transform='matrix(0.875683128833771,%200,%200,%200.875683128833771,%200,%200)'%3e%3cpath%20d='M%2029.01%209.763%20C%2028.085%209.174%2026.908%209.594%2026.571%2010.519%20L%2024.973%2013.967%20C%2024.805%2014.304%2024.469%2014.472%2024.133%2014.472%20L%2024.133%2014.472%20C%2023.544%2014.472%2023.123%2013.967%2023.292%2013.379%20L%2024.721%206.483%20C%2024.889%205.558%2024.385%204.717%2023.46%204.465%20C%2022.535%204.297%2021.694%204.801%2021.442%205.726%20L%2019.844%2012.117%20C%2019.76%2012.538%2019.423%2012.79%2019.003%2012.79%20L%2018.919%2012.79%20C%2018.414%2012.79%2017.994%2012.37%2017.994%2011.865%20L%2017.994%204.549%20C%2017.994%203.708%2017.405%202.951%2016.648%202.783%20C%2015.555%202.615%2014.63%203.456%2014.63%204.465%20L%2014.63%2011.949%20C%2014.63%2012.454%2014.21%2012.874%2013.705%2012.874%20L%2013.621%2012.874%20C%2013.2%2012.874%2012.864%2012.622%2012.78%2012.201%20L%2011.266%205.81%20C%2011.014%204.801%209.921%204.213%208.996%204.633%20C%208.155%204.885%207.818%205.81%207.987%206.651%20L%2010.089%2016.154%20C%2010.257%2016.826%209.5%2017.415%208.828%2017.079%20L%205.464%2014.892%20C%204.791%2014.472%203.95%2014.556%203.362%2015.145%20C%202.689%2015.817%202.689%2016.911%203.362%2017.583%20L%2012.023%2026.329%20C%2013.032%2027.422%2014.546%2028.011%2016.144%2028.011%20L%2019.676%2028.011%20C%2022.114%2028.011%2023.628%2026.329%2024.637%2023.974%20L%2029.599%2011.949%20C%2029.935%2011.192%2029.683%2010.267%2029.01%209.763%20Z'%20class='Black'%20style='stroke:%20rgb(17,%20119,%20215);%20fill:%20rgb(211,%20224,%20255);%20stroke-width:%202.28393px;%20paint-order:%20stroke;%20stroke-linecap:%20round;'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Pan" />
                                 </button>
 
 
                                 <button onclick="clearCanvas()" class="button" title="Clear Canvas">
-                                    <img src="resources/themes/ie_color/menu/delete.svg" alt="Clear" />
+                                    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20viewBox='-6%20-6%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%20%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Delete'%3e%3cg%3e%3cpath%20d='M18.8,%2016L25.7,%209.1C26.1,%208.7%2026.1,%208.1%2025.7,%207.7L24.3,%206.3C23.9,%205.9%2023.3,%205.9%2022.9,%206.3L16,%2013.2L9.1,%206.3C8.7,%205.9%208.1,%205.9%207.7,%206.3L6.3,%207.7C5.9,%208.1%205.9,%208.7%206.3,%209.1L13.2,%2016L6.3,%2022.9C5.9,%2023.3%205.9,%2023.9%206.3,%2024.3L7.7,%2025.7C8.1,%2026.1%208.7,%2026.1%209.1,%2025.7L16,%2018.8L22.9,%2025.7C23.3,%2026.1%2023.9,%2026.1%2024.3,%2025.7L25.7,%2024.3C26.1,%2023.9%2026.1,%2023.3%2025.7,%2022.9L18.8,%2016z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Layer_1'%20transform='translate(-6,%20-6)'%20style='enable-background:new%200%200%2032%2032'%3e%3cg%20id='Delete'%3e%3cg%3e%3cpath%20d='M18.8,%2016L25.7,%209.1C26.1,%208.7%2026.1,%208.1%2025.7,%207.7L24.3,%206.3C23.9,%205.9%2023.3,%205.9%2022.9,%206.3L16,%2013.2L9.1,%206.3C8.7,%205.9%208.1,%205.9%207.7,%206.3L6.3,%207.7C5.9,%208.1%205.9,%208.7%206.3,%209.1L13.2,%2016L6.3,%2022.9C5.9,%2023.3%205.9,%2023.9%206.3,%2024.3L7.7,%2025.7C8.1,%2026.1%208.7,%2026.1%209.1,%2025.7L16,%2018.8L22.9,%2025.7C23.3,%2026.1%2023.9,%2026.1%2024.3,%2025.7L25.7,%2024.3C26.1,%2023.9%2026.1,%2023.3%2025.7,%2022.9L18.8,%2016z'%20fill='%23D11C1C'%20class='Red'%20/%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt="Clear" />
                                 </button>
                             </div>
                         </div>
@@ -591,33 +622,33 @@
                     <div class="artistic-brushes-header">Artistic & Nature</div>
                     <div class="div-toolbox">
                         <button id="btn-brush-oil" onclick="selectArtisticBrush('oil')" title="Realistic Oil Paint" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_oil.svg" alt="Oil" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%3e%3cpath%20fill='none'%20d='M0%200h24v24H0z'/%3e%3cpath%20d='M9%205v6.273H7V5H5v9h14V5H9zm11%2011H4v2h16v-2zM3%2014V4a1%201%200%200%201%201-1h16a1%201%200%200%201%201%201v10h1v5a1%201%200%200%201-1%201h-8v3h-2v-3H3a1%201%200%200%201-1-1v-5h1z'%20fill='currentColor'/%3e%3c/g%3e%3c/svg%3e" alt="Oil" />
                         </button>
                         <button id="btn-brush-charcoal" onclick="selectArtisticBrush('charcoal')" title="Charcoal Stick" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_charcoal.svg" alt="Charcoal" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%20512%20512'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M256,413.795c-9.512,0-17.251-7.739-17.251-17.252c0-9.513,7.739-17.252,17.251-17.252c9.513,0,17.252,7.738,17.252,17.252%20C273.251,406.055,265.512,413.795,256,413.795z%20M256,391.291c-2.896,0-5.252,2.355-5.252,5.252c0,2.896,2.355,5.252,5.252,5.252c2.896,0,5.251-2.355,5.251-5.252%20C261.251,393.646,258.896,391.291,256,391.291z'%20fill='currentColor'/%3e%3cpath%20d='M230.99,252.542l-7.926,50.653l11.855,1.855l8.073-51.593v-0.467c0-26.563-21.611-48.175-48.175-48.175h-23.643v-32.349%20h123.706v-12H171.176v-12H340.824v12h32.604v32.349H317.18c-26.563,0-48.174,21.611-48.174,48.175v0.467%20l10.104,64.567c3.896,24.9,2.142,87.662-4.6,111.036l-0.648,2.268c-1.76,6.197-4.709,16.569-8.436,25.8%20c-5.188,12.849-8.65,15.326-9.427,15.74c-0.775-0.414-4.237-2.891-9.427-15.743c-3.728-9.231-6.675-19.604-8.436-25.801%20l-0.646-2.264c-6.743-23.374-8.498-86.136-4.602-111.036'%20fill='currentColor'/%3e%3c/svg%3e" alt="Charcoal" />
                         </button>
                         <button id="btn-brush-watercolor" onclick="selectArtisticBrush('watercolor')" title="Watercolor Wash" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_watercolor.svg" alt="Watercolor" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%20612%20612'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%3e%3cpath%20d='M600.195,3.203c-27.612-27.612-229.2,129.21-343.928,243.94c-27.811,27.809-47.495,50.998-61.13,70.498%20c18.725,5.797,36.292,16.375,51.568,31.655c6.546,6.546,12.677,13.948,18.225,21.996c8.543,12.401,14.531,25.428,18.065,38.877%20c20.061-13.681,44.126-33.916,73.261-63.042C470.985,232.402,627.807,30.815,600.195,3.203z'%20fill='currentColor'/%3e%3cpath%20d='M93.801,364.184c-105.658,61.408-10.941,144.218-85.2,218.472c53.607,53.611,138.564,26.071,185.785-21.154%20c43.828-43.819,79.004-106.442,38.846-164.758C199.203,347.336,145.419,334.186,93.801,364.184z'%20fill='currentColor'/%3e%3c/g%3e%3c/svg%3e" alt="Watercolor" />
                         </button>
                         <button id="btn-brush-calligraphy" onclick="selectArtisticBrush('calligraphy')" title="Calligraphy Pen" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_calligraphy.svg" alt="Calligraphy" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%20365.59%20365.591'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M355.458,7.443C350.59,2.574,344.062,0,336.577,0c-10.159,0-29.491,4.533-79.879,43.733%20c-33.747,26.256-74.202,62.585-113.913,102.295c-27.837,27.836-50.188,51.875-72.421,77.892%20c-18.55,2.251-36.082,13.324-48.41,30.67C3.752,280.201-1.852,316.067,6.176,355.579c0.913,4.495,4.216,8.13,8.604,9.468%20c1.199,0.366,2.427,0.544,3.645,0.544c3.237,0,6.404-1.259,8.777-3.599c11.396-11.235,23.931-13.215,39.803-15.723%20c12.541-1.979,26.756-4.228,42.625-11.598c22.469-10.438,35.61-28,35.663-47.387c23.235-20.316,47.308-42.907,71.574-67.177%20c43.822-43.822,82.673-87.574,109.393-123.195c13.451-17.933,23.277-33.097,29.208-45.071%20C359.488,43.723,370.167,22.154,355.458,7.443z%20M124.188,244.191c-3.499-3.498-7.218-6.6-11.107-9.264%20c17.399-19.7,35.844-39.223,57.613-60.992c38.499-38.498,77.571-73.614,110.022-98.883c9.644-7.508,18.572-14.036,26.546-19.419%20c-5.382,7.972-11.911,16.904-19.418,26.546c-25.267,32.447-60.383,71.521-98.883,110.021%20c-19.855,19.854-40.547,39.45-60.126,56.948C127.375,247.484,125.821,245.827,124.188,244.191z'%20fill='currentColor'/%3e%3c/svg%3e" alt="Calligraphy" />
                         </button>
                         <button id="btn-brush-marker" onclick="selectArtisticBrush('marker')" title="Felt Marker" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_marker.svg" alt="Marker" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M4.56681%203.09871C4.91328%202.93219%205.32452%202.979%205.6247%203.21914L10.4679%207.09367L17.2747%209.03849C17.4381%209.08517%2017.4381%209.08517%2017.5869%209.17273C17.7071%209.2929%2017.7071%209.2929%2020.7071%2012.2929C21.0976%2012.6834%2021.0976%2013.3166%2020.7071%2013.7071C20.3166%2014.0976%2019.6834%2014.0976%2019.2929%2013.7071L17%2011.4142L10.4142%2018L12.7071%2020.2929C13.0976%2020.6834%2013.0976%2021.3166%2012.7071%2021.7071C12.3166%2022.0977%2011.6834%2022.0977%2011.2929%2021.7071L8.29289%2018.7071C8.17272%2018.5869%208.08516%2018.4381%208.03848%2018.2747L6.10966%2011.5239L4.2929%209.70713C4.10537%209.51959%204.00001%209.26524%204.00001%209.00002L4%204.00001C4%203.61561%204.22034%203.26523%204.56681%203.09871ZM8.12317%2011.2911L9.49463%2016.0912L15.0912%2010.4946L10.291%209.12318L8.12317%2011.2911ZM8.50287%208.08293L6%206.08064L6.00001%208.58581L7%209.5858L8.50287%208.08293Z'%20fill='currentColor'/%3e%3c/svg%3e" alt="Marker" />
                         </button>
                         
                         <!-- NEW NATURE BRUSHES -->
                         <button id="btn-brush-leaf" onclick="selectArtisticBrush('leaf')" title="Leaf Stamp" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_leaf.svg" alt="Leaf" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12%202C12%202%2013%208%2018%2010C13%2011%2012%2018%2012%2022C12%2018%2011%2011%206%2010C11%208%2012%202%2012%202Z'%20fill='currentColor'/%3e%3cpath%20d='M12%2022L12%2018'%20stroke='currentColor'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="Leaf" />
                         </button>
                         <button id="btn-brush-rock" onclick="selectArtisticBrush('rock')" title="Rock Texture" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_rock.svg" alt="Rock" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M4%2018L6%208L15%204L20%2010L16%2020H8L4%2018Z'%20fill='currentColor'/%3e%3cpath%20d='M12%207L14%2011M8%2012L11%2016'%20stroke='white'%20stroke-opacity='0.3'%20stroke-width='1'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="Rock" />
                         </button>
                         <button id="btn-brush-meadow" onclick="selectArtisticBrush('meadow')" title="Meadow/Grass" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_meadow.svg" alt="Meadow" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M4%2021C4%2021%204.5%2014%207%2011'%20stroke='currentColor'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3cpath%20d='M7%2021C7%2021%208%2010%2012%207'%20stroke='currentColor'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cpath%20d='M11%2021C11%2021%2012%2015%2015%2013'%20stroke='currentColor'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3cpath%20d='M16%2021C16%2021%2017%2012%2021%209'%20stroke='currentColor'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3cpath%20d='M3%2021H21'%20stroke='currentColor'%20stroke-width='1'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="Meadow" />
                         </button>
                         <button id="btn-brush-wood" onclick="selectArtisticBrush('wood')" title="Wood Grain" class="button">
-                            <img src="resources/themes/ie_color/brushes/brush_wood.svg" alt="Wood" />
+                            <img src="data:image/svg+xml,%3csvg%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='4'%20y='6'%20width='16'%20height='12'%20rx='2'%20fill='currentColor'/%3e%3cpath%20d='M7%2010H17M8%2014H16M12%208L12%2011M14%2013L14%2016'%20stroke='white'%20stroke-opacity='0.2'%20stroke-width='1'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="Wood" />
                         </button>
                     </div>
 
@@ -893,6 +924,61 @@
             </div>
         </div>
     </div>
+    <!-- Risk Acceptance Modal -->
+    <div id="riskAcceptanceModal" class="modal risk-modal" style="display: flex;">
+        <div class="modal-content risk-content">
+            <div class="modal-header risk-header">
+                <h3>⚠️ Beta Usage Warning</h3>
+            </div>
+            <div class="modal-body risk-body">
+                <p>This application is currently in the <strong>Beta</strong> stage.</p>
+                <p>To prevent potential data loss, please do not use it on <strong>important files</strong> without backing them up first.</p>
+                <p>By using this application, you acknowledge and accept all associated risks.</p>
+            </div>
+            <div class="modal-footer risk-footer">
+                <button class="btn-risk-accept" id="btnRiskAccept">I Accept the Risks and Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Consent (Web Only) -->
+    <div id="cookieConsent" class="cookie-banner" style="display: none;">
+        <div class="cookie-content">
+            <p>We use cookies to improve your experience and analyze our traffic.</p>
+            <button id="btnCookieAccept" class="btn-cookie">Got it!</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Risk Modal Logic (Always show on launch)
+            var riskModal = document.getElementById('riskAcceptanceModal');
+            var riskBtn = document.getElementById('btnRiskAccept');
+            if (riskBtn) {
+                riskBtn.addEventListener('click', function() {
+                    riskModal.style.display = 'none';
+                    riskModal.classList.remove('active');
+                });
+            }
+
+            // Cookie Consent Logic (Web Only)
+            var isTauri = !!(window.__TAURI__ || window.__TAURI_INTERNALS__);
+            if (!isTauri) {
+                var cookieBanner = document.getElementById('cookieConsent');
+                var cookieAccepted = localStorage.getItem('hcie_cookies_accepted');
+                if (cookieAccepted !== 'true') {
+                    cookieBanner.style.display = 'flex';
+                }
+                var cookieBtn = document.getElementById('btnCookieAccept');
+                if (cookieBtn) {
+                    cookieBtn.addEventListener('click', function() {
+                        localStorage.setItem('hcie_cookies_accepted', 'true');
+                        cookieBanner.style.display = 'none';
+                    });
+                }
+            }
+        })();
+    </script>
 </body>
 
 </html>
