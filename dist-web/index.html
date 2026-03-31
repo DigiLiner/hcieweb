@@ -22,8 +22,8 @@
 
     <title>HCIE - Advanced Online Image Editor & Layered Design Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-lQ0LTJRd.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-L-BHrwiU.css">
+  <script type="module" crossorigin src="./assets/index-CIno5SNU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C00ky_F9.css">
 </head>
 
 <body>
@@ -65,7 +65,7 @@
     </script>
 
     <!-- ag-psd for PSD Writing Support (Local) -->
-    <script src="ag-psd.js"></script>
+    <script src="./ag-psd.js"></script>
 
 
     <div id="appContainer" style="display: flex; flex-direction: column; width: 100%; height: 100vh; overflow: hidden;">
@@ -716,16 +716,22 @@
                         <div class="panel-content">
                             <!-- Swatches Tab -->
                             <div class="panel-pane active" id="swatches-pane">
-                                    <div class="color-indicator-container" style="display: flex; gap: 4px; padding: 4px; align-items: center; background: #1a1a1a; border-radius: 4px; margin-bottom: 4px;">
-                                        <div id="primary-color-preview" style="width: 24px; height: 24px; border: 1px solid #555; background: #000000; cursor: pointer; border-radius: 2px;" title="Primary Color (Left Click Swatch)"></div>
-                                        <div id="secondary-color-preview" style="width: 24px; height: 24px; border: 1px solid #555; background: #ffffff; cursor: pointer; border-radius: 2px;" title="Secondary Color (Right Click Swatch)"></div>
-                                        <span style="font-size: 10px; color: #888; margin-left: 4px;">L: Primary / R: Fill</span>
-                                    </div>
-                                    <canvas id="colorBoxCanvas" width="224" height="150" style="width: 100%; height: 150px; background: #333; border-radius: 4px; border: 1px solid #1a1a1a; cursor: crosshair;"></canvas>
-                                    <div class="recent-colors-section">
-                                        <div class="section-title">Recent</div>
-                                        <div id="recentColorsGrid" class="recent-colors-grid"></div>
-                                    </div>
+                                <div class="color-indicator-container"
+                                    style="display: flex; gap: 4px; padding: 4px; align-items: center; background: #1a1a1a; border-radius: 4px; margin-bottom: 4px;">
+                                    <div id="primary-color-preview"
+                                        style="width: 24px; height: 24px; border: 1px solid #555; background: #000000; cursor: pointer; border-radius: 2px;"
+                                        title="Primary Color (Left Click Swatch)"></div>
+                                    <div id="secondary-color-preview"
+                                        style="width: 24px; height: 24px; border: 1px solid #555; background: #ffffff; cursor: pointer; border-radius: 2px;"
+                                        title="Secondary Color (Right Click Swatch)"></div>
+                                    <span style="font-size: 10px; color: #888; margin-left: 4px;">L: Primary / R:
+                                        Fill</span>
+                                </div>
+                                <canvas id="colorBoxCanvas" width="224" height="150"
+                                    style="width: 100%; height: 150px; background: #333; border-radius: 4px; border: 1px solid #1a1a1a; cursor: crosshair;"></canvas>
+                                <div class="recent-colors-section">
+                                    <div class="section-title">Recent</div>
+                                    <div id="recentColorsGrid" class="recent-colors-grid"></div>
                                 </div>
                             </div>
 
@@ -821,14 +827,12 @@
 
         <!-- Status Bar -->
         <div id="statusBar" class="status-bar">
-            <div class="status-bar-content">
-                <span class="unselectable" id="toolName">Pen</span>
-                <span id="statusMessage">Ready</span>
-                <span id="mousePosition">X: 0, Y: 0</span>
-                <span id="zoomDisplay"></span>
-                <span style="flex:1"></span>
-                <span id="filePath">Image 1</span>
-            </div>
+            <span class="unselectable" id="toolName">Pen</span>
+            <span id="statusMessage">Ready</span>
+            <span id="mousePosition">X: 0, Y: 0</span>
+            <span id="zoomDisplay"></span>
+            <span style="flex:1"></span>
+            <span id="filePath">Image 1</span>
         </div>
 
     </div>
