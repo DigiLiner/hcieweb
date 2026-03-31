@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+/**
+ * Special config for generating a static IIFE bundle 
+ * to bypass CORS/Module restrictions on file:// protocol.
+ */
 export default defineConfig({
   plugins: [],
   resolve: {
