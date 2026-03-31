@@ -5,7 +5,7 @@
 - Monorepo to Polyrepo migration and integration (Tasks #2000-#2008).
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
-- #1051: Krita (.kra) tiled format support. (Fixed missing `lzfjs` build dependency)
+- #1051: Krita (.kra) tiled format support. (Fixed: moved `lzfjs` to dependencies and added Vite resolution alias)
 
 ## 🔴 In Progress
 - Refactoring `floodFill` to respect selection mask (#1007).
