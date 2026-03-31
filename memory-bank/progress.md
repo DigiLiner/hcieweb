@@ -7,7 +7,7 @@
   - [x] #1004: Update dark theme checkerboard pattern. 🟢 (Completed)
   - [ ] #1005: Reorganize SVG icons and resource structure.
   - [x] #1050: Core I/O & Standard Rasters (PNG, JPG, BMP, TGA, ICO, WebP, GIF). 🟡
-  - [ ] #1051: Krita (.kra) Layered Support. 🟡
+  - [x] #1051: Krita (.kra) Layered Support. 🟡 (Fixed build dependency missing 'lzfjs')
   - [ ] #1052: GIMP (.xcf) Layered Support. 🔴
   - [ ] #1053: Paint.NET (.pdn) Layered Support. ⚪
   - [ ] #1007: Constrain Floodfill to selection area.
