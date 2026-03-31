@@ -2,12 +2,19 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@hcie/*": ["../hcie-*/src"]
+      "@hcie/*": [
+        "../hcie-*/src"
+      ]
     },
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["ES2020", "DOM"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "strict": true,
     "declaration": true,
     "composite": true,

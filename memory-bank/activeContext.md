@@ -40,7 +40,7 @@ _Follow task-specific logs in `memory-bank/task-logs/` for detailed granular pro
 3. Agent implements one task at a time, marks 🟡 on completion, awaits 🟢 confirmation.
 
 
-## Güncel Aşama: Monorepo -> Polyrepo Dönüşümü (#2000+)
-- **Plan**: `plan_2000_polyrepo_migration.md` ve detayları `plan_2001_core_extraction.md` üzerinden devam ediyor.
-- **Durum**: Kütüphaneler target dizinlere oluşturuluyor ve `file:../` sembolleriyle bağlandı.
-- **Sıradaki Adım**: Plan klasöründeki yönergeler takip edilerek `#2007` ve `#2008` işlemleri gerçekleştirilmeli.
+## Güncel Aşama: UI/UX & Gelişmiş Format Desteği (#1000+)
+- **Durum**: Monorepo -> Polyrepo dönüşümü başarıyla tamamlandı. 🟢
+- **Sıradaki Adım**: Phase 9 (UI Polishing) ve profesyonel dosya formatları (.kra, .xcf, .pdn) için derinlemesine entegrasyon.
+- **Odak**: Floodfill (#1007) ve SVG Reorganizasyonu (#1005).

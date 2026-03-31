@@ -12,11 +12,6 @@
   - [ ] #1053: Paint.NET (.pdn) Layered Support. ⚪
   - [ ] #1007: Constrain Floodfill to selection area.
 
-- [ ] **Phase 11: Monorepo to Polyrepo Migration**
-  - [x] #2000: Hedef Repoların Oluşturulması ve Başlangıç Ayarları. 🟢
-  - [x] #2001-2006: Kütüphane klasörlerinin kopyalanması, `file:` linkleriyle yerel npm modüllerine sarılması. 🟢
-  - [x] #2007: Ana uygulamanın (hcie) Workspace Kaldırılması ve yerel Polyrepo'ya bağlanması. 🟡
-  - [x] #2008: Ana Uygulamanın Derlenmesi ve Testi. 🟡
 
 ### Archived Completed Phases
 

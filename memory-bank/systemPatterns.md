@@ -19,5 +19,12 @@
 - **Bidirectional Sync**: Shared settings are synced to/from the core `g` object upon tool change and manual input, ensuring old core logic remains functional without awareness of the storage structure.
 - **Auto-Restoration**: Tools retrieve their specific last-used settings immediately upon selection.
 
+## IO & Formats
+- **Standardized DecodedImage**: All format adapters (`IImageFormat`) must return a `DecodedImage` object containing `width`, `height`, and `layers: LayerData[]`.
+- **LayerData Flexibility**: `LayerData` supports both `HTMLCanvasElement` and `ImageData` for the `canvas` property, enabling adapters to choose the most efficient representation.
+- **ProjectIO Orchestration**: `ProjectIO` serves as the central bridge between file binary data and the core `LayerClass` and `Document` systems.
+
 ## Project Structure
-- **Monorepo**: Logical separation into `@hcie/core`, `@hcie/tools`, `@hcie/ui`, `@hcie/io`, and `@hcie/shared`.
+- **Polyrepo Migration**: Logical separation into `@hcie/core`, `@hcie/tools`, `@hcie/ui-components`, `@hcie/io`, `@hcie/canvas-ui`, and `@hcie/shared`.
+- **Local Linking**: Development uses `file:../hcie-*` npm links to maintain isolation while allowing cross-package development.
+
