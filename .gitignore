@@ -3,7 +3,6 @@
 /.vs/
 /.idea/
 /dist/
-/dist-web/
 /tauri-dist/
 /.history/
 /.cursor/
