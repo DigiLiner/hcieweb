@@ -14,7 +14,7 @@
     "tauri": "APPIMAGE_EXTRACT_AND_RUN=1 tauri",
     "tauri:build": "APPIMAGE_EXTRACT_AND_RUN=1 tauri build",
     "web:dev": "vite --mode web",
-    "web:build": "vite build --mode web && npm run static:bundle && cp dist-static/main.bundle.js dist-static/hcie.css dist-web/",
+    "web:build": "npm run static:bundle && cp dist-static/main.bundle.js dist-static/hcie.css public/ && vite build --mode web",
     "static:bundle": "vite build --config vite-static.config.ts",
     "web:preview": "vite preview --mode web",
     "web:serve": "npm run serve",

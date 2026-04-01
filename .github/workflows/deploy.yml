@@ -64,7 +64,10 @@ jobs:
           
       - name: Install dependencies
         working-directory: hcie
-        run: npm install
+        run: |
+          npm install
+          echo "Verifying dependencies..."
+          ls -l node_modules/lzfjs || echo "lzfjs NOT FOUND in current node_modules"
         
       - name: Build Web App
         working-directory: hcie

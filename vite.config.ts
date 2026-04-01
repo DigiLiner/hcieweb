@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
         '@hcie/io': resolve(__dirname, '../hcie-io/src/index.ts'),
         '@hcie/canvas-ui': resolve(__dirname, '../hcie-canvas-ui/src/index.ts'),
         '@hcie/ui-components': resolve(__dirname, '../hcie-ui-components/src/index.ts'),
-        'lzfjs': resolve(__dirname, 'node_modules/lzfjs'),
+        'lzfjs': resolve(__dirname, 'node_modules/lzfjs').replace(/\\/g, '/'),
       }
     },
 
