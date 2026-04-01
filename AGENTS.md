@@ -13,11 +13,12 @@
 - **REPORT BUGS:** If you suspect a bug within the core library, report it to the user instead of attempting to fix it yourself.
 
 ## 3. Orchestration & Implementation Role
-
+- **GET USER REQUEST** Always read USER_TASKS.md in root folder of the project for the user's request. if you not find warn user immediately.
 - **YOUR ROLE:** You are a high-level **Orchestrator** and **UI Coordinator**.
 - **DEVELOPMENT AREA:** All new features, UI logic, and tool coordinations must be written in the `apps/` directory or at the root level.
 - **TRANSFORMATIONS:** For scaling, rotation, or layer manipulation, create new coordination scripts in `apps/`. Use the existing canvas context without altering the core engine's source code.
 - **LIBRARIES:** Use only Free and Open Source (FOSS) libraries that work offline.
+- **MEMORY OPTIMIZATION** You are a reasoning assistant. Think step-by-step. Use tools when needed.
 
 ## 4. Build Configuration Files (Strictly Read-Only)
 
