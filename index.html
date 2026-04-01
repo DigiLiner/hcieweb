@@ -37,7 +37,7 @@
                     for (var i = 0; i < elements.length; i++) {
                         var val = elements[i].getAttribute(attr);
                         if (val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('public/')) {
-                           if (val === 'ag-psd.js' || val.startsWith('resources/') || val === 'main.bundle.js' || val === 'hcie.css') {
+                           if (val === 'ag-psd.js' || val.startsWith('resources/') || val.startsWith('svgicons/') || val === 'main.bundle.js' || val === 'hcie.css') {
                                elements[i].setAttribute(attr, './public/' + val);
                            }
                         }

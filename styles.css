@@ -288,6 +288,10 @@ td {
   --scrollbar-thumb: #ccc;
   --toolbox-btn-bg: #ffffff;
   --toolbox-btn-border: #999;
+  --icon-invert: 0;
+  --icon-grayscale: 0;
+  --icon-brightness: 1;
+  --icon-filter-unified: none !important;
   --checker-color-1: #c0c0c0;
   --checker-color-2: #808080;
 }
