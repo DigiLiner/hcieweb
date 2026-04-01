@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../hcie-io"
+		},
+		{
+			"path": "../hcie-ui-components"
+		},
+		{
+			"path": "../hcie-canvas-ui"
+		},
+		{
+			"path": "../hcie-shared"
+		},
+		{
+			"path": "../hcie-tools"
+		}
+	],
+	"settings": {}
+}
