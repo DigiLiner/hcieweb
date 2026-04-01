@@ -58,18 +58,17 @@
     </script>
     <script>
         // Detection for Environments that don't support JIT TS transformation (Vite)
-        // file: protocol or production hosts like github.io
+        // or for any built production environment (dist folders)
         (function() {
-            var isGitHub = window.location.hostname.includes('github.io');
-            var isLocalFile = window.location.protocol === 'file:';
+            var isBuild = !!document.querySelector('link[href*="assets/"]');
             
-            if (isLocalFile || isGitHub) {
+            if (isBuild) {
                 // Static IIFE Fallback (CORS/MIME bypass)
                 var link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = './hcie.css'; // Path is relative to index.html, public prefix removed
                 document.head.appendChild(link);
-                console.log("Environment: Static (GitHub/Local) - Loading CSS fallback");
+                console.log("Environment: Production Build - Loading CSS fallback");
             }
         })();
     </script>
@@ -120,13 +119,14 @@
     <script src="./ag-psd.js"></script>
 
     <script>
-        // Load main.ts only if NOT on static production or file://
+        // Load main.ts only in Development environment
         (function() {
-            var isGitHub = window.location.hostname.includes('github.io');
-            var isLocalFile = window.location.protocol === 'file:';
+            // Check for build marker (Vite places CSS/JS in assets/)
+            var isBuild = !!document.querySelector('link[href*="assets/"]');
             
-            if (!isGitHub && !isLocalFile) {
+            if (!isBuild) {
                 document.write('<script type="module" src="apps/web/src/main.ts"><\/script>');
+                console.log("Environment: Development - Loading main.ts");
             }
         })();
     </script>
@@ -1033,14 +1033,13 @@
     <script>
         // Static IIFE Fallback (Execute AFTER body is parsed)
         (function() {
-            var isGitHub = window.location.hostname.includes('github.io');
-            var isLocalFile = window.location.protocol === 'file:';
+            var isBuild = !!document.querySelector('link[href*="assets/"]');
             
-            if (isLocalFile || isGitHub) {
+            if (isBuild) {
                 var script = document.createElement('script');
                 script.src = './main.bundle.js'; // Path is relative to index.html, public prefix removed
                 document.body.appendChild(script);
-                console.log("Environment: Static - Fallback Script Injected");
+                console.log("Environment: Production Build - Fallback Script Injected");
             }
         })();
     </script>

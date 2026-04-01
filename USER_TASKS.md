@@ -7,24 +7,6 @@ The AI AGENT is strictly forbidden from modifying this file.
 
 (Write your requests here)
 
-- [x] list every line of code related by polygol select, analyze to remove safely and give me a list of codes to delete.
-
-  19.02.2026 (solved)
-
-#1001 – Araç kutusu (Toolbox) butonlarının tema uyumu
-
-Türkçe:
-Hata: Araç kutusundaki butonlar, koyu tema etkin olsa bile beyaz renkte kalıyor. Bu butonların CSS stilleri, yerel (native) buton görünümünde olacak ve açık/koyu temaya otomatik uyum sağlayacak şekilde düzenlenmelidir. Ayrıca butonların içindeki SVG simgelerinin renkleri de temaya uygun olarak güncellenmelidir.
-
-English:
-Bug: Toolbox buttons remain white even when the dark theme is active. Their CSS styles should be redesigned to look like native buttons and adapt automatically to light/dark themes. Also, the colors of the SVG icons inside the buttons must be updated to match the active theme.
-#1002 – Web sürümünde durum çubuğu (status bar) görünmüyor
-
-Türkçe:
-Hata: Uygulamanın web sürümünde durum çubuğu (status bar) hiç görünmüyor. Bu durum, CSS veya render hatasından kaynaklanıyor olabilir. Durum çubuğunun tüm sürümlerde (web ve masaüstü) doğru şekilde görüntülenmesi sağlanmalıdır.
-
-English:
-Bug: In the web version of the application, the status bar is not visible at all. This may be caused by a CSS or rendering error. The status bar must be made visible correctly in all versions (web and desktop).
 #1003 – Çizim araçlarının ayarlarının kalıcı olarak saklanması
 
 Türkçe:
@@ -34,19 +16,10 @@ English:
 New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored in a configuration file. These settings include values such as size, opacity, and radius. When the user changes any setting, the change must be saved immediately and restored automatically the next time the application starts. These settings must be kept in a global object and the corresponding UI controls (sliders, checkboxes, buttons) must always stay synchronized with these global values.
 #1004 – Koyu tema için dama tahtası (checkerboard) deseni
 
-Türkçe:
-Hata/İyileştirme: Koyu tema aktifken, saydamlık arka planı olarak kullanılan dama tahtası deseni göze fazla parlak geliyor. Bu desen, koyu tema için özel olarak koyu gri ve normal gri karelerden oluşacak şekilde yeniden tanımlanmalıdır. Desen kaynağı (resource) ayrı bir dosyadan yüklenmeli ve tema değiştiğinde otomatik olarak değiştirilmelidir.
-
-English:
-Bug/Enhancement: When the dark theme is active, the checkerboard pattern used as the transparency background appears too bright. This pattern should be redefined specifically for the dark theme using dark gray and normal gray squares. The pattern resource should be loaded from a separate file and automatically swapped when the theme changes.
 #1005 – Kaynak dosyalarının (SVG simgeleri) tema uyumu ve klasör yapısı
 
 Türkçe:
 Yeniden düzenleme: Tüm kaynak dosyaları (özellikle SVG simgeler) temaya uygun şekilde düzenlenmelidir. Gerekirse simgeler tematik gruplara ayrılmalı ve mantıklı bir klasör yapısına yerleştirilmelidir. Kullanılmayan veya gelecekte ihtiyaç duyulabilecek kaynaklar ise “depo” (archive/storage) adlı bir klasöre taşınmalıdır. Amaç, proje dosyalarını temiz ve sürdürülebilir kılmaktır.
-
-English:
-Reorganization: All resource files (especially SVG icons) must be made theme-aware. If necessary, icons should be grouped thematically and placed in a sensible folder structure. Unused resources or those that might be needed in the future should be moved to an “archive” folder. The goal is to keep the project files clean and maintainable.
-
 
 #1006 – Farklı dosya formatlarını okuma/yazma altyapısı
 
@@ -88,7 +61,6 @@ New feature: To support reading and writing different image file formats, design
 
 Additionally, files from the following applications must be supported: Krita, GIMP, Photoshop, Paint.NET. Build the necessary infrastructure to read, write, and edit these file formats.
 
-
 rgba(19, 250, 123, 0.96) butonlarda ve menülerde simgeler görünmüyor.
 
 rgba(10, 240, 60, 0.97) silgi seçili alan dışını siliyor. Halbuki oraya dokunmamalı
@@ -97,3 +69,10 @@ rgba(10, 240, 60, 0.97) silgi seçili alan dışını siliyor. Halbuki oraya dok
 #1017
 #1018
 #1019
+
+#1020 FTP , Github ve Statik site hataları
+
+https://digiliner.github.io/hcieweb/ sitesinde hatalar var. bu projeyi oraya yükledim. sorun ne ise çöz.
+
+bu projenin github adresidir.  
+<br/>statik adres ise https://digiliner.org/hcie/ buraya fa ftp ile yükleme yapıyorum . site yerelde dist-web klasöründe normal çalışıyor . ama sitelere yüklediğimde sorun çıkıyor. sayfa tam yüklenmiyor. script eksik gibi hatalar var.
