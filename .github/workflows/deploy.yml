@@ -71,7 +71,12 @@ jobs:
         
       - name: Build Web App
         working-directory: hcie
-        run: npm run web:build
+        run: |
+          npm run web:build
+          echo "==== Build Verification ===="
+          ls -lh dist-web/main.bundle.js || echo "main.bundle.js MISSING"
+          ls -lh dist-web/hcie.css || echo "hcie.css MISSING"
+          ls -lh dist-web/assets/ || echo "Assets folder MISSING"
         env:
           VITE_BASE_URL: /${{ github.event.repository.name }}/ # Adjust if not deploying to project root
 
