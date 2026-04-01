@@ -13,7 +13,6 @@
 - [ ] #1030: GIMP (.xcf) Save/Export support. ⚪ (Wait, plan file says #1040)
 - [ ] #1040: Krita (.kra) Save/Export support. ⚪ (Wait, plan file says #1030)
 - [ ] #1050 / #1053: Paint.NET (.pdn) Import support. ⚪
-- [ ] #1060: Photoshop (.psd) Export support. ⚪
 
 ### Phase 11: Specialized Targets & Workspace
 - [ ] #1070: Icon (.ico) Export support. ⚪
@@ -38,6 +37,7 @@
 - [x] UI UX Polish: Versioning, Beta warning, Risk acceptance modal. 🟢
 - [x] #2000-2008: Monorepo to Polyrepo migration and integration. 🟢
 - [x] Rounded Rectangle Fix: Normalization of dimensions. 🟢
+- [x] #1060: Photoshop (.psd) Export/Import support. 🟢
 - [x] DEV_GUIDE.md & README.md updates for developers and users. 🟢
 
 ## Pending/Needs Assessment

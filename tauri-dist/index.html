@@ -72,7 +72,8 @@
             }
         })();
     </script>
-  <link rel="stylesheet" crossorigin href="./assets/index-Cqy04PT8.css">
+  <script type="module" crossorigin src="./assets/index-B0V9bxfC.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BJsCiji9.css">
 </head>
 
 <body>
@@ -118,17 +119,11 @@
     <!-- ag-psd for PSD Writing Support (Local) -->
     <script src="./ag-psd.js"></script>
 
+    <!-- Application Bundle / Development Entry -->
     <script>
-        // Load main.ts only in Development environment
-        (function() {
-            // Check for build marker (Vite places CSS/JS in assets/)
-            var isBuild = !!document.querySelector('link[href*="assets/"]');
-            
-            if (!isBuild) {
-                document.write('<script type="module" src="apps/web/src/main.ts"><\/script>');
-                console.log("Environment: Development - Loading main.ts");
-            }
-        })();
+        // Detection for environments where ES modules might fail (e.g., file:// protocol)
+        // Console will show an error, but the Fallback IIFE at the end of body will take over.
+        console.log("Environment: Loading application entry...");
     </script>
 
     <div id="appContainer" style="display: flex; flex-direction: column; width: 100%; height: 100vh; overflow: hidden;">
@@ -1033,13 +1028,15 @@
     <script>
         // Static IIFE Fallback (Execute AFTER body is parsed)
         (function() {
-            var isBuild = !!document.querySelector('link[href*="assets/"]');
+            var isLocal = window.location.protocol === 'file:';
             
-            if (isBuild) {
+            // Only inject the IIFE bundle if we are in static file mode
+            // AND the UI has not been initialized yet by the standard module.
+            if (isLocal && !window.UI_INITIALIZED) {
                 var script = document.createElement('script');
-                script.src = './main.bundle.js'; // Path is relative to index.html, public prefix removed
+                script.src = './main.bundle.js'; 
                 document.body.appendChild(script);
-                console.log("Environment: Production Build - Fallback Script Injected");
+                console.log("Environment: Static File Fallback - Injecting main.bundle.js");
             }
         })();
     </script>

@@ -22,7 +22,7 @@
 
 ## 4. Build Configuration Files (Strictly Read-Only)
 
-- **VITE & BUILD CONFIGURATION:** Files such as `vite.config.ts`, `vite-static.config.ts`, and `.github/workflows/deploy.yml` are considered strictly READ-ONLY.
+- **BUILD & TS CONFIGURATION:** Files such as `vite.config.ts`, `vite-static.config.ts`, `.github/workflows/deploy.yml`, and ALL `tsconfig.json` or `tsconfig.base.json` files are considered strictly READ-ONLY. AI agents MUST NOT modify these files.
 - **AUTHORIZATION:** AI agents MUST NOT modify these configuration files without explicit, prior user approval. If an issue is suspected to originate from these files, the agent must inform the user and request permission to modify them.
 
 ## 5. Memory Bank & Context Management
@@ -35,7 +35,7 @@
 - **COMPLETION CONFIRMATION:** Before archiving any task log or marking a task as completed in `progress.md`, the agent MUST ask the user for confirmation every single time.
 - **PLAN MAINTENANCE:** Keep the `memory-bank/plans/` directory updated with current architectural designs or feature implementation plans, but do not archive them prematurely.
 
-## 6. Status Reporting (#1008 & #1009 — Mandatory)
+## 6. Status Reporting (Active Issues — Mandatory)
 
 ### MESSAGE_FROM_AGENT.md — Always-Updated, Color-Coded Status Report
 
