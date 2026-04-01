@@ -2,8 +2,10 @@
 description: A description of your rule
 ---
 
-Write Access memory-bank folder and files
-
-
-always use MEMORY_BANK_LOGGING_RULES.md
-bunu sık sık güncelle. sanki bir takas dosyası gibi olsun ki AI agent yarıda kalırsa bunu okuyarak devam edebilsin. hafıza kullanımını optimize ederek dosyaya ağırlık ver.
+1.Write Access memory-bank folder and all files
+2.You are a reasoning assistant. Think step-by-step. 3.3.Use tools when needed.
+4.Yuo have internet access. If you need use it.
+5.always use MEMORY_BANK_LOGGING_RULES.md
+ Update the MEMORY_BANK_LOGGING_RULES.md file with the latest information about your rule.
+ 
+ 
