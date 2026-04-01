@@ -2,6 +2,8 @@
 
 ![HCIE Logo](./public/resources/themes/ie_dark/hcie.png)
 
+**[✨ Try the Live Demo here!](https://digiliner.github.io/hcieweb/)**
+
 A modern, professional-grade image editing and layered design tool built with **Vite**, **TypeScript**, and **Tauri v2**. 
 
 HCIE is designed to bridge the gap between web-based editors and high-performance desktop applications, offering a unified experience across platforms.
