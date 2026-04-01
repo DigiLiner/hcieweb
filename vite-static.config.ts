@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+// ============================================================================
+// @AI-AGENT: DO NOT MODIFY THIS FILE WITHOUT EXPLICIT USER APPROVAL.
+// This is a strictly controlled build configuration file (See AGENTS.md Rule 4).
+// ============================================================================
+
 /**
  * Special config for generating a static IIFE bundle 
  * to bypass CORS/Module restrictions on file:// protocol.

@@ -1,3 +1,7 @@
+# ============================================================================
+# @AI-AGENT: DO NOT MODIFY THIS FILE WITHOUT EXPLICIT USER APPROVAL.
+# This is a strictly controlled build configuration file (See AGENTS.md Rule 4).
+# ============================================================================
 name: Build and Deploy Web App
 
 on:
