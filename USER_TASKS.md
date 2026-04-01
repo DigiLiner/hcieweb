@@ -70,4 +70,26 @@ rgba(10, 240, 60, 0.97) silgi seçili alan dışını siliyor. Halbuki oraya dok
 #1018
 #1019
 
+#1030 Gimp dosyası kaydetme özelliği ekle
 
+#1040 Krita dosyası kaydetme özelliği ekle
+
+#1050 Paint.NET (.pdn) format desteği . dosya import özelliği ekle
+
+#1060 Photoshop (.psd) dosyası export özelliği ekle
+#1070 Icon (.ico) dosyası export özelliği ekle
+#1071 Icon (.ico) dosyası import özelliği ekle
+#1072 Icon düzenleme için canvas ve toolset farklı olacak şekilde workspace yapılanması planlanmalı
+#1080 SVG düzenleme için workspace yapılanması planlanmalı
+#1081 SVG Import özelliği ekle
+#1082 SVG Export özelliği ekle
+
+#1100 viewer modu eklenecek. 
+#1101 viewer modunda faststone benzeri bir arayüz kullanılacak. 
+#1102 viewer modunda resimler arasında geçiş yapılacak. 
+#1104 viewer basit çizim araçları da olacak
+
+#1200 Resim renk paleti ile ilgili işler
+#1210 Contrast, Brightness, Hue, Saturation ayarları eklenecek
+
+#1300 AI resim düzenleme araçları eklenecek
