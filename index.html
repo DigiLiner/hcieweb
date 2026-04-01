@@ -53,14 +53,21 @@
         })();
     </script>
     <script>
-        // Static IIFE Fallback for file:// protocol (CORS bypass)
-        if (window.location.protocol === 'file:') {
-            var link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'public/hcie.css';
-            document.head.appendChild(link);
-            console.log("Static Fallback: Loading CSS fallback");
-        }
+        // Detection for Environments that don't support JIT TS transformation (Vite)
+        // file: protocol or production hosts like github.io
+        (function() {
+            var isGitHub = window.location.hostname.includes('github.io');
+            var isLocalFile = window.location.protocol === 'file:';
+            
+            if (isLocalFile || isGitHub) {
+                // Static IIFE Fallback (CORS/MIME bypass)
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = './public/hcie.css';
+                document.head.appendChild(link);
+                console.log("Environment: Static (GitHub/Local) - Loading CSS fallback");
+            }
+        })();
     </script>
 </head>
 
@@ -108,10 +115,15 @@
     <script src="public/ag-psd.js"></script>
 
     <script>
-        // Load main.ts only if NOT on file:// protocol (where it would fail with CORS)
-        if (window.location.protocol !== 'file:') {
-            document.write('<script type="module" src="apps/web/src/main.ts"><\/script>');
-        }
+        // Load main.ts only if NOT on static production or file://
+        (function() {
+            var isGitHub = window.location.hostname.includes('github.io');
+            var isLocalFile = window.location.protocol === 'file:';
+            
+            if (!isGitHub && !isLocalFile) {
+                document.write('<script type="module" src="apps/web/src/main.ts"><\/script>');
+            }
+        })();
     </script>
 
     <div id="appContainer" style="display: flex; flex-direction: column; width: 100%; height: 100vh; overflow: hidden;">
@@ -1014,13 +1026,18 @@
         })();
     </script>
     <script>
-        // Static IIFE Fallback for file:// protocol (Execute AFTER body is parsed)
-        if (window.location.protocol === 'file:') {
-            var script = document.createElement('script');
-            script.src = 'public/main.bundle.js';
-            document.body.appendChild(script);
-            console.log("Static Fallback Script Injected at Body End");
-        }
+        // Static IIFE Fallback (Execute AFTER body is parsed)
+        (function() {
+            var isGitHub = window.location.hostname.includes('github.io');
+            var isLocalFile = window.location.protocol === 'file:';
+            
+            if (isLocalFile || isGitHub) {
+                var script = document.createElement('script');
+                script.src = './public/main.bundle.js';
+                document.body.appendChild(script);
+                console.log("Environment: Static - Fallback Script Injected");
+            }
+        })();
     </script>
 </body>
 
