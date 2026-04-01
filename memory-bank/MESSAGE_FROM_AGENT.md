@@ -1,19 +1,20 @@
 # Task Status Report
-*Last updated: 2026-03-31 16:15*
+*Last updated: 2026-04-01 15:45*
 
 ## 🟢 Completed (USER confirmed)
-- **#2000-2006**: Polyrepo migration and initial setup.
-- **#2007**: Root workspace removal and local linking (`file:../`).
-- **#2008**: Core application integration and verification.
-- **Bug Fix**: Resolved `DecodedImage` type mismatch and `project-io.js` legacy sync issues.
-- **#1050, #1051, #1052**: Core IO, Krita, and GIMP format basics restored and verified.
-
-## 🟡 Waiting to Confirm (finished, needs user verification)
-- **Debug index.html**: Resolved icon 404s and script path issues for static loading. Resolved 15+ console errors. CORS for `main.ts` is a browser limitation for `file://`.
-
+- **#1020 GitHub & FTP Errors**: Deployed the robust Vite module resolution, CSS injection, and `lzfjs` GHA payload fix. Site is confirmed working.
+- **Static Support (Bypass CORS)**: Created a separate `vite-static.config.ts` to generate an IIFE bundle (`main.bundle.js` and `hcie.css`) which runs correctly over `file://` protocol. Added a conditional loader in `index.html` to automatically switch between standard development (Vite/TS) and static (bundled IIFE) modes.
+- **UI UX Polish**: Added version `v4.0.0 Beta` and "Beta program, do not use on important files" (English) to the header. Added a blocking risk acceptance modal in English on page load.
+- **#1051 Krita (.kra) Support**: Tiled format support implemented and verified.
+- **#1052 GIMP (.xcf) Support**: Format parser logic for XCF (v11+) implemented and verified.
+- **#2000-2008**: Monorepo to Polyrepo migration and integration.
+- **Rounded Rectangle Fix**: Resolved the bottom-right to top-left normalization bug.
+- **#1007 Floodfill/Eraser Selection**: Confirmed by user as solved. Tools now strictly respect the active selection mask.
+- **DEV_GUIDE.md Update**: Updated development documentation with Vite/Tauri commands, Polyrepo package details, and static deployment instructions.
+- **GitHub README.md**: Created a professional, English README with logo, beta warning, feature list, and roadmap.
 
 ## 🔴 In Progress
-- **Next Phase**: Continuing with remaining Phase 9 tasks (#1003, #1005, #1053).
+- **#1005 SVG Icon Reorganization**: Categorizing 200+ icons into theme-based folders (tools, ui, selection, file, edit, depo).
 
 ## ⚪ Backlog
 | Task | Description | Plan File |

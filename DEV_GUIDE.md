@@ -1,147 +1,99 @@
-# Development Guide
+# Development Guide (HCIE v4.0.0 Beta)
 
-## Running on Localhost
+This guide provides information for developers working on the HC Image Editor (HCIE). The project has migrated from a legacy Webpack/Electron architecture to a modern **Vite + Tauri v2** polyrepo structure.
 
-### Option 1: Webpack Dev Server (Recommended)
-This provides hot reload and automatic browser refresh:
+## Core Commands
 
-```bash
-npm run web:dev
-```
-
-- Opens automatically at `http://localhost:8080`
-- Hot module replacement enabled
-- TypeScript compiles automatically
-- Changes reflected instantly
-
-### Option 2: Simple HTTP Server
-For quick testing without webpack:
+### 🔴 Development (Dev Mode)
+To start the application with hot-reload for UI and logic changes:
 
 ```bash
-# First compile TypeScript
-npm run build
-
-# Then serve
-npm run serve
-```
-
-- Serves at `http://localhost:8000`
-- No hot reload, manual refresh needed
-- Faster startup
-
-### Option 3: Electron Desktop App
-To run as Electron desktop application:
-
-```bash
+# General development (launches Vite dev server)
 npm run dev
-```
 
----
-
-## Development Workflow
-
-### 1. Start Development Server
-```bash
+# Targeted Web development mode
 npm run web:dev
 ```
 
-### 2. Make Code Changes
-Edit `.ts` files in the project root:
-- `tools.ts` - Drawing tools
-- `filters.ts` - Image filters
-- `global.ts` - Global settings
-- `drawing_canvas.ts` - Canvas logic
+### 🟢 Build for Production
 
-### 3. See Changes Live
-Webpack dev server will automatically:
-- Recompile TypeScript
-- Refresh the browser
-- Show compilation errors in overlay
+#### 1. Web Version (GitHub Pages / FTP / Static Server)
+This build generates standard assets and a special IIFE bundle (`main.bundle.js` and `hcie.css`) that allows the application to run over the `file://` protocol, bypassing browser CORS restrictions.
 
----
-
-## Build for Production
-
-### Web Version
 ```bash
+# Complete static web build (Recommended for Deployment)
 npm run web:build
 ```
-Output: `dist/bundle.js`
+*   **Output:** Located in `dist-web/` (or `dist-static/` for bundles).
+*   **Deployment:** Simply upload the contents of the final build folder to GitHub Pages or your FTP server.
 
-### Electron App
+#### 2. Desktop Version (Tauri / Windows / Linux / MacOS)
+Builds the native desktop application binaries.
+
 ```bash
-npm run app:dist
+# Build native application installers/binaries
+npm run tauri:build
 ```
+*   **Output:** Located in `src-tauri/target/release/bundle/`.
 
 ---
 
-## Project Structure
+### ⚪ Advanced Building & Script Details
 
-```
-/run/media/hc/DATA/00_PROJECTS/Electron/hcie/
-├── index.html          # Main HTML (works for both Electron & Web)
-├── global.ts           # Global state and Tool class
-├── tools.ts            # Drawing tools (Pen, Brush, Eraser, etc.)
-├── filters.ts          # Image filters (Sepia, Blur, Melt, etc.)
-├── drawing_canvas.ts   # Canvas event handling
-├── renderer.ts         # Renderer entry point
-├── main.ts             # Electron main process (desktop only)
-├── webpack.config.web.js  # Webpack config for web
-└── dist/               # Compiled output
-```
+| Script | Purpose |
+|--------|---------|
+| `npm run static:bundle` | Only generates the `main.bundle.js` and `hcie.css` IIFE bundles. |
+| `npm run serve` | Locally serves the web build at `http://localhost:8000` for final testing. |
+| `npm run ts:build` | Compiles all TypeScript packages in the polyrepo using project references. |
+
+---
+
+## Architecture & Polyrepo Structure
+
+The project is divided into specialized packages located in the parent directory. This allows for modular testing and reuse.
+
+*   `@hcie/core`: Global state, event systems, and layer classes.
+*   `@hcie/canvas-ui`: Main drawing canvas logic, layer rendering, and viewport management.
+*   `@hcie/tools`: Implementation of drawing tools (Pen, Brush, Eraser, Spray, etc.).
+*   `@hcie/io`: Format adapters (PSD, Krita, GIMP, PNG, JPG).
+*   `@hcie/ui-components`: Shared UI elements (Options Bar, Properties Panel, Dialogs).
+*   `@hcie/shared`: Utility functions, math, and shared interfaces.
+
+---
+
+## Recent Technical Implementations
+
+### 1. Static Loading & CORS Bypass
+The application includes a specialized loader in `index.html`. If it detects the `file://` protocol or a static environment, it automatically switches from ES module loading to the bundled `main.bundle.js`. This allows users to open `index.html` directly from their hard drive.
+
+### 2. Selection Masking Support
+Tools like `Eraser` and `Floodfill` now strictly respect the global selection mask. 
+*   **Eraser:** Uses `destination-out` composition on a masked `tempCanvas`.
+*   **Floodfill:** Uses a `maskData` bitwise check inside the scanline fill algorithm.
+
+### 3. Tool Settings Persistence
+Settings (Brush size, Opacity, Hardness) are persisted using the `SyncableState` interface. 
+*   **Storage:** Browser `localStorage` (Key: `hcie-tool-settings-v2`).
+*   **Sync Logic:** UI components trigger `saveToolSettings(undefined, g)` on change.
 
 ---
 
 ## Troubleshooting
 
-### Port Already in Use
-If port 8080 is taken:
+### CORS Errors in Browser
+If you see "CORS" or "MIME Type" errors when opening `index.html` locally:
+*   Ensure you ran `npm run web:build`.
+*   Check if `main.bundle.js` exists in the same directory as `index.html`.
+
+### Tauri Build Failures
+*   Update your Rust toolchain: `rustup update`.
+*   Linux users: Ensure all webkit2gtk-4.1 development headers are installed.
 ```bash
-# Edit webpack.config.web.js, change port: 8080 to another port
-# Or kill the process using the port
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget ...
 ```
 
-### TypeScript Errors
+### Script Execution on Linux
+If `tauri` commands fail with permission errors:
 ```bash
-# Check for compilation errors
-npm run build
+chmod +x node_modules/.bin/tauri
 ```
-
-### Module Not Found
-```bash
-# Install dependencies
-npm install
-```
-
----
-
-## IDE Configuration
-
-### VS Code
-1. Install recommended extensions:
-   - ESLint
-   - TypeScript and JavaScript Language Features
-
-2. Open project folder in VS Code
-
-3. Press `F5` or use Run > Start Debugging for Electron mode
-
-4. For web mode, use terminal: `npm run web:dev`
-
-### WebStorm/IntelliJ
-1. Right-click `package.json`
-2. Select "Show npm Scripts"
-3. Double-click `web:dev` to start
-
----
-
-## Testing
-
-### Quick Test
-1. Run `npm run web:dev`
-2. Browser opens automatically
-3. Try drawing with Pen tool
-4. Test new Brush with hardness
-5. Try Eraser tool
-6. Test filters (need UI buttons - coming next)
-

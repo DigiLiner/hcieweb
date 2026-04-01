@@ -70,9 +70,4 @@ rgba(10, 240, 60, 0.97) silgi seçili alan dışını siliyor. Halbuki oraya dok
 #1018
 #1019
 
-#1020 FTP , Github ve Statik site hataları
 
-https://digiliner.github.io/hcieweb/ sitesinde hatalar var. bu projeyi oraya yükledim. sorun ne ise çöz.
-
-bu projenin github adresidir.  
-<br/>statik adres ise https://digiliner.org/hcie/ buraya fa ftp ile yükleme yapıyorum . site yerelde dist-web klasöründe normal çalışıyor . ama sitelere yüklediğimde sorun çıkıyor. sayfa tam yüklenmiyor. script eksik gibi hatalar var.
