@@ -1,8 +1,8 @@
 # AI Agent Rules & Architecture Policy
 
 ## 1. Language & Documentation
-
-- **All documentation must be written in English.** 
+- **All communication must be in Turkish** 
+- **All documentation, file names, code comments must be written in English** 
 
 ## 2. Core Library Protection (Strictly Read-Only)
 

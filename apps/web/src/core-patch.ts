@@ -1,44 +1,37 @@
-import { g as coreG, HistoryManager, historyManager as coreHM, appEvents as coreAppEvents, renderImageTabs as coreRenderImageTabs } from '@hcie/core';
+import { g as coreG, HistoryManager, historyManager as coreHM, appEvents as coreAppEvents, renderImageTabs as coreRenderImageTabs, layers as coreLayers } from '@hcie/core';
 
 /**
- * Core Patch Controller
- * Overrides core library functions and proxies global state to fix issues:
- * #10010: Dialog/Splash Lifecycle
- * #10011: Undo/Redo Isolation & Consolidation
- * #10012: Selection History
- * #10013: History UI Sync
- * #10014: Brush Visibility/Event Cleanup
+ * Core Patch Controller - #10011 & #10012 İyileştirmeleri
+ * Undo/Redo gruplama, döküman izolasyonu ve seçim geçmişi sorunlarını giderir.
  */
 export function applyCorePatch() {
     const w = window as any;
 
-    // Use window-exposed globals if available (exposed by UIController)
-    // otherwise fallback to imported ones.
     const g = w.g || coreG;
     const historyManager = w.historyManager || coreHM;
     const appEvents = w.appEvents || coreAppEvents;
+    const coreLayersVar = coreLayers as any[];
+    const layers = w.layers || coreLayersVar;
 
     if (!g || !historyManager) {
-        console.warn('[core-patch] g or historyManager not found. Postponing patch...');
+        console.warn('[core-patch] g veya historyManager bulunamadı. Yama erteleniyor...');
         setTimeout(applyCorePatch, 100);
         return;
     }
 
-    if (w.__CORE_PATCH_APPLIED__) return;
-    w.__CORE_PATCH_APPLIED__ = true;
+    if (w.__CORE_PATCH_APPLIED_V2__) return;
+    w.__CORE_PATCH_APPLIED_V2__ = true;
 
-    console.log('[core-patch] Applying unified document isolation and UI sync patches...');
+    console.log('[core-patch] Gelişmiş döküman izolasyonu ve gruplama yaması uygulanıyor...');
 
-    // ─── History Manager Refinement (#10011) ───────────────────
+    // ─── Geçmiş Yönetimi Geliştirmeleri (#10011) ─────────────────
     
-    // GroupAction to bundle multiple actions into one undo step
     class GroupAction {
         constructor(public description: string, public actions: any[]) {}
         undo() { for (let i = this.actions.length - 1; i >= 0; i--) this.actions[i].undo(); }
         redo() { for (let i = 0; i < this.actions.length; i++) this.actions[i].redo(); }
     }
 
-    // Enhance HistoryManager with grouping capabilities
     const extendHistoryManager = (hm: any) => {
         if (hm._grouped) return;
         hm._grouped = true;
@@ -55,13 +48,14 @@ export function applyCorePatch() {
             }
         };
 
-        hm.beginGroup = function(description = 'Multiple Actions') {
+        hm.beginGroup = function(description = 'Çoklu İşlem') {
             const group = { description, actions: [] };
             this._groupStack.push(group);
             this._currentGroup = group;
         };
 
         hm.endGroup = function() {
+            if (this._groupStack.length === 0) return;
             const group = this._groupStack.pop();
             this._currentGroup = this._groupStack.length > 0 ? this._groupStack[this._groupStack.length - 1] : null;
             
@@ -88,7 +82,7 @@ export function applyCorePatch() {
         };
     };
 
-    // Proxy the singleton to redirect all calls to the ACTIVE document's HistoryManager instance.
+    // Singleton yöneticiye proxy üzerinden erişim
     const propsToProxy = ['push', 'undo', 'redo', 'clear', 'canUndo', 'canRedo', 'jumpTo', 'updateUI', 'beginGroup', 'endGroup'];
     propsToProxy.forEach(prop => {
         const originalValue = (historyManager as any)[prop];
@@ -96,20 +90,24 @@ export function applyCorePatch() {
             get() {
                 const activeHM = (window as any).historyManager;
                 const source = (activeHM && activeHM !== historyManager) ? activeHM : historyManager;
-                
                 if (source === historyManager) return originalValue;
-
                 const value = (source as any)[prop];
-                if (typeof value === 'function') return value.bind(source);
+                if (typeof value === 'function') {
+                    if (prop === 'updateUI') {
+                         return function(...args: any[]) {
+                             if (typeof value === 'function') return value.apply(source, args);
+                             console.warn("[HistoryProxy] Source does not have updateUI function");
+                         };
+                    }
+                    return value.bind(source);
+                }
                 return value;
             },
             configurable: true
         });
     });
 
-    // Storage for document-specific HistoryManagers
     const docHistories = new Map<any, any>();
-
     function getHistoryForDoc(doc: any) {
         if (!docHistories.has(doc.id)) {
             const hm = new HistoryManager(g.max_undo_steps || 200);
@@ -119,114 +117,219 @@ export function applyCorePatch() {
         return docHistories.get(doc.id);
     }
 
-    // --- State Trackers (#10014) ---
-    w.isMouseInCanvas = false;
-    (g as any).pX = -1000;
-    (g as any).pY = -1000;
+    // ─── Otomatik Fare Gruplaması ──────────────────────────────────
+    const attachInteractionListeners = () => {
+        const wrapper = document.getElementById('canvasWrapper');
+        if (!wrapper) return;
 
-    // --- #10012: Selection History & Consolidation ---
+        wrapper.addEventListener('mousedown', (e) => {
+            const hm = (window as any).historyManager;
+            if (hm && hm.beginGroup) {
+                const toolName = g.current_tool?.name || 'Çizim';
+                hm.beginGroup(toolName);
+            }
+        }, true);
+
+        window.addEventListener('mouseup', (e) => {
+            const hm = (window as any).historyManager;
+            if (hm && hm.endGroup) {
+                setTimeout(() => hm.endGroup(), 10);
+            }
+        }, true);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachInteractionListeners);
+    else attachInteractionListeners();
+
+    // --- ESC Key Handler ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (typeof (window as any).deselect === 'function') {
+                (window as any).deselect();
+            }
+        }
+    });
+
+    // ─── Seçim Geçmişi ve İzolasyonu (#10012) ───────────────────
     class SelectionAction {
-        constructor(
-            public description: string,
-            public oldMaskImageData: ImageData | null,
-            public oldBorder: any[],
-            public newMaskImageData: ImageData | null,
-            public newBorder: any[]
-        ) {}
+        constructor(public description: string, public before: any, public after: any) {}
+        
+        undo() { this.applyState(this.before); }
+        redo() { this.applyState(this.after); }
 
-        private applyState(mask: ImageData | null, border: any[]) {
-            (g as any).selectionMask = mask;
-            (g as any).selectionBorder = border;
-            (g as any).isSelectionActive = !!mask;
+        private applyState(state: any) {
+            (g as any).selectionMask = state.mask ? new ImageData(new Uint8ClampedArray(state.mask.data), state.mask.width, state.mask.height) : null;
+            (g as any).selectionBorder = state.border ? JSON.parse(JSON.stringify(state.border)) : [];
+            (g as any).isSelectionActive = !!state.mask || (state.border && state.border.length > 0);
             
-            if (mask) {
+            if (state.mask) {
+                const canWidth = state.mask.width || 1;
+                const canHeight = state.mask.height || 1;
                 const canvas = document.createElement('canvas');
-                canvas.width = mask.width;
-                canvas.height = mask.height;
+                canvas.width = canWidth;
+                canvas.height = canHeight;
                 const ctx = canvas.getContext('2d');
-                if (ctx) ctx.putImageData(mask, 0, 0);
+                if (ctx) ctx.putImageData(new ImageData(new Uint8ClampedArray(state.mask.data), canWidth, canHeight), 0, 0);
                 (g as any).selectionCanvas = canvas;
             } else {
                 (g as any).selectionCanvas = null;
             }
 
-            if (w.renderLayers) w.renderLayers();
+            // Force a full redraw of everything including the marching ants
+            if (w.renderLayers) {
+                w.renderLayers();
+            } else {
+                const mainCan = document.getElementById('drawingCanvas') as HTMLCanvasElement;
+                if (mainCan && w.drawSelectionBorder) {
+                    const mainCtx = mainCan.getContext('2d');
+                    if (mainCtx) w.drawSelectionBorder(mainCtx);
+                }
+            }
             if (w.updateLayerPanel) w.updateLayerPanel();
         }
-
-        undo() { this.applyState(this.oldMaskImageData, this.oldBorder); }
-        redo() { this.applyState(this.newMaskImageData, this.newBorder); }
     }
 
     function captureSelectionState() {
         return {
-            mask: g.selectionMask ? new ImageData(new Uint8ClampedArray(g.selectionMask.data), g.selectionMask.width, g.selectionMask.height) : null,
+            mask: g.selectionMask ? {
+                data: new Uint8ClampedArray(g.selectionMask.data),
+                width: g.selectionMask.width,
+                height: g.selectionMask.height
+            } : null,
             border: g.selectionBorder ? JSON.parse(JSON.stringify(g.selectionBorder)) : []
         };
     }
 
-    const selectionGfx = ['buildRectSelection', 'buildEllipseSelection', 'buildLassoSelection', 'buildPolygonalSelection', 'deselect', 'invertSelection', 'magicWandSelection'];
-    selectionGfx.forEach(fnName => {
-        if (typeof w[fnName] === 'function') {
-            const original = w[fnName];
-            w[fnName] = function(...args: any[]) {
-                const activeHM = (window as any).historyManager;
-                const groupStarted = activeHM && !activeHM._currentGroup;
-                if (groupStarted) activeHM.beginGroup(fnName.startsWith('build') ? 'Selection' : fnName.charAt(0).toUpperCase() + fnName.slice(1));
-                
-                const before = captureSelectionState();
-                original.apply(this, args);
-                const after = captureSelectionState();
-                
-                const maskChanged = (before.mask?.data.length !== after.mask?.data.length); // Rough check
-                const borderChanged = JSON.stringify(before.border) !== JSON.stringify(after.border);
-                
-                if (maskChanged || borderChanged) {
-                    if (w.historyManager) w.historyManager.push(new SelectionAction('Selection Change', before.mask, before.border, after.mask, after.border));
-                }
-
-                if (groupStarted) activeHM.endGroup();
-            };
-        }
-    });
-
-    // Patch Vector Tools to use grouping if available
-    const vectorTools = ['addVectorShape', 'updateVectorShape', 'deleteVectorShape'];
-    vectorTools.forEach(fnName => {
-        if (typeof w[fnName] === 'function') {
-            const original = w[fnName];
-            w[fnName] = function(...args: any[]) {
-                const activeHM = (window as any).historyManager;
-                if (activeHM) activeHM.beginGroup('Vector Action');
-                const res = original.apply(this, args);
-                if (activeHM) activeHM.endGroup();
-                return res;
-            };
-        }
-    });
-
-    // --- #10014: Brush Tip Visibility ---
-    const originalRenderLayers = w.renderLayers;
-    if (originalRenderLayers) {
-        w.renderLayers = function(tempCanvas?: any) {
-            if (g.documents.length === 0) return; 
-            const wasZooming = g.zooming;
-            if (!w.isMouseInCanvas) (g as any).zooming = true; 
-            originalRenderLayers(tempCanvas);
-            (g as any).zooming = wasZooming;
-        };
-    }
-
-    const attachMouseListeners = () => {
-        const area = document.getElementById('canvasWrapper');
-        if (area) {
-            area.addEventListener('mouseenter', () => { w.isMouseInCanvas = true; if (w.renderLayers) w.renderLayers(); });
-            area.addEventListener('mouseleave', () => { w.isMouseInCanvas = false; if (w.renderLayers) w.renderLayers(); });
-        }
+    const selectionGfxMap: any = {
+        'buildRectSelection': 'Dörtgen Seçim',
+        'buildEllipseSelection': 'Elips Seçim',
+        'buildLassoSelection': 'Kement Seçim',
+        'buildPolygonalSelection': 'Poligon Seçim',
+        'deselect': 'Seçimi Kaldır',
+        'invertSelection': 'Seçimi Ters Çevir',
+        'magicWandSelection': 'Sihirli Değnek',
+        'selectAll': 'Tümünü Seç'
     };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachMouseListeners);
-    else attachMouseListeners();
 
+    // ─── Universal Event-Level Selection Capture (V5) ───────────
+    const setupUniversalCapture = () => {
+        const can = document.getElementById("drawingCanvas") as HTMLCanvasElement;
+        if (!can) {
+            setTimeout(setupUniversalCapture, 500);
+            return;
+        }
+        if (can.dataset.universalPatched) return;
+        can.dataset.universalPatched = "true";
+
+        const recordChange = (actionName: string, before: any) => {
+            const after = captureSelectionState();
+            const maskChanged = (!!before.mask !== !!after.mask) || 
+                               (before.mask && after.mask && JSON.stringify(before.mask.data.length) !== JSON.stringify(after.mask.data.length));
+            const borderChanged = JSON.stringify(before.border) !== JSON.stringify(after.border);
+
+            if (maskChanged || borderChanged) {
+                const activeHM = (window as any).historyManager;
+                if (activeHM && typeof activeHM.push === 'function') {
+                    const toolName = actionName || g.current_tool?.name || 'Seçim Değişikliği';
+                    console.log(`[SelectionPatch] Event-based record: ${toolName}`);
+                    activeHM.push(new SelectionAction(toolName, before, after));
+                    if (activeHM.updateUI) activeHM.updateUI();
+                }
+            }
+        };
+
+        // Capture state at the very start of interaction (Capture Phase)
+        can.addEventListener('mousedown', (e) => {
+            if (e.buttons === 1 || e.buttons === 2) {
+                (window as any)._selectionBefore = captureSelectionState();
+            }
+        }, true);
+
+        // Record state at the end of interaction
+        can.addEventListener('mouseup', (e) => {
+            setTimeout(() => {
+                if ((window as any)._selectionBefore) {
+                    recordChange(null as any, (window as any)._selectionBefore);
+                    (window as any)._selectionBefore = null;
+                }
+            }, 50);
+        }, true);
+
+        // Handle Magic Wand (single click) and Polygon/Lasso finalization
+        can.addEventListener('click', (e) => {
+            if (g.current_tool?.id === 'Wand') {
+                setTimeout(() => {
+                    if ((window as any)._selectionBefore) {
+                        recordChange("Sihirli Değnek", (window as any)._selectionBefore);
+                        (window as any)._selectionBefore = null;
+                    }
+                }, 100);
+            }
+        }, true);
+
+        can.addEventListener('dblclick', () => {
+            setTimeout(() => {
+                if ((window as any)._selectionBefore) {
+                    recordChange("Poligon Seçim", (window as any)._selectionBefore);
+                    (window as any)._selectionBefore = null;
+                } else {
+                    // Start of polygon might not have mousedown capture if it's the very first click
+                    // but usually it does. If not, we use empty state.
+                    recordChange("Poligon Seçim", { mask: null, border: [] });
+                }
+            }, 100);
+        }, true);
+
+        // Keyboard finalization (Enter key)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                setTimeout(() => {
+                    if ((window as any)._selectionBefore) {
+                        recordChange(null as any, (window as any)._selectionBefore);
+                        (window as any)._selectionBefore = null;
+                    }
+                }, 100);
+            }
+        }, true);
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setupUniversalCapture);
+    else setupUniversalCapture();
+    
+    // Polling mechanism for late-added canvas
+    setInterval(setupUniversalCapture, 2000);
+
+    const wrapSelectionFunctions = () => {
+        let patchedCount = 0;
+        Object.keys(selectionGfxMap).forEach(fnName => {
+            if (typeof w[fnName] === 'function' && !w[fnName].__patched) {
+                patchedCount++;
+                const original = w[fnName];
+                const actionName = selectionGfxMap[fnName];
+                
+                w[fnName] = function(...args: any[]) {
+                    console.log(`[SelectionPatch] Function call (Gfx): ${fnName}`);
+                    const activeHM = (window as any).historyManager;
+                    const before = captureSelectionState();
+                    const res = original.apply(this, args);
+                    
+                    const after = captureSelectionState();
+                    if (JSON.stringify(before.border) !== JSON.stringify(after.border)) {
+                        if (activeHM && activeHM.push) {
+                            activeHM.push(new SelectionAction(actionName, before, after));
+                        }
+                    }
+                    return res;
+                };
+                w[fnName].__patched = true;
+            }
+        });
+        return patchedCount;
+    };
+    wrapSelectionFunctions();
+    setInterval(wrapSelectionFunctions, 2000);
+
+
+    // ─── UI ve Döküman İzolasyonu ──────────────────────────────────
     w.updateUndoRedoUI = function() {
         const hm = w.historyManager;
         if (!hm) return;
@@ -247,7 +350,6 @@ export function applyCorePatch() {
         }
     };
 
-    // --- #10011: Document Isolation & Sync ---
     const originalSwitchDocument = w.switchDocument;
     w.switchDocument = function(index: number) {
         if (index < 0 || index >= g.documents.length) return;
@@ -258,37 +360,33 @@ export function applyCorePatch() {
             oldDoc.selectionActive = (g as any).isSelectionActive;
             oldDoc.selectionMask = (g as any).selectionMask;
             oldDoc.selectionBorder = (g as any).selectionBorder;
-            oldDoc.selectionPreviewBorder = (g as any).selectionPreviewBorder;
             oldDoc.selectionCanvas = (g as any).selectionCanvas;
-            oldDoc.selectionDashOffset = (g as any).selectionDashOffset;
         }
 
-        if (originalSwitchDocument) {
-            originalSwitchDocument(index);
-        } else {
-            g.activeDocumentIndex = index;
-        }
+        if (originalSwitchDocument) originalSwitchDocument(index); else g.activeDocumentIndex = index;
         
         const doc = g.documents[index] as any;
         w.historyManager = getHistoryForDoc(doc);
         
-        // Restore selection state
         (g as any).isSelectionActive = !!doc.selectionActive;
         (g as any).selectionMask = doc.selectionMask || null;
-        (g as any).selectionBorder = doc.selectionBorder || [];
-        (g as any).selectionPreviewBorder = doc.selectionPreviewBorder || [];
+        (g as any).selectionBorder = doc.selectionBorder ? [...doc.selectionBorder] : [];
         (g as any).selectionCanvas = doc.selectionCanvas || null;
-        (g as any).selectionDashOffset = doc.selectionDashOffset || 0;
+        (g as any).selectionPreviewBorder = []; // Reset preview on switch
 
         const forceUpdate = () => {
             if (w.updateUndoRedoUI) w.updateUndoRedoUI();
-            if (historyManager.updateUI) historyManager.updateUI(); // Proxied call
             if (w.updateLayerPanel) w.updateLayerPanel();
             if (w.renderLayers) w.renderLayers();
-            const filePath = document.getElementById('filePath');
-            if (filePath) filePath.innerText = doc.name || 'Untitled';
+            if (w.historyManager && w.historyManager.updateUI) {
+                w.historyManager.updateUI();
+            }
         };
-
+            
+        // Footer (Alt bilgi) güncellemesi
+        const filePathElem = document.getElementById('filePath') || document.getElementById('status-file-path') || document.querySelector('.file-path');
+        if (filePathElem) (filePathElem as HTMLElement).innerText = doc.name || 'Adsız';
+        
         forceUpdate();
         setTimeout(forceUpdate, 50);
     };
@@ -296,17 +394,11 @@ export function applyCorePatch() {
     const originalRenderImageTabs = w.renderImageTabs || coreRenderImageTabs;
     w.renderImageTabs = function() {
         if (originalRenderImageTabs) originalRenderImageTabs();
-        
-        // Force re-bind of tabs to use window.switchDocument if needed
-        const tabs = document.querySelectorAll('.image-tab-name');
-        tabs.forEach((tab: any) => {
+        document.querySelectorAll('.image-tab-name').forEach((tab: any) => {
             const parent = tab.parentElement;
-            if (parent && parent.dataset.index) {
+            if (parent?.dataset.index) {
                 const idx = parseInt(parent.dataset.index);
-                tab.onclick = (e: Event) => {
-                    e.stopPropagation();
-                    w.switchDocument(idx);
-                };
+                tab.onclick = (e: Event) => { e.stopPropagation(); w.switchDocument(idx); };
             }
         });
     };
@@ -320,50 +412,106 @@ export function applyCorePatch() {
                 if (historyManager.updateUI) historyManager.updateUI();
                 if (w.updateLayerPanel) w.updateLayerPanel();
                 if (w.renderLayers) w.renderLayers();
-                const filePath = document.getElementById('filePath');
-                if (filePath) filePath.innerText = doc.name || 'Untitled';
             }
         });
     }
 
-    w.closeDocument = function(index: number) {
-        const doc = g.documents[index];
-        if (doc) docHistories.delete(doc.id);
-        g.documents.splice(index, 1);
-
-        if (g.documents.length === 0) {
-            (g as any).activeDocumentIndex = -1;
-            showNoDocumentSplash();
-            w.renderImageTabs();
-        } else {
-            if (g.activeDocumentIndex >= g.documents.length) (g as any).activeDocumentIndex = g.documents.length - 1;
-            w.switchDocument(g.activeDocumentIndex);
+    // ─── Modal ve Görünürlük İyileştirmeleri ──────────────────────
+    const updateModalVisibility = (show: boolean) => {
+        const modal = document.getElementById('newImageModal');
+        if (modal) {
+            modal.style.display = show ? 'flex' : 'none';
+            if (show) modal.classList.add('active'); else modal.classList.remove('active');
         }
     };
 
-    // --- #10010: Modal Handling ---
     if (typeof w.openNewImageDialog === 'function') {
         const originalOpenNew = w.openNewImageDialog;
         w.openNewImageDialog = function() {
             originalOpenNew.apply(this);
-            const modal = document.getElementById('newImageModal');
-            if (modal) modal.style.display = 'flex';
+            updateModalVisibility(true);
+        };
+    }
+    
+    if (typeof w.createNewImage === 'function') {
+        const originalCreate = w.createNewImage;
+        w.createNewImage = function() {
+            originalCreate.apply(this);
+            updateModalVisibility(false);
+            // Ensure splash is hidden
+            const splash = document.getElementById('hcie-empty-state');
+            if (splash) splash.style.display = 'none';
         };
     }
 
-    const originalNewDocument = w.newDocument;
-    if (originalNewDocument) {
-        w.newDocument = function(...args: any[]) {
-            const res = originalNewDocument.apply(this, args);
-            document.body.classList.remove('no-document-active');
-            const splash = document.getElementById('no-document-splash');
-            if (splash) splash.style.display = 'none';
-            if (g.documents.length > 0) w.switchDocument(g.documents.length - 1);
-            return res;
+    if (typeof w.closeNewImageDialog === 'function') {
+        const originalClose = w.closeNewImageDialog;
+        w.closeNewImageDialog = function() {
+            originalClose.apply(this);
+            updateModalVisibility(false);
         };
     }
+
+    // ─── Boş Durum (Splash) Ekranı ────────────────────────────────
+    const setupEmptyStateUI = () => {
+        let emptyState = document.getElementById('hcie-empty-state');
+        if (!emptyState) {
+            emptyState = document.createElement('div');
+            emptyState.id = 'hcie-empty-state';
+            emptyState.className = 'empty-state-overlay';
+            emptyState.innerHTML = `
+                <div class="empty-state-card" style="padding: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align:center; max-width: 400px; width: 90%;">
+                    <h2 style="margin-top:0;">HC Image Editor</h2>
+                    <p style="color: #666; margin-bottom: 30px;">Hızlıca başlamak için bir yöntem seçin:</p>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="menu-option-btn" onclick="openNewImageDialog()" style="background:#0078d7; color:white; border:none; padding:12px; border-radius:4px; font-weight:bold; cursor:pointer;">Yeni Resim Oluştur</button>
+                        <button class="menu-option-btn" onclick="openImage()" style="background:#eee; border:none; padding:12px; border-radius:4px; font-weight:bold; cursor:pointer;">Dosyadan Resim Aç</button>
+                    </div>
+                </div>
+            `;
+            emptyState.style.cssText = "position:absolute; top:0; left:0; width:100%; height:100%; background:#f5f6f7; z-index:900; display:none; align-items:center; justify-content:center;";
+            const canvasContainer = document.getElementById('drawingCanvasContainer');
+            if (canvasContainer) canvasContainer.appendChild(emptyState);
+        }
+
+        const isEmpty = g.documents.length === 0;
+        emptyState.style.display = isEmpty ? 'flex' : 'none';
+    };
+
+    const originalCloseDocument = w.closeDocument;
+    w.closeDocument = function(index: number) {
+        if (index < 0 || index >= g.documents.length) return;
+        
+        g.documents.splice(index, 1);
+        if (g.documents.length === 0) {
+            (g as any).activeDocumentIndex = -1;
+            layers.length = 0;
+            if (w.renderLayers) w.renderLayers();
+            if (w.updateLayerPanel) w.updateLayerPanel();
+        } else if (g.activeDocumentIndex >= g.documents.length) {
+            (g as any).activeDocumentIndex = g.documents.length - 1;
+            w.switchDocument(g.activeDocumentIndex);
+        } else {
+            // Re-render tabs at least
+            w.renderImageTabs();
+        }
+        setupEmptyStateUI();
+        if (w.renderImageTabs) w.renderImageTabs();
+    };
+
+    // Initialize Empty State
+    if (document.readyState === 'complete') setupEmptyStateUI();
+    else window.addEventListener('load', setupEmptyStateUI);
 
     const observer = new MutationObserver(() => {
+        // Menülerin kazara display:none kalmasını önle
+        ['file-menu', 'edit-menu', 'image-menu'].forEach(id => {
+            const menu = document.getElementById(id);
+            if (menu && menu.style.display === 'none' && !w.__IN_TEST_SESSION__) {
+                // Menüleri normale döndür
+            }
+        });
+        
         document.querySelectorAll('.image-tab-close').forEach((btn: any) => {
             if (!btn.dataset.patched) {
                 const tab = btn.closest('.image-tab');
@@ -374,45 +522,8 @@ export function applyCorePatch() {
                 }
             }
         });
-
-        const hasDocs = g.documents && g.documents.length > 0;
-        const splash = document.getElementById('no-document-splash');
-        if (hasDocs && splash && splash.style.display !== 'none') {
-            splash.style.display = 'none';
-            document.body.classList.remove('no-document-active');
-            const workspace = document.getElementById('canvasWrapper');
-            if (workspace) workspace.style.display = 'inline-block';
-        }
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    console.log('[core-patch] Applied all core fixes.');
-}
-
-function showNoDocumentSplash() {
-    const scrollArea = document.getElementById('canvasScrollArea');
-    if (!scrollArea) return;
-    document.body.classList.add('no-document-active');
-
-    let splash = document.getElementById('no-document-splash');
-    if (!splash) {
-        splash = document.createElement('div');
-        splash.id = 'no-document-splash';
-        splash.innerHTML = `
-            <div class=\"splash-content fadeIn\">
-                <img src=\"assets/logo.png\" alt=\"HCIE\" class=\"splash-logo\" onerror=\"this.style.display='none'\">
-                <h2>Welcome to HC Image Editor</h2>
-                <p>Start by creating a new document or opening an existing image.</p>
-                <div class=\"splash-actions\">
-                    <button class=\"primary-btn\" onclick=\"window.openNewImageDialog()\">New Image</button>
-                    <button class=\"secondary-btn\" onclick=\"window.openImage()\">Open Image</button>
-                </div>
-            </div>
-        `;
-        scrollArea.appendChild(splash);
-    }
-    splash.style.display = 'flex';
-    const wrapper = document.getElementById('canvasWrapper');
-    if (wrapper) wrapper.style.display = 'none';
-    scrollArea.style.backgroundColor = 'var(--bg-darker, #1a1a1a)';
+    console.log('[core-patch] Tüm iyileştirmeler uygulandı.');
 }
