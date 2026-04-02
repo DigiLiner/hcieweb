@@ -115,6 +115,9 @@
         })();
     </script>
 
+    <!-- Application Coordination Scripts -->
+    <script src="./apps/editor/menu_connections.js"></script>
+
     <!-- ag-psd for PSD Writing Support (Local) -->
     <script src="./ag-psd.js"></script>
 
@@ -133,215 +136,417 @@
                 <div class="menu-item">
                     <span class="menu-label">File</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option" onclick="newCanvas()">
+                        <div class="menu-option" onclick="newCanvas()" title="Create a new blank document or from template.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/new.svg" class="menu-icon">
                                 <span>New</span>
                             </div>
                             <span class="shortcut">Ctrl+N</span>
                         </div>
-                        <div class="menu-option" onclick="openImage()">
+                        <div class="menu-option" onclick="openImage()" title="Open a document from local disk or cloud.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/open.svg" class="menu-icon">
-                                <span>Open</span>
+                                <span>Open...</span>
                             </div>
                             <span class="shortcut">Ctrl+O</span>
                         </div>
+                        <div class="menu-option not-implemented" title="List and open files you worked on recently.">
+                            <div class="menu-option-content">
+                                <span>Open Recent</span>
+                            </div>
+                            <span class="shortcut"></span>
+                        </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="saveProject()">
+                        <div class="menu-option not-implemented" title="Close the current tab or document.">
+                            <div class="menu-option-content">
+                                <span>Close</span>
+                            </div>
+                            <span class="shortcut">Ctrl+W</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Close all active documents in the workspace.">
+                            <div class="menu-option-content">
+                                <span>Close All</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+W</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="saveProject()" title="Save changes to the current file.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/save.svg" class="menu-icon">
                                 <span>Save</span>
                             </div>
                             <span class="shortcut">Ctrl+S</span>
                         </div>
-                        <div class="menu-option" onclick="saveAsProject()">
+                        <div class="menu-option" onclick="saveAsProject()" title="Save a copy of the document with a different name or type.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/save.svg" class="menu-icon">
                                 <span>Save As...</span>
                             </div>
                             <span class="shortcut">Ctrl+Shift+S</span>
                         </div>
-                        <div class="menu-option" onclick="handleExportFile()">
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Bring images, brushes, or palettes into the project.">
+                            <div class="menu-option-content">
+                                <span>Import...</span>
+                            </div>
+                        </div>
+                        <div class="menu-option" onclick="handleExportFile()" title="Save the project as PNG, JPG, or other web formats.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/file-download-svgrepo-com.svg" class="menu-icon">
-                                <span>Export</span>
+                                <span>Export...</span>
                             </div>
-                            <span class="shortcut">Ctrl+E</span>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="exitApp()">
+                        <div class="menu-option not-implemented" title="Send the document to a printer.">
+                            <div class="menu-option-content">
+                                <span>Print...</span>
+                            </div>
+                            <span class="shortcut">Ctrl+P</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="exitApp()" title="Quit the program.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/exit.svg" class="menu-icon">
                                 <span>Exit</span>
                             </div>
-                            <span class="shortcut">Alt+F4</span>
+                            <span class="shortcut">Ctrl+Q</span>
                         </div>
                     </div>
                 </div>
                 <div class="menu-item">
                     <span class="menu-label">Edit</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option" onclick="cutSelection()">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/menu/cut.svg" class="menu-icon">
-                                <span>Cut</span>
-                            </div>
-                            <span class="shortcut">Ctrl+X</span>
-                        </div>
-                        <div class="menu-option" onclick="copySelection()">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/menu/copy.svg" class="menu-icon">
-                                <span>Copy</span>
-                            </div>
-                            <span class="shortcut">Ctrl+C</span>
-                        </div>
-                        <div class="menu-option" onclick="pasteSelection()">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/menu/paste.svg" class="menu-icon">
-                                <span>Paste</span>
-                            </div>
-                            <span class="shortcut">Ctrl+V</span>
-                        </div>
-                        <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="undoImage()">
+                        <div class="menu-option" onclick="undoImage()" title="Undo the most recent change.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/undo.svg" class="menu-icon">
                                 <span>Undo</span>
                             </div>
                             <span class="shortcut">Ctrl+Z</span>
                         </div>
-                        <div class="menu-option" onclick="redoImage()">
+                        <div class="menu-option" onclick="redoImage()" title="Redo the move that was just undone.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/redo.svg" class="menu-icon">
                                 <span>Redo</span>
                             </div>
-                            <span class="shortcut">Ctrl+Y</span>
+                            <span class="shortcut">Ctrl+Shift+Z</span>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="clearCanvas()">
+                        <div class="menu-option" onclick="cutSelection()" title="Cut the selected area and copy it.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/menu/cut.svg" class="menu-icon">
+                                <span>Cut</span>
+                            </div>
+                            <span class="shortcut">Ctrl+X</span>
+                        </div>
+                        <div class="menu-option" onclick="copySelection()" title="Copy the selected area.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/menu/copy.svg" class="menu-icon">
+                                <span>Copy</span>
+                            </div>
+                            <span class="shortcut">Ctrl+C</span>
+                        </div>
+                        <div class="menu-option" onclick="pasteSelection()" title="Place content from clipboard into the layer.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/menu/paste.svg" class="menu-icon">
+                                <span>Paste</span>
+                            </div>
+                            <span class="shortcut">Ctrl+V</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Paste into selection, as a new layer, or in place.">
+                            <div class="menu-option-content">
+                                <span>Paste Special</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+V</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Fill the current selection or layer with solid color or pattern.">
+                            <div class="menu-option-content">
+                                <span>Fill...</span>
+                            </div>
+                            <span class="shortcut">Shift+F5</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Apply a border (outline) to the selection.">
+                            <div class="menu-option-content">
+                                <span>Stroke...</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Scale, rotate, skew, or distort the selection.">
+                            <div class="menu-option-content">
+                                <span>Free Transform</span>
+                            </div>
+                            <span class="shortcut">Ctrl+T</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Application settings.">
+                            <div class="menu-option-content">
+                                <span>Preferences</span>
+                            </div>
+                            <span class="shortcut">Ctrl+K</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="clearCanvas()" title="Clears all pixels on the active layer.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/menu/delete.svg" class="menu-icon">
-                                <span>Clear All</span>
+                                <span>Clear Layer</span>
                             </div>
                             <span class="shortcut">Delete</span>
                         </div>
                     </div>
                 </div>
                 <div class="menu-item">
+                    <span class="menu-label">Tools</span>
+                    <div class="menu-dropdown">
+                        <div class="menu-option" onclick="selectToolShortcut('Pen')" title="Select the Pencil/Pen tool for precise drawing.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/pen.svg" class="menu-icon">
+                                <span>Pencil / Pen</span>
+                            </div>
+                            <span class="shortcut">P</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Brush')" title="Select the Brush tool for artistic painting.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/brush.svg" class="menu-icon">
+                                <span>Art Brush</span>
+                            </div>
+                            <span class="shortcut">B</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Eraser')" title="Select the Eraser tool to remove pixels.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/gui-eraser.svg" class="menu-icon">
+                                <span>Eraser</span>
+                            </div>
+                            <span class="shortcut">E</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="selectToolShortcut('Flood_Fill')" title="Select the Flood Fill tool to fill contiguous areas.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/fill.svg" class="menu-icon">
+                                <span>Flood Fill</span>
+                            </div>
+                            <span class="shortcut">F</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Wand')" title="Select the Magic Wand tool for color-based selection.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/wand.svg" class="menu-icon">
+                                <span>Magic Wand</span>
+                            </div>
+                            <span class="shortcut">W</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="selectToolShortcut('RectSelect')" title="Select the Rectangular Marquee tool.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/selection/selectionrectangle.svg" class="menu-icon">
+                                <span>Rect Selection</span>
+                            </div>
+                            <span class="shortcut">M</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Lasso')" title="Select the Lasso tool for freehand selection.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/selection/selectionlasso.svg" class="menu-icon">
+                                <span>Lasso</span>
+                            </div>
+                            <span class="shortcut">L</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item">
                     <span class="menu-label">Image</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option">
+                        <div class="menu-option not-implemented" title="Switch between RGB, CMYK, or Grayscale.">
                             <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/flip-horizontal-3.svg" class="menu-icon">
-                                <span>Flip Horizontal</span>
+                                <span>Mode</span>
                             </div>
                         </div>
-                        <div class="menu-option">
+                        <div class="menu-option not-implemented" title="Access Levels, Curves, Exposure, and Saturation settings.">
                             <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/flip-vertical-3.svg" class="menu-icon">
-                                <span>Flip Vertical</span>
-                            </div>
-                        </div>
-                        <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="applyFilter('negative')">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/invert-colors.svg" class="menu-icon">
-                                <span>Negative / Invert</span>
-                            </div>
-                        </div>
-                        <div class="menu-option" onclick="applyFilter('grayscale')">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/BarChart.svg" class="menu-icon">
-                                <span>Grayscale</span>
-                            </div>
-                        </div>
-                        <div class="menu-option" onclick="applyFilter('sepia')">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/RatingYellow.svg" class="menu-icon">
-                                <span>Sepia</span>
+                                <span>Adjustments</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option">
+                        <div class="menu-option not-implemented" title="Automatically adjusts the black and white points.">
+                            <div class="menu-option-content">
+                                <span>Auto Tone</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+L</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Automatically adjusts the overall contrast.">
+                            <div class="menu-option-content">
+                                <span>Auto Contrast</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+Shift+L</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Resize the image and adjust resolution.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/ui/icon_scale.svg" class="menu-icon">
+                                <span>Image Size...</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+I</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Expand or shrink the working area without resizing image contents.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/ui/rectangle.svg" class="menu-icon">
+                                <span>Canvas Size...</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+C</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Rotate the entire image 90, 180 degrees or flip it.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/ui/Reload.svg" class="menu-icon">
-                                <span>Rotate</span>
+                                <span>Image Rotation</span>
                             </div>
                         </div>
-                        <div class="menu-option">
+                        <div class="menu-option not-implemented" title="Trim the edges of the image to the selection.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/ui/crop.svg" class="menu-icon">
                                 <span>Crop</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option">
+                        <!-- Keeping existing functional filters for now as they are useful -->
+                        <div class="menu-option" onclick="applyFilter('negative')" title="Invert colors on current layer.">
                             <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/icon_scale.svg" class="menu-icon">
-                                <span>Resize Image</span>
-                            </div>
-                        </div>
-                        <div class="menu-option">
-                            <div class="menu-option-content">
-                                <img src="./resources/themes/ie_color/ui/rectangle.svg" class="menu-icon">
-                                <span>Resize Canvas</span>
+                                <img src="./resources/themes/ie_color/ui/invert-colors.svg" class="menu-icon">
+                                <span>Negative / Invert</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="menu-item">
-                    <span class="menu-label">Tools</span>
+                    <span class="menu-label">Layer</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option" onclick="selectTool(Tool.Pen)">Draw Pen</div>
-                        <div class="menu-option" onclick="selectTool(Tool.Line)">Draw Line</div>
-                        <div class="menu-option" onclick="selectTool(Tool.Rectangle)">Draw Rectangle</div>
-                        <div class="menu-option" onclick="selectTool(Tool.Ellipse)">Draw Ellipse</div>
-                        <div class="menu-option" onclick="selectTool(Tool.Text)">Draw Text</div>
+                        <div class="menu-option" onclick="addLayer()" title="Add a new empty layer to the project.">
+                            <div class="menu-option-content">
+                                <span>New Layer</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+n</span>
+                        </div>
+                        <div class="menu-option" onclick="addGroup()" title="Create a group to organize multiple layers.">
+                            <div class="menu-option-content">
+                                <span>New Group</span>
+                            </div>
+                            <span class="shortcut">Ctrl+G</span>
+                        </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="selectTool(Tool.VectorSelect)">Vector Selection</div>
+                        <div class="menu-option" onclick="duplicateLayer()" title="Create an exact copy of the selected layer.">
+                            <div class="menu-option-content">
+                                <span>Duplicate Layer</span>
+                            </div>
+                            <span class="shortcut">Ctrl+J</span>
+                        </div>
+                        <div class="menu-option" onclick="deleteLayer()" title="Delete the selected layer permanently.">
+                            <div class="menu-option-content">
+                                <span>Delete Layer</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Add Drop Shadow, Bevel, Stroke, or Glow effects.">
+                            <div class="menu-option-content">
+                                <span>Layer Style</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Convert layer into a smart object to preserve quality.">
+                            <div class="menu-option-content">
+                                <span>Smart Object</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Move layers forward, backward, to front, or to back.">
+                            <div class="menu-option-content">
+                                <span>Arrange</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Align layer edges or distribute them evenly.">
+                            <div class="menu-option-content">
+                                <span>Align/Distribute</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="mergeLayers()" title="Merge the selected layers into one.">
+                            <div class="menu-option-content">
+                                <span>Merge Layers</span>
+                            </div>
+                            <span class="shortcut">Ctrl+E</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Merge all visible layers into a single background layer.">
+                            <div class="menu-option-content">
+                                <span>Flatten Image</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="menu-item">
                     <span class="menu-label">Filter</span>
                     <div class="menu-dropdown" style="max-height: 500px; overflow-y: auto;">
-                        <div class="menu-option"><span>Soften</span></div>
-                        <div class="menu-option" onclick="applyFilter('blur')">
+                        <div class="menu-option not-implemented" title="Re-apply the last used filter with same settings.">
+                            <div class="menu-option-content">
+                                <span>Last Filter</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+F</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Preview and apply various artistic and structural filters.">
+                            <div class="menu-option-content">
+                                <span>Filter Gallery</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Use artificial intelligence for complex retouching (e.g., skin smoothing).">
+                            <div class="menu-option-content">
+                                <span>Neural Filters</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Push, pull, and warp pixels for advanced reshaping.">
+                            <div class="menu-option-content">
+                                <span>Liquify...</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+X</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="applyFilter('blur')" title="Soften image edges using box blur.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/ui/blur.svg" class="menu-icon">
                                 <span>Blur</span>
                             </div>
                         </div>
-                        <div class="menu-option"><span>Sharpen</span></div>
-                        <div class="menu-option">
+                        <div class="menu-option not-implemented" title="Geometric distortion effects like Wave or Ripple.">
+                            <div class="menu-option-content">
+                                <span>Distort</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Add or remove grain and artifacts from the image.">
+                            <div class="menu-option-content">
+                                <span>Noise</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Increase the clarity and detail of image edges.">
+                            <div class="menu-option-content">
+                                <span>Sharpen</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Artistic effects like Emboss or Wind.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/ui/theme_palette.svg" class="menu-icon">
-                                <span>Emboss</span>
+                                <span>Stylize</span>
                             </div>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option"><span>Edge Detect</span></div>
-                        <div class="menu-option"><span>Add Noise</span></div>
-                        <div class="menu-option" onclick="applyFilter('mosaic')">
+                        <div class="menu-option" onclick="applyFilter('mosaic')" title="Apply pixelation effect.">
                             <div class="menu-option-content">
                                 <img src="./resources/themes/ie_color/ui/pixelate.svg" class="menu-icon">
-                                <span>Mosaic</span>
+                                <span>Mosaic (Pixelate)</span>
                             </div>
                         </div>
-                        <div class="menu-option"><span>Oil Paint</span></div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="applyFilter('sepia')"><span>Sepia</span></div>
-                        <div class="menu-option" onclick="applyFilter('grayscale')"><span>Grayscale</span></div>
-                        <div class="menu-option"><span>Vignette</span></div>
-                        <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="window.showErodeBorderDialog()">
+                        <div class="menu-option not-implemented" onclick="window.showErodeBorderDialog()" title="Apply natural-looking erosion to layer borders.">
                             <div class="menu-option-content">
-                                <span>Erode Border</span>
+                                <span>Erode Border...</span>
                             </div>
                         </div>
-                        <div class="menu-option" onclick="window.showFadeBorderDialog()">
+                        <div class="menu-option not-implemented" onclick="window.showFadeBorderDialog()" title="Apply smooth transparency fade to layer borders.">
                             <div class="menu-option-content">
-                                <span>Fade Border</span>
+                                <span>Fade Border...</span>
                             </div>
                         </div>
                     </div>
@@ -349,33 +554,187 @@
                 <div class="menu-item">
                     <span class="menu-label">Select</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option">All<span class="shortcut">Ctrl+A</span></div>
-                        <div class="menu-option">Deselect<span class="shortcut">Ctrl+D</span></div>
-                        <div class="menu-option">Inverse<span class="shortcut">Ctrl+Shift+I</span></div>
+                        <div class="menu-option" onclick="selectAll()" title="Create a selection that covers the whole document.">
+                            <div class="menu-option-content">
+                                <span>All</span>
+                            </div>
+                            <span class="shortcut">Ctrl+A</span>
+                        </div>
+                        <div class="menu-option" onclick="deselect()" title="Remove the current selection marquee.">
+                            <div class="menu-option-content">
+                                <span>Deselect</span>
+                            </div>
+                            <span class="shortcut">Ctrl+D</span>
+                        </div>
+                        <div class="menu-option" onclick="reselect()" title="Bring back the most recent selection.">
+                            <div class="menu-option-content">
+                                <span>Reselect</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+D</span>
+                        </div>
+                        <div class="menu-option" onclick="invertSelection()" title="Select everything that is currently unselected.">
+                            <div class="menu-option-content">
+                                <span>Inverse</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+I</span>
+                        </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="selectTool(Tool.Wand)">Magic Wand<span
-                                class="shortcut">W</span></div>
+                        <div class="menu-option not-implemented" title="Select every layer in the layer panel.">
+                            <div class="menu-option-content">
+                                <span>All Layers</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+A</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Create a selection based on specific color samples.">
+                            <div class="menu-option-content">
+                                <span>Color Range...</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open advanced interface for edge refining.">
+                            <div class="menu-option-content">
+                                <span>Select and Mask...</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Alt+R</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Expand, Contract, Smooth, or Feather the selection.">
+                            <div class="menu-option-content">
+                                <span>Modify</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="selectTool(Tool.Wand)" title="Select areas of similar color.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/wand.svg" class="menu-icon">
+                                <span>Magic Wand</span>
+                            </div>
+                            <span class="shortcut">W</span>
+                        </div>
                     </div>
                 </div>
                 <div class="menu-item">
                     <span class="menu-label">View</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option" onclick="zoomIn()">Zoom In<span class="shortcut">Ctrl++</span>
+                        <div class="menu-option" onclick="zoomIn()" title="Zoom into the document.">
+                            <div class="menu-option-content">
+                                <span>Zoom In</span>
+                            </div>
+                            <span class="shortcut">Ctrl++</span>
                         </div>
-                        <div class="menu-option" onclick="zoomOut()">Zoom Out<span class="shortcut">Ctrl+-</span></div>
-                        <div class="menu-option">Fit Screen<span class="shortcut">Ctrl+0</span></div>
+                        <div class="menu-option" onclick="zoomOut()" title="Zoom out from the document.">
+                            <div class="menu-option-content">
+                                <span>Zoom Out</span>
+                            </div>
+                            <span class="shortcut">Ctrl+-</span>
+                        </div>
+                        <div class="menu-option" onclick="fitOnScreen()" title="Zoom so the document fills the screen.">
+                            <div class="menu-option-content">
+                                <span>Fit on Screen</span>
+                            </div>
+                            <span class="shortcut">Ctrl+0</span>
+                        </div>
+                        <div class="menu-option" onclick="actualSize()" title="View the document at its actual size.">
+                            <div class="menu-option-content">
+                                <span>100%</span>
+                            </div>
+                            <span class="shortcut">Ctrl+1</span>
+                        </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option">Show Grid</div>
-                        <div class="menu-option">Show Rulers</div>
+                        <div class="menu-option not-implemented" title="Show or hide all guides, grids, and boundaries.">
+                            <div class="menu-option-content">
+                                <span>Extras</span>
+                            </div>
+                            <span class="shortcut">Ctrl+H</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Toggle specific items like Grid, Layer Bounds, or Guides.">
+                            <div class="menu-option-content">
+                                <span>Show</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Show or hide the measurement rulers.">
+                            <div class="menu-option-content">
+                                <span>Rulers</span>
+                            </div>
+                            <span class="shortcut">Ctrl+R</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Toggle snapping to guides, grid, and layers.">
+                            <div class="menu-option-content">
+                                <span>Snap</span>
+                            </div>
+                            <span class="shortcut">Ctrl+Shift+;</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <span class="menu-label">Window</span>
+                    <div class="menu-dropdown">
+                        <div class="menu-option not-implemented" title="Select from predefined layouts like Painting or Design.">
+                            <div class="menu-option-content">
+                                <span>Workspace</span>
+                            </div>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option not-implemented" title="Record and run sequences of common tasks.">
+                            <div class="menu-option-content">
+                                <span>Actions</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Browse through previous states and jump back.">
+                            <div class="menu-option-content">
+                                <span>History</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open or close the Layers management panel.">
+                            <div class="menu-option-content">
+                                <span>Layers</span>
+                            </div>
+                            <span class="shortcut">F7</span>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open or close the Color Channel panel.">
+                            <div class="menu-option-content">
+                                <span>Channels</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open or close the Vector Path panel.">
+                            <div class="menu-option-content">
+                                <span>Paths</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open or close the Color selection panel.">
+                            <div class="menu-option-content">
+                                <span>Color</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Open or close the Brush engine and presets.">
+                            <div class="menu-option-content">
+                                <span>Brushes</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="View details about the selected layer or tool.">
+                            <div class="menu-option-content">
+                                <span>Properties</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="menu-item">
                     <span class="menu-label">Help</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option">Documentation</div>
-                        <div class="menu-option">Keyboard Shortcuts</div>
-                        <div class="menu-divider"></div>
-                        <div class="menu-option">About</div>
+                        <div class="menu-option not-implemented" title="View version, license, and credit information.">
+                            <div class="menu-option-content">
+                                <span>About</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="Access official learning guides and videos.">
+                            <div class="menu-option-content">
+                                <span>Tutorials</span>
+                            </div>
+                        </div>
+                        <div class="menu-option not-implemented" title="View and customize keyboard shortcuts.">
+                            <div class="menu-option-content">
+                                <span>Shortcuts</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

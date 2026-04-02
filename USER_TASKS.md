@@ -40,3 +40,15 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 #1210 Contrast, Brightness, Hue, Saturation ayarları eklenecek
 
 #1300 AI resim düzenleme araçları eklenecek
+
+#10010 (BUG)Son açık tab kapanmıyor. bir tane açık kalıyor
+
+#10011 (BUG)Seçim alanı aktif iken başka bir dökümana geçildiğinde seçim içindeki pixeller diğer dökümanda görünüyor
+
+#10012 (BUG)Seçim undo redoya kaydedilmiyor.
+
+#10013 (BUG)undo-redo dökümanları karıştırıyor. ayrı tutulmalı.
+
+#10014 (BUG)çizim şeklini(kalem ucunu) gösteren overlay nesnesi daha başlanğıçta bile sol üstte görünüyor. Fare canvas dışında ike görünmemeli
+
+#10015 (BUG)New Image dialog sayfayı ortalamıyor.

@@ -7,6 +7,8 @@
 - [ ] #1006: Core I/O & Universal Format Support. 🔴
   - [x] PNG, JPG, BMP, TGA, ICO (Import), WebP, GIF (Import worked for some).
   - [ ] Support for 30+ formats as per USER_TASKS.md.
+- [ ] #10010-10015: Resolving HCIE Application Bugs. 🔴
+  - Fixing tab closing, undo/redo isolation, and tool overlays.
 
 ## ⚪ Backlog
 ### Phase 10: Layered Application Formats (Open/Save)
