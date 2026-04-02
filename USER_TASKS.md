@@ -23,7 +23,7 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 
 #1050 Paint.NET (.pdn) format desteği . dosya import özelliği ekle
 
-#1060 Photoshop (.psd) dosyası export özelliği ekle
+#1060 Photoshop (.psd) dosyası export özelliği ekle (FIXED). Archive kaldır.
 #1070 Icon (.ico) dosyası export özelliği ekle
 #1071 Icon (.ico) dosyası import özelliği ekle
 #1072 Icon düzenleme için canvas ve toolset farklı olacak şekilde workspace yapılanması planlanmalı
@@ -41,14 +41,15 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 
 #1300 AI resim düzenleme araçları eklenecek
 
-#10010 (BUG)Son açık tab kapanmıyor. bir tane açık kalıyor
+#10010 (BUG-REMAINS)Son açık tab kapanmıyor. bir tane açık kalıyor.NEWCOMMENT: yeni bir image açılıyor ama diyalog açık kalıyor. Ayrıca diyalogda open image çalışmıyor.
 
-#10011 (BUG)Seçim alanı aktif iken başka bir dökümana geçildiğinde seçim içindeki pixeller diğer dökümanda görünüyor
+#10011 (BUG)Seçim alanı aktif iken başka bir dökümana geçildiğinde seçim içindeki pixeller diğer dökümanda görünüyor NEW COMMENT: Undo sayıları dökümanlarda birbirine karışıyor. İlk hale gelse bile undo düğmesi aktif kalıyor, diğer dökümandan kopyalanmaya başlıypr. Undo-redo hafızası her tab için tamamen ayrı tutulmalı. Tab değişince butonlar ve menüler gündellenmeli, ilgili undo hafızası aktif edilmeli.
 
-#10012 (BUG)Seçim undo redoya kaydedilmiyor.
+#10012 (BUG-REMAINS)Seçim undo redoya kaydedilmiyor.NEW COMMENT: Seçim değiştiğinde bu da undo olabilecek şekilde yapılandırılmalı ve history olarak görülmeli. Seçimi geri almaya çalışınca,resim undo oluyor.
 
-#10013 (BUG)undo-redo dökümanları karıştırıyor. ayrı tutulmalı.
+#10013 (BUG)undo-redo dökümanları karıştırıyor. ayrı tutulmalı. NEW COMMENT: Redo yapınca karışıklık var.
 
-#10014 (BUG)çizim şeklini(kalem ucunu) gösteren overlay nesnesi daha başlanğıçta bile sol üstte görünüyor. Fare canvas dışında ike görünmemeli
+#10014 (BUG-FIXED)çizim şeklini(kalem ucunu) gösteren overlay nesnesi daha başlanğıçta bile sol üstte görünüyor. Fare canvas dışında iken görünmemeli
 
-#10015 (BUG)New Image dialog sayfayı ortalamıyor.
+#10015 (BUG-FIXED)New Image dialog sayfayı ortalamıyor.
+

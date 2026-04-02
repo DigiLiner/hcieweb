@@ -72,8 +72,8 @@
             }
         })();
     </script>
-  <script type="module" crossorigin src="./assets/index-DeIJpn3p.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-zLXafKJ1.css">
+  <script type="module" crossorigin src="./assets/index-DLbs56GS.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DBW1dk5R.css">
 </head>
 
 <body>
@@ -115,6 +115,9 @@
             window.addEventListener('load', sync);
         })();
     </script>
+
+    <!-- Application Coordination Scripts -->
+    <script src="./apps/editor/menu_connections.js"></script>
 
     <!-- ag-psd for PSD Writing Support (Local) -->
     <script src="./ag-psd.js"></script>
@@ -292,6 +295,62 @@
                     </div>
                 </div>
                 <div class="menu-item">
+                    <span class="menu-label">Tools</span>
+                    <div class="menu-dropdown">
+                        <div class="menu-option" onclick="selectToolShortcut('Pen')" title="Select the Pencil/Pen tool for precise drawing.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/pen.svg" class="menu-icon">
+                                <span>Pencil / Pen</span>
+                            </div>
+                            <span class="shortcut">P</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Brush')" title="Select the Brush tool for artistic painting.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/brush.svg" class="menu-icon">
+                                <span>Art Brush</span>
+                            </div>
+                            <span class="shortcut">B</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Eraser')" title="Select the Eraser tool to remove pixels.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/gui-eraser.svg" class="menu-icon">
+                                <span>Eraser</span>
+                            </div>
+                            <span class="shortcut">E</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="selectToolShortcut('Flood_Fill')" title="Select the Flood Fill tool to fill contiguous areas.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/fill.svg" class="menu-icon">
+                                <span>Flood Fill</span>
+                            </div>
+                            <span class="shortcut">F</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Wand')" title="Select the Magic Wand tool for color-based selection.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/tools/wand.svg" class="menu-icon">
+                                <span>Magic Wand</span>
+                            </div>
+                            <span class="shortcut">W</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-option" onclick="selectToolShortcut('RectSelect')" title="Select the Rectangular Marquee tool.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/selection/selectionrectangle.svg" class="menu-icon">
+                                <span>Rect Selection</span>
+                            </div>
+                            <span class="shortcut">M</span>
+                        </div>
+                        <div class="menu-option" onclick="selectToolShortcut('Lasso')" title="Select the Lasso tool for freehand selection.">
+                            <div class="menu-option-content">
+                                <img src="./resources/themes/ie_color/selection/selectionlasso.svg" class="menu-icon">
+                                <span>Lasso</span>
+                            </div>
+                            <span class="shortcut">L</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-item">
                     <span class="menu-label">Image</span>
                     <div class="menu-dropdown">
                         <div class="menu-option not-implemented" title="Switch between RGB, CMYK, or Grayscale.">
@@ -358,26 +417,26 @@
                 <div class="menu-item">
                     <span class="menu-label">Layer</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option not-implemented" title="Add a new empty layer to the project.">
+                        <div class="menu-option" onclick="addLayer()" title="Add a new empty layer to the project.">
                             <div class="menu-option-content">
                                 <span>New Layer</span>
                             </div>
-                            <span class="shortcut">Ctrl+Shift+N</span>
+                            <span class="shortcut">Ctrl+Shift+n</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Create a group to organize multiple layers.">
+                        <div class="menu-option" onclick="addGroup()" title="Create a group to organize multiple layers.">
                             <div class="menu-option-content">
                                 <span>New Group</span>
                             </div>
                             <span class="shortcut">Ctrl+G</span>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option not-implemented" title="Create an exact copy of the selected layer.">
+                        <div class="menu-option" onclick="duplicateLayer()" title="Create an exact copy of the selected layer.">
                             <div class="menu-option-content">
                                 <span>Duplicate Layer</span>
                             </div>
                             <span class="shortcut">Ctrl+J</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Delete the selected layer permanently.">
+                        <div class="menu-option" onclick="deleteLayer()" title="Delete the selected layer permanently.">
                             <div class="menu-option-content">
                                 <span>Delete Layer</span>
                             </div>
@@ -405,7 +464,7 @@
                             </div>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option not-implemented" title="Merge the selected layers into one.">
+                        <div class="menu-option" onclick="mergeLayers()" title="Merge the selected layers into one.">
                             <div class="menu-option-content">
                                 <span>Merge Layers</span>
                             </div>
@@ -480,12 +539,12 @@
                             </div>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option" onclick="window.showErodeBorderDialog()" title="Apply natural-looking erosion to layer borders.">
+                        <div class="menu-option not-implemented" onclick="window.showErodeBorderDialog()" title="Apply natural-looking erosion to layer borders.">
                             <div class="menu-option-content">
                                 <span>Erode Border...</span>
                             </div>
                         </div>
-                        <div class="menu-option" onclick="window.showFadeBorderDialog()" title="Apply smooth transparency fade to layer borders.">
+                        <div class="menu-option not-implemented" onclick="window.showFadeBorderDialog()" title="Apply smooth transparency fade to layer borders.">
                             <div class="menu-option-content">
                                 <span>Fade Border...</span>
                             </div>
@@ -495,25 +554,25 @@
                 <div class="menu-item">
                     <span class="menu-label">Select</span>
                     <div class="menu-dropdown">
-                        <div class="menu-option not-implemented" title="Create a selection that covers the whole document.">
+                        <div class="menu-option" onclick="selectAll()" title="Create a selection that covers the whole document.">
                             <div class="menu-option-content">
                                 <span>All</span>
                             </div>
                             <span class="shortcut">Ctrl+A</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Remove the current selection marquee.">
+                        <div class="menu-option" onclick="deselect()" title="Remove the current selection marquee.">
                             <div class="menu-option-content">
                                 <span>Deselect</span>
                             </div>
                             <span class="shortcut">Ctrl+D</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Bring back the most recent selection.">
+                        <div class="menu-option" onclick="reselect()" title="Bring back the most recent selection.">
                             <div class="menu-option-content">
                                 <span>Reselect</span>
                             </div>
                             <span class="shortcut">Ctrl+Shift+D</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Select everything that is currently unselected.">
+                        <div class="menu-option" onclick="invertSelection()" title="Select everything that is currently unselected.">
                             <div class="menu-option-content">
                                 <span>Inverse</span>
                             </div>
@@ -568,13 +627,13 @@
                             </div>
                             <span class="shortcut">Ctrl+-</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Zoom so the document fills the screen.">
+                        <div class="menu-option" onclick="fitOnScreen()" title="Zoom so the document fills the screen.">
                             <div class="menu-option-content">
                                 <span>Fit on Screen</span>
                             </div>
                             <span class="shortcut">Ctrl+0</span>
                         </div>
-                        <div class="menu-option not-implemented" title="View the document at its actual size.">
+                        <div class="menu-option" onclick="actualSize()" title="View the document at its actual size.">
                             <div class="menu-option-content">
                                 <span>100%</span>
                             </div>

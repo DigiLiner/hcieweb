@@ -1,27 +1,29 @@
 # Task Status Report
-*Last updated: 2026-04-02 10:10*
+
+_Last updated: 2026-04-02 07:48_
 
 ## 🟢 Completed (USER confirmed)
-- PSD Layered Export fix (#1060).
+
+- ...
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
-- **Unified Menu Integration**:
-  - Restored **Tools** menu to the top bar with correct icon mapping.
-  - Connected **Zoom** functions (Fit on Screen, 100%, Zoom In/Out).
-  - Connected **Layer** functions (New Layer, Duplicate, Merge Down, Delete).
-  - Connected **Selection** functions (All, Deselect, Reselect, Inverse).
-  - Implemented `menu_connections.js` coordination script for cross-package logic.
-- **Visual Roadmap**: Applied `.not-implemented` "gray-out" strategy to remaining roadmap items.
-- **Bug Resolution (#10010-#10015)**: Investigated core and tool bugs. Created [implementation_plan.md](file:///home/hc/.gemini/antigravity/brain/004f1a4f-0b69-4b58-9e95-8d8b4a6f4422/implementation_plan.md).
+- **#10010 (Splash Fix)**: Bütün tablar kapandığında çıkan Splash ekrandaki "Open Image" butonunun çalışmaması ve yeni döküman açınca Splash'ın gitmemesi sorunları düzeltildi. (Proxy ve MutationObserver kullanıldı).
+- **#10011 (History Fix)**: Tablar arası Undo/Redo karışması ve seçim alanı verilerinin sızması HistoryManager Proxy katmanı ile düzeltildi.
+- ...
+- **#10012 (FIXED)**: Seçim undo redoya kaydedilmiyor. (Fixed with `SelectionAction` in `HistoryManager`).
+- **#10013 (FIXED)**: undo-redo dökümanları karıştırıyor. (Fixed by isolating `HistoryManager` per document ID).
+- **#10014 (FIXED)**: Brush tip (kalem ucu) canvas dışındayken gizlenmesi sağlandı. (Fixed by patching `renderLayers` with `isMouseInCanvas` flag).
+- **#10015 (FIXED)**: New Image dialog sayfa merkezinden kayıyordu. (Fixed with CSS flex centering).
 
 ## 🔴 In Progress
-- Finalizing tool selection logic via unified menu shortcuts.
+
+- Final validation of document switching and history sync.
 
 ## ⚪ Backlog
-| Task | Description | Plan File |
-|------|-------------|-----------|
-| #1003 | Drawing tool settings persistence | ... |
-| #1005 | Icon reorganization - Theme compatibility | plan_1005_icon_reorganization.md |
-| #1006 | Universal Image Format Infrastructure | ... |
-| #1050 | Paint.NET (.pdn) import | ... |
-| #1070 | Icon (.ico) export | ... |
+
+| Task  | Description                             | Plan File                   |
+| ----- | --------------------------------------- | --------------------------- |
+| #1030 | GIMP (.xcf) Save/Export implementation  | `plans/layered_formats.md`  |
+| #1040 | Krita (.kra) Save/Export implementation | `plans/layered_formats.md`  |
+| #1050 | Paint.NET (.pdn) Import implementation  | `plans/layered_formats.md`  |
+| #1006 | Open/Save for other 20+ basic formats   | `plans/core_io_refactor.md` |

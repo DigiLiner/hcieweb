@@ -2,45 +2,42 @@
 
 - **UI Unification Complete**: Tasks #0000–#0001, #1000–#1001, and #1008-#1013 are archived 🟢.
 - **Monochromatic Aesthetic**: Monochromatic "soft light gray" filter applied globally in Dark Mode.
-- **Focus**: Executing remaining Phase 9 tasks (#1003–#1007). 🔴
-- **Cleanup**: `progress.md` has been cleaned of finished tasks; legacy phases archived in `memory-arsiv/`. 🟢
+- **Focus**: Resolving HCIE Core Bugs (#10010-#10015) via Runtime Patching. 🟡
+- **Cleanup**: `progress.md` updated with "Waiting to Confirm" status for all critical patches. 🟢
 
 ## Active Plans
 
 | Task  | Topic                              | Status | Plan File                                |
 | ----- | ---------------------------------- | ------ | ---------------------------------------- |
-| #1003 | Drawing tool settings persistence  | 🟡     | `plans/plan_1003_tool_settings.md`       |
-| #1005 | SVG icon reorganization            | ⚪     | `plans/plan_1005_icon_reorganization.md` |
-| #1050 | Core I/O & Standard Rasters        | 🟡     | `plans/plan_1050_core_io_standard.md`    |
-| #1051 | Krita (.kra) Support               | 🟡     | `plans/plan_1051_krita_support.md`       |
-| #1052 | GIMP (.xcf) Support                | 🔴     | `plans/plan_1052_1053_app_formats.md`    |
-| #1053 | Paint.NET (.pdn) Support           | ⚪     | `plans/plan_1052_1053_app_formats.md`    |
-| #1007 | Floodfill constrained to selection | 🟢     | `plans/plan_1007_floodfill.md`           |
+| #10010 | Last Tab / Splash Screen           | 🟡     | `memory-bank/task-logs/bug_10010_tabs.md`|
+| #10012 | Selection in History               | 🟡     | `memory-bank/task-logs/bug_10012_sel.md` |
+| #10014 | Brush Tip Visibility               | 🟡     | `memory-bank/task-logs/bug_10014_tip.md` |
+| #10013 | Redo / History Isolation            | 🟡     | `memory-bank/task-logs/bug_10013_redo.md`|
+| #1005  | SVG icon reorganization            | ⚪     | `plans/plan_1005_icon_reorganization.md` |
+| #1052  | GIMP (.xcf) Support                | 🔴     | `plans/plan_1052_1053_app_formats.md`    |
 
 ## Task Sessions
 
-- Active Task Log: None (Phase 9 tasks continuing) 🔴
-- Completed & Archived: 🟢 #0000, 🟢 #0001, 🟢 #1000, 🟢 #1001, 🟢 #1002, 🟢 #1004, 🟢 #1008, 🟢 #1012, 🟢 #1013 (in `memory-arsiv/`)
+- Active Task Log: Bug Resolution Phase (#10010-10015) 🟡
+- Architecture: Introduced `apps/web/src/core-patch.ts` to coordinate Opaque Core fixes.
 
 ---
 
 _Follow task-specific logs in `memory-bank/task-logs/` for detailed granular progress._
 
-## Key Technical Findings (from planning)
+## Key Technical Findings (from bug resolution)
 
-- **#1007**: `floodFill()` algorithm is already correct. Bug is in the call site — `maskData` is passed as `null` instead of the active selection canvas data.
-- **#1008/#1009**: AGENTS.md update required, plus MESSAGE_FROM_AGENT.md template.
-- **#1005**: Requires user approval before moving 200+ SVG files.
-- **#1006**: Phase 1 can reuse `ag-psd` (already bundled) + Canvas API for PNG/JPEG.
+- **#10014**: Minified library skips brush tip drawing if `g.zooming` is true. We use this as a toggle based on `isMouseInCanvas`.
+- **#10012**: Selection actions are now injectable as custom `Action` classes into the core `HistoryManager`.
+- **#10010**: Tab close buttons must be force-rebound via `MutationObserver` to ensure our patched code runs instead of the core library.
 
 ## Next Steps
 
-1. User reviews and approves each plan.
-2. User selects execution order.
-3. Agent implements one task at a time, marks 🟡 on completion, awaits 🟢 confirmation.
+1. User verifies 🟡 bug fixes (tabs, history, brush tip, centering).
+2. Mark 🟢 after USER confirmation as per AGENTS.md.
+3. Transition back to Phase 9 features (SVG icons, format support).
 
-
-## Güncel Aşama: UI/UX & Gelişmiş Format Desteği (#1000+)
-- **Durum**: Monorepo -> Polyrepo dönüşümü başarıyla tamamlandı. 🟢
-- **Sıradaki Adım**: Phase 9 (UI Polishing) ve profesyonel dosya formatları (.kra, .xcf, .pdn) için derinlemesine entegrasyon.
-- **Odak**: Floodfill (#1007) ve SVG Reorganizasyonu (#1005).
+## Güncel Aşama: Kritik Hata Giderme (#10010+)
+- **Durum**: Çekirdek kütüphane kısıtlamalarını aşan "Runtime Patching" katmanı eklendi. 🟡
+- **Sıradaki Adım**: Kullanıcı doğrulaması ve Phase 9 özelliklerine dönüş.
+- **Odak**: #10010-10014 arası tüm hata patch'lerinin doğru çalıştığını teyit etmek.

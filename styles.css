@@ -368,18 +368,24 @@ td {
 /* When NOT overflowing, reset scroll to prevent stale offset */
 
 #canvasWrapper {
-  transform-origin: 0 0;
+  position: relative;
   display: inline-block;
-  flex-shrink: 0;
   margin: auto;
-  /* Centers when container is larger than wrapper */
-  box-shadow:
-    0 2px 12px rgba(0, 0, 0, 0.4),
-    0 0 1px rgba(0, 0, 0, 0.6);
-  /* width/height set dynamically by JS to image_width*zoom / image_height*zoom */
-  pointer-events: auto;
-  /* Ensure events are captured */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4), 0 0 1px rgba(0,0,0,0.6);
   z-index: 2;
+  flex-shrink: 0;
+  pointer-events: auto;
+  transform-origin: 0 0;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FIX #10014: Hide all overlays if no document is active
+   ───────────────────────────────────────────────────────── */
+body.no-document-active #canvasWrapper,
+body.no-document-active #vector-edit-overlay,
+body.no-document-active #selectionTransformOverlay,
+body.no-document-active #textToolOverlay {
+    display: none !important;
 }
 
 #drawingCanvasContainer .drawing-canvas {
@@ -511,6 +517,32 @@ td {
   margin-bottom: 2px;
 }
 
+/* Modal centering fixes */
+#newImageModal.modal,
+#riskAcceptanceModal.modal,
+.modal.risk-modal {
+    /* Use flex for centering, but allow it to be hidden by JS */
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* When the modal is shown via style="display: block" in legacy JS, 
+   we force it to flex if it's supposed to be centered. */
+#newImageModal.modal[style*="display: block"],
+#newImageModal.modal[style*="display: flex"],
+#riskAcceptanceModal.modal[style*="display: block"],
+#riskAcceptanceModal.modal[style*="display: flex"] {
+    display: flex !important;
+}
+
 .image-tab-new:hover {
   background: #444;
   color: #fff;
@@ -542,9 +574,13 @@ td {
   justify-content: center;
 }
 
-.modal.active {
+/* Fix #10015: Force flex centering even if JS sets display: block */
+.modal.active,
+.modal[style*="display: block"],
+.modal[style*="display:block"] {
   display: flex !important;
 }
+
 
 .modal-content {
   background-color: var(--bg-surface);

@@ -2,6 +2,10 @@
 
 ## Orchestration & Core
 - **Black Box Core**: `packages/core/src/` is read-only. Access via `@hcie/core` exports.
+- **Runtime Patching (Opaque Core Patch)**: When the read-only Core library contains bugs or requires behavioral changes, we apply patches in `apps/web/src/core-patch.ts`. 
+  - **Function Overrides**: Window-level core functions (`switchDocument`, `closeDocument`) are replaced with wrappers that inject additional logic (history isolation, splash screen triggers).
+  - **State Hijacking**: We use hardcoded core flags (e.g., `g.zooming`) to conditionally toggle core behaviors (e.g., hiding the brush tip) at runtime.
+  - **Action Injection**: Custom `Action` classes (e.g., `SelectionAction`) are injected into the core `HistoryManager`'s internal stacks to add history support for external features.
 - **Orchestrator Pattern**: UI logic and tool coordination live in `apps/` or root, using Core as a service.
 
 ## Communication & State
