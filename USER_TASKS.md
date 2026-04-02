@@ -43,7 +43,7 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 
 #10010 (BUG-REMAINS)Son açık tab kapanmıyor. bir tane açık kalıyor.NEWCOMMENT: yeni bir image açılıyor ama diyalog açık kalıyor. Ayrıca diyalogda open image çalışmıyor.
 
-#10011 (BUG)Seçim alanı aktif iken başka bir dökümana geçildiğinde seçim içindeki pixeller diğer dökümanda görünüyor NEW COMMENT: Undo sayıları dökümanlarda birbirine karışıyor. İlk hale gelse bile undo düğmesi aktif kalıyor, diğer dökümandan kopyalanmaya başlıypr. Undo-redo hafızası her tab için tamamen ayrı tutulmalı. Tab değişince butonlar ve menüler gündellenmeli, ilgili undo hafızası aktif edilmeli.
+#10011 (BUG)Seçim alanı aktif iken başka bir dökümana geçildiğinde seçim içindeki pixeller diğer dökümanda görünüyor NEW COMMENT: Undo sayıları dökümanlarda birbirine karışıyor. İlk hale gelse bile undo düğmesi aktif kalıyor, diğer dökümandan kopyalanmaya başlıyor. Undo-redo hafızası her tab için tamamen ayrı tutulmalı. Tab değişince butonlar ve menüler güncellenmeli, ilgili undo hafızası aktif edilmeli.
 
 #10012 (BUG-REMAINS)Seçim undo redoya kaydedilmiyor.NEW COMMENT: Seçim değiştiğinde bu da undo olabilecek şekilde yapılandırılmalı ve history olarak görülmeli. Seçimi geri almaya çalışınca,resim undo oluyor.
 

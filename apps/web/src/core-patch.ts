@@ -1,56 +1,133 @@
-import { g, ImageDocument, HistoryManager, historyManager, renderImageTabs, appEvents } from '@hcie/core';
+import { g as coreG, HistoryManager, historyManager as coreHM, appEvents as coreAppEvents, renderImageTabs as coreRenderImageTabs } from '@hcie/core';
 
 /**
  * Core Patch Controller
  * Overrides core library functions and proxies global state to fix issues:
  * #10010: Dialog/Splash Lifecycle
- * #10011: Undo/Redo Isolation
+ * #10011: Undo/Redo Isolation & Consolidation
  * #10012: Selection History
  * #10013: History UI Sync
  * #10014: Brush Visibility/Event Cleanup
  */
 export function applyCorePatch() {
-    console.log("[CorePatch] Applying advanced proxies and patches...");
-
     const w = window as any;
 
-    // --- #10011: Global History Proxy ---
-    // Since core modules use the imported 'historyManager' instance, we proxy its methods
-    // to point to whatever is currently in window.historyManager.
-    const originalPush = historyManager.push;
-    const originalUndo = historyManager.undo;
-    const originalRedo = historyManager.redo;
-    const originalClear = historyManager.clear;
+    // Use window-exposed globals if available (exposed by UIController)
+    // otherwise fallback to imported ones.
+    const g = w.g || coreG;
+    const historyManager = w.historyManager || coreHM;
+    const appEvents = w.appEvents || coreAppEvents;
 
-    (historyManager as any).push = function(action: any) {
-        const activeHM = (window as any).historyManager;
-        if (activeHM && activeHM !== historyManager) activeHM.push(action);
-        else originalPush.call(historyManager, action);
+    if (!g || !historyManager) {
+        console.warn('[core-patch] g or historyManager not found. Postponing patch...');
+        setTimeout(applyCorePatch, 100);
+        return;
+    }
+
+    if (w.__CORE_PATCH_APPLIED__) return;
+    w.__CORE_PATCH_APPLIED__ = true;
+
+    console.log('[core-patch] Applying unified document isolation and UI sync patches...');
+
+    // ─── History Manager Refinement (#10011) ───────────────────
+    
+    // GroupAction to bundle multiple actions into one undo step
+    class GroupAction {
+        constructor(public description: string, public actions: any[]) {}
+        undo() { for (let i = this.actions.length - 1; i >= 0; i--) this.actions[i].undo(); }
+        redo() { for (let i = 0; i < this.actions.length; i++) this.actions[i].redo(); }
+    }
+
+    // Enhance HistoryManager with grouping capabilities
+    const extendHistoryManager = (hm: any) => {
+        if (hm._grouped) return;
+        hm._grouped = true;
+        hm._groupStack = [];
+        hm._currentGroup = null;
+
+        const originalPush = hm.push;
+        hm.push = function(action: any) {
+            if (this._currentGroup) {
+                this._currentGroup.actions.push(action);
+            } else {
+                originalPush.call(this, action);
+                if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+            }
+        };
+
+        hm.beginGroup = function(description = 'Multiple Actions') {
+            const group = { description, actions: [] };
+            this._groupStack.push(group);
+            this._currentGroup = group;
+        };
+
+        hm.endGroup = function() {
+            const group = this._groupStack.pop();
+            this._currentGroup = this._groupStack.length > 0 ? this._groupStack[this._groupStack.length - 1] : null;
+            
+            if (group && group.actions.length > 0) {
+                if (group.actions.length === 1) {
+                    this.push(group.actions[0]);
+                } else {
+                    originalPush.call(this, new GroupAction(group.description, group.actions));
+                }
+            }
+            if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+        };
+
+        const originalUndo = hm.undo;
+        hm.undo = function() {
+            originalUndo.call(this);
+            if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+        };
+
+        const originalRedo = hm.redo;
+        hm.redo = function() {
+            originalRedo.call(this);
+            if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+        };
     };
-    (historyManager as any).undo = function() {
-        const activeHM = (window as any).historyManager;
-        if (activeHM && activeHM !== historyManager) activeHM.undo();
-        else originalUndo.call(historyManager);
-    };
-    (historyManager as any).redo = function() {
-        const activeHM = (window as any).historyManager;
-        if (activeHM && activeHM !== historyManager) activeHM.redo();
-        else originalRedo.call(historyManager);
-    };
-    (historyManager as any).clear = function() {
-        const activeHM = (window as any).historyManager;
-        if (activeHM && activeHM !== historyManager) activeHM.clear();
-        else originalClear.call(historyManager);
-    };
+
+    // Proxy the singleton to redirect all calls to the ACTIVE document's HistoryManager instance.
+    const propsToProxy = ['push', 'undo', 'redo', 'clear', 'canUndo', 'canRedo', 'jumpTo', 'updateUI', 'beginGroup', 'endGroup'];
+    propsToProxy.forEach(prop => {
+        const originalValue = (historyManager as any)[prop];
+        Object.defineProperty(historyManager, prop, {
+            get() {
+                const activeHM = (window as any).historyManager;
+                const source = (activeHM && activeHM !== historyManager) ? activeHM : historyManager;
+                
+                if (source === historyManager) return originalValue;
+
+                const value = (source as any)[prop];
+                if (typeof value === 'function') return value.bind(source);
+                return value;
+            },
+            configurable: true
+        });
+    });
+
+    // Storage for document-specific HistoryManagers
+    const docHistories = new Map<any, any>();
+
+    function getHistoryForDoc(doc: any) {
+        if (!docHistories.has(doc.id)) {
+            const hm = new HistoryManager(g.max_undo_steps || 200);
+            extendHistoryManager(hm);
+            docHistories.set(doc.id, hm);
+        }
+        return docHistories.get(doc.id);
+    }
 
     // --- State Trackers (#10014) ---
     w.isMouseInCanvas = false;
     (g as any).pX = -1000;
     (g as any).pY = -1000;
 
-    // --- #10012: Selection History ---
+    // --- #10012: Selection History & Consolidation ---
     class SelectionAction {
         constructor(
+            public description: string,
             public oldMaskImageData: ImageData | null,
             public oldBorder: any[],
             public newMaskImageData: ImageData | null,
@@ -93,27 +170,52 @@ export function applyCorePatch() {
         if (typeof w[fnName] === 'function') {
             const original = w[fnName];
             w[fnName] = function(...args: any[]) {
+                const activeHM = (window as any).historyManager;
+                const groupStarted = activeHM && !activeHM._currentGroup;
+                if (groupStarted) activeHM.beginGroup(fnName.startsWith('build') ? 'Selection' : fnName.charAt(0).toUpperCase() + fnName.slice(1));
+                
                 const before = captureSelectionState();
                 original.apply(this, args);
                 const after = captureSelectionState();
                 
-                const bothNull = !before.mask && !after.mask;
-                if (!(bothNull && before.border.length === 0 && after.border.length === 0)) {
-                    if (w.historyManager) w.historyManager.push(new SelectionAction(before.mask, before.border, after.mask, after.border));
+                const maskChanged = (before.mask?.data.length !== after.mask?.data.length); // Rough check
+                const borderChanged = JSON.stringify(before.border) !== JSON.stringify(after.border);
+                
+                if (maskChanged || borderChanged) {
+                    if (w.historyManager) w.historyManager.push(new SelectionAction('Selection Change', before.mask, before.border, after.mask, after.border));
                 }
+
+                if (groupStarted) activeHM.endGroup();
+            };
+        }
+    });
+
+    // Patch Vector Tools to use grouping if available
+    const vectorTools = ['addVectorShape', 'updateVectorShape', 'deleteVectorShape'];
+    vectorTools.forEach(fnName => {
+        if (typeof w[fnName] === 'function') {
+            const original = w[fnName];
+            w[fnName] = function(...args: any[]) {
+                const activeHM = (window as any).historyManager;
+                if (activeHM) activeHM.beginGroup('Vector Action');
+                const res = original.apply(this, args);
+                if (activeHM) activeHM.endGroup();
+                return res;
             };
         }
     });
 
     // --- #10014: Brush Tip Visibility ---
     const originalRenderLayers = w.renderLayers;
-    w.renderLayers = function(tempCanvas?: any) {
-        if (g.documents.length === 0) return; 
-        const wasZooming = g.zooming;
-        if (!w.isMouseInCanvas) (g as any).zooming = true; 
-        originalRenderLayers(tempCanvas);
-        (g as any).zooming = wasZooming;
-    };
+    if (originalRenderLayers) {
+        w.renderLayers = function(tempCanvas?: any) {
+            if (g.documents.length === 0) return; 
+            const wasZooming = g.zooming;
+            if (!w.isMouseInCanvas) (g as any).zooming = true; 
+            originalRenderLayers(tempCanvas);
+            (g as any).zooming = wasZooming;
+        };
+    }
 
     const attachMouseListeners = () => {
         const area = document.getElementById('canvasWrapper');
@@ -124,36 +226,6 @@ export function applyCorePatch() {
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachMouseListeners);
     else attachMouseListeners();
-
-    // --- #10013: History Manager Swapping ---
-    const historyMap = new Map<string, HistoryManager>();
-
-    function getHistoryForDoc(doc: any): HistoryManager {
-        if (!historyMap.has(doc.id)) {
-            console.log(`[CorePatch] Initializing HistoryManager for: ${doc.name}`);
-            const hm = new HistoryManager(g.max_undo_steps);
-            
-            // Patch Push/Undo/Redo for UI updates
-            const instPush = hm.push;
-            hm.push = function(action: any) {
-                instPush.call(hm, action);
-                w.updateUndoRedoUI();
-            };
-            const instUndo = hm.undo;
-            hm.undo = function() {
-                instUndo.call(hm);
-                w.updateUndoRedoUI();
-            }
-            const instRedo = hm.redo;
-            hm.redo = function() {
-                instRedo.call(hm);
-                w.updateUndoRedoUI();
-            }
-
-            historyMap.set(doc.id, hm);
-        }
-        return historyMap.get(doc.id)!;
-    }
 
     w.updateUndoRedoUI = function() {
         const hm = w.historyManager;
@@ -175,49 +247,94 @@ export function applyCorePatch() {
         }
     };
 
+    // --- #10011: Document Isolation & Sync ---
     const originalSwitchDocument = w.switchDocument;
     w.switchDocument = function(index: number) {
         if (index < 0 || index >= g.documents.length) return;
         
         const oldIndex = (g as any).activeDocumentIndex;
         if (oldIndex >= 0 && oldIndex < g.documents.length) {
-            const oldDoc = g.documents[oldIndex];
+            const oldDoc = g.documents[oldIndex] as any;
             oldDoc.selectionActive = (g as any).isSelectionActive;
             oldDoc.selectionMask = (g as any).selectionMask;
             oldDoc.selectionBorder = (g as any).selectionBorder;
+            oldDoc.selectionPreviewBorder = (g as any).selectionPreviewBorder;
             oldDoc.selectionCanvas = (g as any).selectionCanvas;
+            oldDoc.selectionDashOffset = (g as any).selectionDashOffset;
         }
 
-        document.body.classList.remove('no-document-active');
-        originalSwitchDocument(index);
+        if (originalSwitchDocument) {
+            originalSwitchDocument(index);
+        } else {
+            g.activeDocumentIndex = index;
+        }
         
-        const doc = g.documents[index];
+        const doc = g.documents[index] as any;
         w.historyManager = getHistoryForDoc(doc);
         
+        // Restore selection state
         (g as any).isSelectionActive = !!doc.selectionActive;
         (g as any).selectionMask = doc.selectionMask || null;
         (g as any).selectionBorder = doc.selectionBorder || [];
+        (g as any).selectionPreviewBorder = doc.selectionPreviewBorder || [];
         (g as any).selectionCanvas = doc.selectionCanvas || null;
+        (g as any).selectionDashOffset = doc.selectionDashOffset || 0;
 
-        w.updateUndoRedoUI();
+        const forceUpdate = () => {
+            if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+            if (historyManager.updateUI) historyManager.updateUI(); // Proxied call
+            if (w.updateLayerPanel) w.updateLayerPanel();
+            if (w.renderLayers) w.renderLayers();
+            const filePath = document.getElementById('filePath');
+            if (filePath) filePath.innerText = doc.name || 'Untitled';
+        };
 
-        const splash = document.getElementById('no-document-splash');
-        if (splash) splash.style.display = 'none';
-        const wrapper = document.getElementById('canvasWrapper');
-        if (wrapper) wrapper.style.display = 'inline-block';
-        const canvas = document.getElementById('drawingCanvas');
-        if (canvas) canvas.style.display = 'block';
+        forceUpdate();
+        setTimeout(forceUpdate, 50);
     };
+
+    const originalRenderImageTabs = w.renderImageTabs || coreRenderImageTabs;
+    w.renderImageTabs = function() {
+        if (originalRenderImageTabs) originalRenderImageTabs();
+        
+        // Force re-bind of tabs to use window.switchDocument if needed
+        const tabs = document.querySelectorAll('.image-tab-name');
+        tabs.forEach((tab: any) => {
+            const parent = tab.parentElement;
+            if (parent && parent.dataset.index) {
+                const idx = parseInt(parent.dataset.index);
+                tab.onclick = (e: Event) => {
+                    e.stopPropagation();
+                    w.switchDocument(idx);
+                };
+            }
+        });
+    };
+
+    if (appEvents) {
+        appEvents.addEventListener('document:switch', (e: any) => {
+            const doc = g.documents[g.activeDocumentIndex];
+            if (doc) {
+                w.historyManager = getHistoryForDoc(doc);
+                if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+                if (historyManager.updateUI) historyManager.updateUI();
+                if (w.updateLayerPanel) w.updateLayerPanel();
+                if (w.renderLayers) w.renderLayers();
+                const filePath = document.getElementById('filePath');
+                if (filePath) filePath.innerText = doc.name || 'Untitled';
+            }
+        });
+    }
 
     w.closeDocument = function(index: number) {
         const doc = g.documents[index];
-        if (doc) historyMap.delete(doc.id);
+        if (doc) docHistories.delete(doc.id);
         g.documents.splice(index, 1);
 
         if (g.documents.length === 0) {
             (g as any).activeDocumentIndex = -1;
             showNoDocumentSplash();
-            renderImageTabs();
+            w.renderImageTabs();
         } else {
             if (g.activeDocumentIndex >= g.documents.length) (g as any).activeDocumentIndex = g.documents.length - 1;
             w.switchDocument(g.activeDocumentIndex);
@@ -235,17 +352,18 @@ export function applyCorePatch() {
     }
 
     const originalNewDocument = w.newDocument;
-    w.newDocument = function(...args: any[]) {
-        const res = originalNewDocument.apply(this, args);
-        document.body.classList.remove('no-document-active');
-        const splash = document.getElementById('no-document-splash');
-        if (splash) splash.style.display = 'none';
-        if (g.documents.length > 0) w.switchDocument(g.documents.length - 1);
-        return res;
-    };
+    if (originalNewDocument) {
+        w.newDocument = function(...args: any[]) {
+            const res = originalNewDocument.apply(this, args);
+            document.body.classList.remove('no-document-active');
+            const splash = document.getElementById('no-document-splash');
+            if (splash) splash.style.display = 'none';
+            if (g.documents.length > 0) w.switchDocument(g.documents.length - 1);
+            return res;
+        };
+    }
 
     const observer = new MutationObserver(() => {
-        // 1. Patch Tab Close Buttons
         document.querySelectorAll('.image-tab-close').forEach((btn: any) => {
             if (!btn.dataset.patched) {
                 const tab = btn.closest('.image-tab');
@@ -257,12 +375,9 @@ export function applyCorePatch() {
             }
         });
 
-        // 2. Aggressive Splash/Modal Sync (#10010)
         const hasDocs = g.documents && g.documents.length > 0;
         const splash = document.getElementById('no-document-splash');
-        
         if (hasDocs && splash && splash.style.display !== 'none') {
-            console.log("[CorePatch] Auto-hiding splash.");
             splash.style.display = 'none';
             document.body.classList.remove('no-document-active');
             const workspace = document.getElementById('canvasWrapper');
@@ -270,6 +385,8 @@ export function applyCorePatch() {
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });
+
+    console.log('[core-patch] Applied all core fixes.');
 }
 
 function showNoDocumentSplash() {
@@ -281,15 +398,14 @@ function showNoDocumentSplash() {
     if (!splash) {
         splash = document.createElement('div');
         splash.id = 'no-document-splash';
-        // USE ATTRIBUTES INSTEAD OF ADD-EVENT-LISTENER FOR RELIABILITY (#10010)
         splash.innerHTML = `
-            <div class="splash-content fadeIn">
-                <img src="assets/logo.png" alt="HCIE" class="splash-logo" onerror="this.style.display='none'">
+            <div class=\"splash-content fadeIn\">
+                <img src=\"assets/logo.png\" alt=\"HCIE\" class=\"splash-logo\" onerror=\"this.style.display='none'\">
                 <h2>Welcome to HC Image Editor</h2>
                 <p>Start by creating a new document or opening an existing image.</p>
-                <div class="splash-actions">
-                    <button class="primary-btn" onclick="window.openNewImageDialog()">New Image</button>
-                    <button class="secondary-btn" onclick="window.openImage()">Open Image</button>
+                <div class=\"splash-actions\">
+                    <button class=\"primary-btn\" onclick=\"window.openNewImageDialog()\">New Image</button>
+                    <button class=\"secondary-btn\" onclick=\"window.openImage()\">Open Image</button>
                 </div>
             </div>
         `;

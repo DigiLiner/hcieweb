@@ -2,8 +2,7 @@
 
 ## 1. Language & Documentation
 
-- **All documentation must be written in English.** This includes memory-bank files, code comments in documentation, commit messages, and any generated reports or walkthroughs.
-- Code-level comments (e.g., inline PHP/JS) may remain in Turkish for consistency with the existing codebase.
+- **All documentation must be written in English.** 
 
 ## 2. Core Library Protection (Strictly Read-Only)
 
@@ -26,8 +25,8 @@
 - **AUTHORIZATION:** AI agents MUST NOT modify these configuration files without explicit, prior user approval. If an issue is suspected to originate from these files, the agent must inform the user and request permission to modify them.
 
 ## 5. Memory Bank & Context Management
-
-- **MANDATORY LOGGING:** Every action, decision, analysis, and change MUST be logged in the `memory-bank/` directory.
+- **SEPERATED MEMORY BANK** Every request from user need to seperated folder under memory-bank. AI AGENT will read that folder only. Don't read evey file in memory. 
+- **MANDATORY LOGGING:** Every action, decision, analysis, and change MUST be logged in the corrct folder in `memory-bank/` directory.
 - **VIRTUAL CONTEXT (SWAP):** Use the `memory-bank/task-logs/` directory as a "virtual context swap" area. Update these logs frequently to track granular, unfinished work.
 - **PERSISTENT TRACKING:** Active or unfinished task logs MUST NOT be archived until the task is fully completed and confirmed by the USER.
 - **ARCHIVE AUTHORIZATION (CRITICAL):** Agents are strictly forbidden from archiving, moving, or deleting any active or unfinished task logs, plans, or documentation sections without explicit, per-item confirmation from the USER.
@@ -39,7 +38,7 @@
 
 ### MESSAGE_FROM_AGENT.md — Always-Updated, Color-Coded Status Report
 
-- **ALWAYS UPDATE** `MESSAGE_FROM_AGENT.md` after EVERY significant task, fix, or change. No exceptions.
+- **UPDATE** `MESSAGE_FROM_AGENT.md` after EVERY significant task, fix, or change. No exceptions.
 - The file MUST be human-readable and use emoji color indicators for task statuses:
   - **🟢 Completed** — Only tasks explicitly confirmed by the USER.
   - **🟡 Waiting to Confirm** — Task finished/fixed by agent, pending user verification.

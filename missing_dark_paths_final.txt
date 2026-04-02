@@ -1,2 +1,0 @@
-ls: 'public/resources/themes/ie_dark/ui/flip-horizontal-3.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_dark/ui/flip-vertical-3.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok

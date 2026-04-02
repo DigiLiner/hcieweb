@@ -1,13 +1,0 @@
-
-> hcie@4.0.0 build
-> vite build
-
-vite v8.0.3 building client environment for production...
-[2Ktransforming...✓ 64 modules transformed.
-rendering chunks...
-computing gzip size...
-tauri-dist/index.html                  55.91 kB │ gzip:  8.28 kB
-tauri-dist/assets/index-C00ky_F9.css   30.40 kB │ gzip:  6.03 kB
-tauri-dist/assets/index-BduqMAxG.js   166.72 kB │ gzip: 45.09 kB │ map: 539.90 kB
-
-✓ built in 321ms

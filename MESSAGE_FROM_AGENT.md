@@ -1,9 +1,7 @@
 # Task Status Report
-
-_Last updated: 2026-04-02 07:48_
+*Last updated: 2026-04-02 19:16*
 
 ## 🟢 Completed (USER confirmed)
-
 - ...
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
@@ -14,10 +12,10 @@ _Last updated: 2026-04-02 07:48_
 - **#10013 (FIXED)**: undo-redo dökümanları karıştırıyor. (Fixed by isolating `HistoryManager` per document ID).
 - **#10014 (FIXED)**: Brush tip (kalem ucu) canvas dışındayken gizlenmesi sağlandı. (Fixed by patching `renderLayers` with `isMouseInCanvas` flag).
 - **#10015 (FIXED)**: New Image dialog sayfa merkezinden kayıyordu. (Fixed with CSS flex centering).
+- **#10011 (BUG)**: Undo memory and selection leakage between documents. (Fixed by proxying HistoryManager singleton to active document instance, synchronizing selection-related globals, adding 'document:switch' event listener, and fixing canUndo/canRedo getters).
 
 ## 🔴 In Progress
-
-- Final validation of document switching and history sync.
+- ...
 
 ## ⚪ Backlog
 
