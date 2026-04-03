@@ -7,13 +7,10 @@ The AI AGENT is strictly forbidden from modifying this file.
 
 (Write your requests here)
 
-#1003 – Çizim araçlarının ayarlarının kalıcı olarak saklanması
 
-English:
-New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored in a configuration file. These settings include values such as size, opacity, and radius. When the user changes any setting, the change must be saved immediately and restored automatically the next time the application starts. These settings must be kept in a global object and the corresponding UI controls (sliders, checkboxes, buttons) must always stay synchronized with these global values.
+#1004 – Tema yapısı
 
-
-#1005 – Kaynak dosyalarının (SVG simgeleri) tema uyumu ve klasör yapısı
+#1005 – Kaynak dosyalarının (SVG simgeleri) tema yapısının değiştirilmesiuyumu ve klasör yapısın değiştirilmesiuyumu
 
 #1006 – Farklı dosya formatlarını okuma/yazma altyapısı
 
@@ -47,8 +44,11 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 #1322 Cut-copy-paste ve gelişmiş seçenekler
 
 
+#11016 seçim menüsüne feather, grow, daralma gibi ek özellikler eklenecek. Invert, feather, grow, shrink, border, fill, deselect, select all fonksiyonları aktif olarak çalışsın.  
+    #10016-1-FIX-REQUEST : bu araçlar iyi çalışıyor. istediğim bir UI kolaylığı, menüden çıkan modal diyaloğa değer girerken önizleme yapılamıyor. Çünkü modal ekranı kapatıyor. taşınabilir bir pencere içinde bu ayarlar yapılsın ve hemen önizleme görünsün. ok ve cancel butonları da olsun.
 
-#10016 seçim menüsüne feather, grow, daralma gibi ek özellikler eklenecek. Invert, feather, grow, shrink, border, fill, deselect, select all fonksiyonları aktif olarak çalışsın.
 
-#10017 crop tool eklenecek. Crop tool ile ilgili ayarlar history'ye kaydedilsin.Menüler de aktif olsun.
+
+
+
 

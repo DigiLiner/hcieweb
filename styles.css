@@ -1110,4 +1110,4 @@ body.no-document-active #textToolOverlay {
 .btn-cookie:hover {
   filter: brightness(1.2);
   transform: translateY(-1px);
-}
+}\n/* ─── Disabled Menu States ─── */\n.menu-option.disabled {\n    opacity: 0.5;\n    cursor: default;\n    pointer-events: none;\n    filter: grayscale(1);\n}

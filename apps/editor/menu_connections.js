@@ -2,65 +2,82 @@
     console.log("[UnifiedMenu] Linking logical connections...");
 
     /**
-     * Internal UI Helper: showModifierModal
-     * Provides a premium slider + numeric input dialog.
+     * Closes all active dropdown menus.
      */
-    function showModifierModal(title, initialValue, min, max, unit, onApply) {
-        const overlay = document.createElement('div');
-        overlay.id = 'modifier-modal-overlay';
-        Object.assign(overlay.style, {
+    window.closeAllMenus = function() {
+        document.querySelectorAll(".menu-item").forEach(mi => mi.classList.remove("active"));
+        document.querySelectorAll(".menu-option").forEach(mo => mo.classList.remove("active"));
+    };
+
+    /**
+     * Internal UI Helper: showModifierModal
+     * Provides a premium, draggable slider + numeric input dialog with preview support.
+     */
+    function showModifierModal(title, initialValue, min, max, unit, onApply, onPreview, onCancel) {
+        // Close menus after a short delay to ensure propagation completes
+        setTimeout(() => {
+            if (window.closeAllMenus) window.closeAllMenus();
+        }, 30);
+
+        // Remove existing if any
+        const existing = document.getElementById('modifier-modal-container');
+        if (existing) document.body.removeChild(existing);
+
+        const container = document.createElement('div');
+        container.id = 'modifier-modal-container';
+        Object.assign(container.style, {
             position: 'fixed',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: '100000', // Extremely high
-            backdropFilter: 'blur(4px)',
-            transition: 'opacity 0.2s ease'
+            top: '100px',
+            right: '40px', // Defaults to top-right area
+            zIndex: '100000',
+            userSelect: 'none',
+            fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
         });
 
         const modal = document.createElement('div');
         modal.className = 'modifier-modal';
         Object.assign(modal.style, {
-            backgroundColor: '#252525',
-            border: '1px solid #444',
-            borderTop: '4px solid #0078d7',
-            borderRadius: '8px',
-            padding: '24px',
-            width: '340px',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-            color: '#fff',
-            fontFamily: "'Roboto', sans-serif",
-            userSelect: 'none'
+            backgroundColor: '#2b2b2b',
+            border: '1px solid #333',
+            borderTop: '4px solid #0078d7', // Premium accent stripe
+            boxShadow: '0 12px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)',
+            borderRadius: '6px',
+            width: '300px',
+            overflow: 'hidden'
         });
 
-        const h3 = document.createElement('h3');
-        h3.textContent = title;
-        Object.assign(h3.style, {
-            marginTop: '0',
-            marginBottom: '20px',
-            fontSize: '18px',
-            fontWeight: '500',
-            color: '#0078d7'
-        });
-
-        const controlGroup = document.createElement('div');
-        Object.assign(controlGroup.style, {
+        // Title Bar (Draggable)
+        const titleBar = document.createElement('div');
+        Object.assign(titleBar.style, {
+            backgroundColor: '#1e1e1e',
+            padding: '10px 16px',
+            cursor: 'move',
             display: 'flex',
-            flexDirection: 'column',
-            gap: '15px',
-            marginBottom: '30px'
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderBottom: '1px solid #333'
         });
 
-        const sliderRow = document.createElement('div');
-        Object.assign(sliderRow.style, {
+        const titleText = document.createElement('span');
+        titleText.textContent = title;
+        Object.assign(titleText.style, {
+            fontSize: '12px',
+            fontWeight: '600',
+            color: '#eee'
+        });
+        titleBar.appendChild(titleText);
+
+        const content = document.createElement('div');
+        Object.assign(content.style, {
+            padding: '16px'
+        });
+
+        const controlRow = document.createElement('div');
+        Object.assign(controlRow.style, {
             display: 'flex',
             alignItems: 'center',
-            gap: '15px'
+            gap: '12px',
+            marginBottom: '20px'
         });
 
         const slider = document.createElement('input');
@@ -70,118 +87,151 @@
         slider.value = initialValue;
         Object.assign(slider.style, {
             flex: '1',
-            cursor: 'pointer',
-            height: '4px',
-            borderRadius: '2px',
-            outline: 'none',
-            accentColor: '#0078d7'
+            accentColor: '#0078d7',
+            cursor: 'pointer'
         });
 
-        const numberInput = document.createElement('input');
-        numberInput.type = 'number';
-        numberInput.min = min;
-        numberInput.max = max;
-        numberInput.value = initialValue;
-        Object.assign(numberInput.style, {
-            width: '70px',
-            backgroundColor: '#111',
+        const numInput = document.createElement('input');
+        numInput.type = 'number';
+        numInput.min = min;
+        numInput.max = max;
+        numInput.value = initialValue;
+        Object.assign(numInput.style, {
+            width: '55px',
+            backgroundColor: '#1a1a1a',
             border: '1px solid #444',
-            color: '#00ff00', // Green for values
-            padding: '8px',
-            borderRadius: '4px',
+            color: '#00ff7f',
+            padding: '4px 2px',
+            borderRadius: '3px',
+            fontSize: '12px',
             textAlign: 'center',
-            fontSize: '14px',
-            fontFamily: 'monospace',
             outline: 'none'
         });
 
-        const unitSpan = document.createElement('span');
-        unitSpan.textContent = unit;
-        Object.assign(unitSpan.style, {
-            fontSize: '12px',
+        const unitText = document.createElement('span');
+        unitText.textContent = unit;
+        Object.assign(unitText.style, {
+            fontSize: '11px',
             color: '#888',
             width: '20px'
         });
 
-        sliderRow.appendChild(slider);
-        sliderRow.appendChild(numberInput);
-        sliderRow.appendChild(unitSpan);
-        controlGroup.appendChild(sliderRow);
+        controlRow.appendChild(slider);
+        controlRow.appendChild(numInput);
+        controlRow.appendChild(unitText);
+        content.appendChild(controlRow);
 
-        const buttonRow = document.createElement('div');
-        Object.assign(buttonRow.style, {
+        const footer = document.createElement('div');
+        Object.assign(footer.style, {
             display: 'flex',
             justifyContent: 'flex-end',
-            gap: '12px'
+            gap: '8px'
         });
 
         const cancelBtn = document.createElement('button');
         cancelBtn.textContent = 'İptal';
         Object.assign(cancelBtn.style, {
-            backgroundColor: 'transparent',
-            border: '1px solid #444',
-            color: '#aaa',
-            padding: '8px 20px',
-            borderRadius: '4px',
+            padding: '5px 12px',
+            backgroundColor: '#444',
+            border: 'none',
+            color: '#eee',
+            borderRadius: '3px',
             cursor: 'pointer',
-            fontSize: '14px',
-            transition: 'all 0.1s'
+            fontSize: '12px'
         });
-        cancelBtn.onmouseover = () => cancelBtn.style.color = '#fff';
-        cancelBtn.onmouseout = () => cancelBtn.style.color = '#aaa';
 
-        const applyBtn = document.createElement('button');
-        applyBtn.textContent = 'Uygula';
-        Object.assign(applyBtn.style, {
+        const okBtn = document.createElement('button');
+        okBtn.textContent = 'Tamam';
+        Object.assign(okBtn.style, {
+            padding: '5px 16px',
             backgroundColor: '#0078d7',
             border: 'none',
             color: '#fff',
-            padding: '8px 24px',
-            borderRadius: '4px',
+            borderRadius: '3px',
             cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            transition: 'background 0.1s'
+            fontSize: '12px',
+            fontWeight: '600'
         });
-        applyBtn.onmouseover = () => applyBtn.style.backgroundColor = '#0084ee';
-        applyBtn.onmouseout = () => applyBtn.style.backgroundColor = '#0078d7';
 
-        buttonRow.appendChild(cancelBtn);
-        buttonRow.appendChild(applyBtn);
+        footer.appendChild(cancelBtn);
+        footer.appendChild(okBtn);
+        content.appendChild(footer);
 
-        modal.appendChild(h3);
-        modal.appendChild(controlGroup);
-        modal.appendChild(buttonRow);
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
+        modal.appendChild(titleBar);
+        modal.appendChild(content);
+        container.appendChild(modal);
+        document.body.appendChild(container);
 
-        const sync = (source, target) => {
-            target.value = source.value;
+        // Drag Logic
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        titleBar.onmousedown = (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialLeft = container.offsetLeft;
+            initialTop = container.offsetTop;
+            container.style.transform = 'none'; // Lock transformation to absolute pos
+            container.style.left = initialLeft + 'px';
+            container.style.top = initialTop + 'px';
+            container.style.right = 'auto'; // Break alignment to right
+            
+            document.onmousemove = (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                container.style.left = (initialLeft + dx) + 'px';
+                container.style.top = (initialTop + dy) + 'px';
+            };
+            
+            document.onmouseup = () => {
+                isDragging = false;
+                document.onmousemove = null;
+            };
         };
-        slider.addEventListener('input', () => sync(slider, numberInput));
-        numberInput.addEventListener('input', () => sync(numberInput, slider));
+
+        let previewTimeout = null;
+        const updateValue = (v) => {
+            slider.value = v;
+            numInput.value = v;
+
+            // Performance: 1000ms Debounce for preview to prevent massive memory usage on large images
+            if (previewTimeout) {
+                clearTimeout(previewTimeout);
+            }
+            
+            previewTimeout = setTimeout(() => {
+                if (onPreview) {
+                    console.log(`[ModifierModal] Triggering preview: ${title} (${v}${unit})`);
+                    onPreview(parseInt(v));
+                }
+                previewTimeout = null;
+            }, 1000);
+        };
+
+        slider.oninput = (e) => updateValue(e.target.value);
+        numInput.onchange = (e) => updateValue(e.target.value);
+        numInput.oninput = (e) => updateValue(e.target.value);
 
         const close = () => {
-            if (document.body.contains(overlay)) {
-                document.body.removeChild(overlay);
+            if (document.body.contains(container)) {
+                document.body.removeChild(container);
             }
         };
-        cancelBtn.onclick = close;
-        applyBtn.onclick = () => {
-            onApply(parseInt(numberInput.value));
+
+        cancelBtn.onclick = () => {
+            if (onCancel) onCancel();
             close();
         };
-        overlay.onclick = (e) => { if (e.target === overlay) close(); };
-        
-        window.addEventListener('keydown', function esc(e) {
-            if (e.key === 'Escape') {
-                close();
-                window.removeEventListener('keydown', esc);
-            }
-        });
 
-        numberInput.focus();
-        numberInput.select();
+        okBtn.onclick = () => {
+            onApply(parseInt(numInput.value));
+            close();
+        };
+
+        numInput.focus();
+        numInput.select();
     }
 
     // ─── View Connections ─────────────────────────────────────
@@ -353,60 +403,44 @@
 
     // ─── Selection Modification Connections ───────────────────
 
-    /**
-     * Select: Feather
-     */
-    /**
-     * Select: Feather
-     */
-    window.modifyFeather = function() {
-        console.log("[Menu] Opening Feather modal...");
-        showModifierModal("Seçimi Yumuşat (Feather)", 5, 0, 100, "px", (val) => {
-            if (window.featherSelection) {
-                console.log(`[Menu] Calling featherSelection(${val})`);
-                window.featherSelection(val);
+    function wrapperSelectionChange(title, initial, min, max, unit, func) {
+        const g = window.g;
+        if (!g || !g.isSelectionActive) {
+            // Visual alert could be replaced with simple guard or toast
+            alert("Önce bir alan seçmelisiniz.");
+            if (window.closeAllMenus) window.closeAllMenus();
+            return;
+        }
+        if (!window.captureSelectionState) return;
+        
+        const startState = window.captureSelectionState();
+        
+        showModifierModal(title, initial, min, max, unit,
+            (val) => { // OK/Apply - final change with history
+                window.applySelectionState(startState);
+                window.__BYPASS_HISTORY__ = false;
+                func(val);
+            },
+            (val) => { // Preview - temporary change without history
+                window.applySelectionState(startState);
+                window.__BYPASS_HISTORY__ = true;
+                func(val);
+            },
+            () => { // Cancel - revert to original state
+                window.applySelectionState(startState);
+                window.__BYPASS_HISTORY__ = false;
             }
-        });
-    };
+        );
+    }
 
-    /**
-     * Select: Expand
-     */
-    window.modifyExpand = function() {
-        console.log("[Menu] Opening Expand modal...");
-        showModifierModal("Seçimi Genişlet (Expand)", 5, 1, 50, "px", (val) => {
-            if (window.expandSelection) {
-                console.log(`[Menu] Calling expandSelection(${val})`);
-                window.expandSelection(val);
-            }
-        });
-    };
-
-    /**
-     * Select: Contract
-     */
-    window.modifyContract = function() {
-        console.log("[Menu] Opening Contract modal...");
-        showModifierModal("Seçimi Daralt (Contract)", 5, 1, 50, "px", (val) => {
-            if (window.contractSelection) {
-                console.log(`[Menu] Calling contractSelection(${val})`);
-                window.contractSelection(val);
-            }
-        });
-    };
-
-    /**
-     * Select: Border
-     */
-    window.modifyBorder = function() {
-        console.log("[Menu] Opening Border modal...");
-        showModifierModal("Seçim Kenarlığı (Border)", 5, 1, 100, "px", (val) => {
-            if (window.borderSelection) {
-                console.log(`[Menu] Calling borderSelection(${val})`);
-                window.borderSelection(val);
-            }
-        });
-    };
+    window.modifyFeather = () => wrapperSelectionChange("Seçimi Yumuşat (Feather)", 5, 0, 100, "px", (v) => window.featherSelection && window.featherSelection(v));
+    window.modifyExpand = () => wrapperSelectionChange("Seçimi Genişlet (Grow)", 5, 1, 50, "px", (v) => window.expandSelection && window.expandSelection(v));
+    window.modifyContract = () => wrapperSelectionChange("Seçimi Daralt (Shrink)", 5, 1, 50, "px", (v) => window.contractSelection && window.contractSelection(v));
+    window.modifyBorder = () => wrapperSelectionChange("Kenarlık Seçimi (Border)", 5, 1, 100, "px", (v) => window.borderSelection && window.borderSelection(v));
+    
+    window.modifyStroke = () => wrapperSelectionChange("Seçimi Çiz (Stroke)", 2, 1, 50, "px", (v) => {
+        if (window.strokeSelection) window.strokeSelection(window.g.pen_color || "#000000", v);
+    });
 
     /**
      * Edit: Fill Selection
@@ -415,25 +449,13 @@
         const g = window.g;
         if (!g || !g.isSelectionActive) {
             alert("Önce bir alan seçmelisiniz.");
+            if (window.closeAllMenus) window.closeAllMenus();
             return;
         }
         if (window.fillSelection) {
-            // Fill with current active color
             window.fillSelection(g.pen_color || "#000000");
         }
-    };
-
-    window.modifyStroke = function() {
-        const g = window.g;
-        if (!g || !g.isSelectionActive) {
-            alert("Önce bir alan seçmelisiniz.");
-            return;
-        }
-        showModifierModal("Seçimi Çiz (Stroke)", 2, 1, 50, "px", (val) => {
-            if (window.strokeSelection) {
-                window.strokeSelection(g.pen_color || "#000000", val);
-            }
-        });
+        if (window.closeAllMenus) window.closeAllMenus();
     };
 
     // ─── Image/Global Connections ─────────────────────────────
@@ -447,6 +469,7 @@
         if (bounds && window.performCrop) {
             window.performCrop(bounds.x, bounds.y, bounds.w, bounds.h);
         }
+        if (window.closeAllMenus) window.closeAllMenus();
     };
 
     // ─── Menu Interaction Overrides ───────────────────────────
@@ -454,8 +477,36 @@
     document.addEventListener("DOMContentLoaded", function() {
         const menuItems = document.querySelectorAll(".menu-item");
         
+        function updateSelectionMenuStates() {
+            const g = window.g;
+            const hasSelection = g && g.isSelectionActive;
+            
+            // Find "Modify" menu option and its sub-options
+            const modifyOptions = document.querySelectorAll('.menu-option[onclick*="modify"], .menu-option[onclick*="feather"], .menu-option[onclick*="expand"], .menu-option[onclick*="contract"], .menu-option[onclick*="border"], .menu-option[onclick*="stroke"], .menu-option[onclick*="fill"]');
+            
+            modifyOptions.forEach(opt => {
+                if (hasSelection) {
+                    opt.classList.remove('disabled');
+                } else {
+                    opt.classList.add('disabled');
+                }
+            });
+
+            // Specific check for parent "Modify" (the one with the submenu)
+            const modifyParent = Array.from(document.querySelectorAll('.menu-option')).find(el => el.textContent.includes('Modify'));
+            if (modifyParent) {
+                if (hasSelection) modifyParent.classList.remove('disabled');
+                else modifyParent.classList.add('disabled');
+            }
+        }
+
         menuItems.forEach(item => {
             item.addEventListener("click", function(e) {
+                // Update selection-dependent states before showing the menu
+                if (this.textContent.trim().includes('Select') || this.textContent.trim().includes('Edit')) {
+                    updateSelectionMenuStates();
+                }
+
                 // Toggle active class on the clicked menu item
                 const isActive = this.classList.contains("active");
                 

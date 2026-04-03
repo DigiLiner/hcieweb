@@ -73,12 +73,16 @@ export function applyCorePatch() {
         hm.undo = function() {
             originalUndo.call(this);
             if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+            if (w.markLayersDirty) w.markLayersDirty();
+            if (w.renderLayers) w.renderLayers();
         };
 
         const originalRedo = hm.redo;
         hm.redo = function() {
             originalRedo.call(this);
             if (w.updateUndoRedoUI) w.updateUndoRedoUI();
+            if (w.markLayersDirty) w.markLayersDirty();
+            if (w.renderLayers) w.renderLayers();
         };
     };
 
@@ -150,46 +154,28 @@ export function applyCorePatch() {
     });
 
     // ─── Seçim Geçmişi ve İzolasyonu (#10012) ───────────────────
-    class SelectionAction {
-        constructor(public description: string, public before: any, public after: any) {}
+    const applySelectionState = (state: any) => {
+        (g as any).selectionMask = state.mask ? new ImageData(new Uint8ClampedArray(state.mask.data), state.mask.width, state.mask.height) : null;
+        (g as any).selectionBorder = state.border ? JSON.parse(JSON.stringify(state.border)) : [];
+        (g as any).isSelectionActive = !!state.mask || (state.border && state.border.length > 0);
         
-        undo() { this.applyState(this.before); }
-        redo() { this.applyState(this.after); }
-
-        private applyState(state: any) {
-            (g as any).selectionMask = state.mask ? new ImageData(new Uint8ClampedArray(state.mask.data), state.mask.width, state.mask.height) : null;
-            (g as any).selectionBorder = state.border ? JSON.parse(JSON.stringify(state.border)) : [];
-            (g as any).isSelectionActive = !!state.mask || (state.border && state.border.length > 0);
-            
-            if (state.mask) {
-                const canWidth = state.mask.width || 1;
-                const canHeight = state.mask.height || 1;
-                const canvas = document.createElement('canvas');
-                canvas.width = canWidth;
-                canvas.height = canHeight;
-                const ctx = canvas.getContext('2d');
-                if (ctx) ctx.putImageData(new ImageData(new Uint8ClampedArray(state.mask.data), canWidth, canHeight), 0, 0);
-                (g as any).selectionCanvas = canvas;
-            } else {
-                (g as any).selectionCanvas = null;
-            }
-
-            // Force a full redraw of everything including the marching ants
-            if (w.renderLayers) {
-                w.renderLayers();
-            } else {
-                const mainCan = document.getElementById('drawingCanvas') as HTMLCanvasElement;
-                if (mainCan && w.drawSelectionBorder) {
-                    const mainCtx = mainCan.getContext('2d');
-                    if (mainCtx) {
-                        mainCtx.clearRect(0,0,mainCan.width, mainCan.height);
-                        w.drawSelectionBorder(mainCtx);
-                    }
-                }
-            }
-            if (w.updateLayerPanel) w.updateLayerPanel();
+        if (state.mask) {
+            const canWidth = state.mask.width || 1;
+            const canHeight = state.mask.height || 1;
+            const canvas = document.createElement('canvas');
+            canvas.width = canWidth;
+            canvas.height = canHeight;
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.putImageData(new ImageData(new Uint8ClampedArray(state.mask.data), canWidth, canHeight), 0, 0);
+            (g as any).selectionCanvas = canvas;
+        } else {
+            (g as any).selectionCanvas = null;
         }
-    }
+
+        if (w.renderLayers) w.renderLayers();
+        if (w.updateLayerPanel) w.updateLayerPanel();
+        if (w.updateSVGSelection) w.updateSVGSelection();
+    };
 
     function captureSelectionState() {
         return {
@@ -200,6 +186,15 @@ export function applyCorePatch() {
             } : null,
             border: g.selectionBorder ? JSON.parse(JSON.stringify(g.selectionBorder)) : []
         };
+    }
+
+    w.captureSelectionState = captureSelectionState;
+    w.applySelectionState = applySelectionState;
+
+    class SelectionAction {
+        constructor(public description: string, public before: any, public after: any) {}
+        undo() { applySelectionState(this.before); }
+        redo() { applySelectionState(this.after); }
     }
 
     const selectionGfxMap: any = {
@@ -331,6 +326,9 @@ export function applyCorePatch() {
                     const before = captureSelectionState();
                     const res = original.apply(this, args);
                     
+                    if (w.markLayersDirty) w.markLayersDirty();
+                    if (w.__BYPASS_HISTORY__) return res;
+
                     const after = captureSelectionState();
                     if (JSON.stringify(before.border) !== JSON.stringify(after.border)) {
                         if (activeHM && activeHM.push) {
@@ -396,6 +394,7 @@ export function applyCorePatch() {
         (g as any).lastCropRect = doc.lastCropRect || null;
 
         const forceUpdate = () => {
+            if (w.markLayersDirty) w.markLayersDirty();
             if (w.updateUndoRedoUI) w.updateUndoRedoUI();
             if (w.updateLayerPanel) w.updateLayerPanel();
             if (w.renderLayers) w.renderLayers();
@@ -429,6 +428,7 @@ export function applyCorePatch() {
             const doc = g.documents[g.activeDocumentIndex];
             if (doc) {
                 w.historyManager = getHistoryForDoc(doc);
+                if (w.markLayersDirty) w.markLayersDirty();
                 if (w.updateUndoRedoUI) w.updateUndoRedoUI();
                 if (historyManager.updateUI) historyManager.updateUI();
                 if (w.updateLayerPanel) w.updateLayerPanel();
@@ -545,6 +545,174 @@ export function applyCorePatch() {
         });
     });
     observer.observe(document.body, { childList: true, subtree: true });
+
+    // ─── GPU-Accelerated SVG Seçim Kenarlığı (Marching Ants) ──────────────
+    // #10016-GPU Optimizasyonu: JS loopları yerine CSS ve SVG kullanarak 
+    // çizimi tamamen GPU kompozitörüne taşır.
+    
+    const setupSVGOverlay = () => {
+        let svg = document.getElementById('hcie-selection-svg') as any;
+        if (!svg) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            const newSvg = document.createElementNS(svgNS, "svg");
+            newSvg.id = 'hcie-selection-svg';
+            newSvg.setAttribute('width', '100%');
+            newSvg.setAttribute('height', '100%');
+            // Set viewBox to image dimensions so SVG coordinates match image pixels regardless of zoom
+            newSvg.setAttribute('viewBox', `0 0 ${g.image_width || 100} ${g.image_height || 100}`);
+            newSvg.style.cssText = "position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1000; overflow:visible; display:none;";
+            
+            // Add CSS for animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes marchingAnts { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 8; } }
+                .marching-ants-path { animation: marchingAnts 0.4s linear infinite; }
+            `;
+            document.head.appendChild(style);
+            
+            const wrapper = document.getElementById('canvasWrapper');
+            if (wrapper) wrapper.appendChild(newSvg);
+            svg = newSvg;
+
+            // Update SVG on zoom
+            window.addEventListener('zoomChanged', () => {
+                if (svg) {
+                    svg.setAttribute('viewBox', `0 0 ${g.image_width} ${g.image_height}`);
+                    w.updateSVGSelection(); // Refresh to ensure precision
+                }
+            });
+        }
+        return svg as any;
+    };
+
+    w.updateSVGSelection = () => {
+        const svg = setupSVGOverlay();
+        const allPaths = [...(g.selectionBorder || []), ...(g.selectionPreviewBorder || [])];
+        
+        if (!g.isSelectionActive && allPaths.length === 0) {
+            if (svg) svg.style.display = 'none';
+            return;
+        }
+        
+        if (svg) {
+            svg.style.display = 'block';
+            // Final safety: Sync viewBox with image size (e.g. after crop/resize)
+            const expectedViewBox = `0 0 ${g.image_width} ${g.image_height}`;
+            if (svg.getAttribute('viewBox') !== expectedViewBox) {
+                svg.setAttribute('viewBox', expectedViewBox);
+            }
+        }
+        
+        // Optimize: Path Data Generation
+        const svgNS = "http://www.w3.org/2000/svg";
+        const frag = document.createDocumentFragment();
+        
+        allPaths.forEach((path) => {
+            if (!path || path.length < 2) return;
+            
+            // Simplification: Skip points for giant paths (Performance vs Precision)
+            const step = path.length > 5000 ? (path.length > 20000 ? 5 : 2) : 1;
+            let d = `M ${path[0].x} ${path[0].y}`;
+            for (let i = 1; i < path.length; i += step) {
+                d += ` L ${path[i].x} ${path[i].y}`;
+            }
+            if (path.length > 2) d += ' Z';
+            
+            // 1. Black Outline (Contrast)
+            const p1 = document.createElementNS(svgNS, "path");
+            p1.setAttribute('d', d);
+            p1.setAttribute('stroke', 'rgba(0,0,0,0.8)');
+            p1.setAttribute('stroke-width', '1');
+            p1.setAttribute('fill', 'none');
+            frag.appendChild(p1);
+            
+            // 2. White Animated Dashes
+            const p2 = document.createElementNS(svgNS, "path");
+            p2.setAttribute('d', d);
+            p2.setAttribute('stroke', 'white');
+            p2.setAttribute('stroke-width', '1');
+            p2.setAttribute('stroke-dasharray', '4,4');
+            p2.setAttribute('fill', 'none');
+            p2.setAttribute('class', 'marching-ants-path');
+            frag.appendChild(p2);
+        });
+        
+        if (svg) {
+            svg.innerHTML = '';
+            svg.appendChild(frag);
+        }
+    };
+
+    // Override original drawSelectionBorder to stop canvas-based animation
+    w.drawSelectionBorder = function() {
+        // SVG manages the drawing now.
+        // We only trigger update if data changed (handled elsewhere).
+    };
+
+    // Trigger SVG update on selection changes
+    const originalApplySelectionState = w.applySelectionState;
+    w.applySelectionState = function(state: any) {
+        if (originalApplySelectionState) originalApplySelectionState.call(this, state);
+        w.updateSVGSelection();
+    };
+
+    // ─── renderLayers Throttling (Cache-based Optimization) ────────
+    let lastComposite: HTMLCanvasElement | null = null;
+    let layersDirty = true;
+    
+    w.markLayersDirty = () => { 
+        layersDirty = true; 
+        w.updateSVGSelection();
+    };
+    
+    w.addEventListener('mousedown', w.markLayersDirty, true);
+    w.addEventListener('mouseup', w.markLayersDirty, true);
+    w.addEventListener('keydown', w.markLayersDirty, true);
+    w.addEventListener('toolChanged', w.markLayersDirty, true);
+    
+    // Auto-update SVG on a regular timer but only when needed (e.g. preview)
+    setInterval(() => {
+        if (g.selectionPreviewBorder?.length > 0 || g.drawing) {
+             w.updateSVGSelection();
+        }
+    }, 50);
+
+    const originalRenderLayers = w.renderLayers;
+    w.renderLayers = function(liveCanvas?: HTMLCanvasElement) {
+        if (!originalRenderLayers) return;
+        
+        const can = document.getElementById("drawingCanvas") as HTMLCanvasElement;
+        const ctx = can?.getContext("2d");
+        if (!ctx) return originalRenderLayers.apply(this, arguments as any);
+
+        // If we are just during an animation tick (nothing dirty), we do ABSOLUTELY NOTHING.
+        // The SVG handles the marching ants animation. 
+        // We only re-render layers if they are dirty or we are actively moving.
+        if (liveCanvas || g.drawing || g.zooming || layersDirty) {
+            const wasActive = g.isSelectionActive;
+            g.isSelectionActive = false; // Hide from canvas render
+            
+            originalRenderLayers.apply(this, arguments as any);
+            
+            g.isSelectionActive = wasActive;
+            layersDirty = false;
+            
+            // Update cache
+            if (!lastComposite) lastComposite = document.createElement('canvas');
+            if (lastComposite.width !== g.image_width || lastComposite.height !== g.image_height) {
+                lastComposite.width = g.image_width;
+                lastComposite.height = g.image_height;
+            }
+            const lctx = lastComposite.getContext('2d');
+            if (lctx) {
+                lctx.clearRect(0, 0, g.image_width, g.image_height);
+                lctx.drawImage(can, 0, 0);
+            }
+        } else if (lastComposite && lastComposite.width === g.image_width && lastComposite.height === g.image_height) {
+            // Lazy restore from cache if canvas was wiped by something else
+            // Usually not needed if we just skip drawing.
+        }
+    };
 
     console.log('[core-patch] Tüm iyileştirmeler uygulandı.');
 }

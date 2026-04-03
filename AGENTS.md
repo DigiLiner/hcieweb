@@ -31,6 +31,7 @@
 - **PERSISTENT TRACKING:** Active or unfinished task logs MUST NOT be archived until the task is fully completed and confirmed by the USER.
 - **ARCHIVE AUTHORIZATION (CRITICAL):** Agents are strictly forbidden from archiving, moving, or deleting any active or unfinished task logs, plans, or documentation sections without explicit, per-item confirmation from the USER.
 - **ARCHIVE PRIVACY:** Agents MUST NOT read the `memory-bank/memory-arsiv/` directory. It is for user reference only.
+- **AI-FORBIDDEN ZONE:** Agents MUST NOT read or modify any files within the `.AI-FORBIDDEN/` directory. This is a restricted area for human use only. Any interaction with this directory is strictly forbidden unless explicitly requested by the USER.
 - **COMPLETION CONFIRMATION:** Before archiving any task log or marking a task as completed in `progress.md`, the agent MUST ask the user for confirmation every single time.
 - **PLAN MAINTENANCE:** Keep the `memory-bank/plans/` directory updated with current architectural designs or feature implementation plans, but do not archive them prematurely.
 
