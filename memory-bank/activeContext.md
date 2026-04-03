@@ -11,10 +11,10 @@
 
 | Task  | Topic                              | Status | Plan File                                |
 | ----- | ---------------------------------- | ------ | ---------------------------------------- |
-| #10012 | Selection in History               | 🟡     | `memory-bank/task-logs/bug_10012_sel.md` |
+| #10012 | Selection in History               | 🟢     | `memory-bank/task-logs/bug_10012_sel.md` |
+| #10017 | Crop Stabilization (UI/Handles)    | 🟡     | `memory-bank/task-logs/crop-stabilization-v2.md` |
+| #10016 | Selection Modifiers (Slider UI)    | 🟡     | `apps/editor/menu_connections.js`        |
 | #10010 | Last Tab / Splash Screen           | 🟢     | `memory-bank/task-logs/bug_10010_tabs.md`|
-| #10005 | SVG icon reorganization            | ⚪     | `plans/plan_1005_icon_reorganization.md` |
-| #1030  | GIMP (.xcf) Support                | ⚪     | `plans/layered_formats.md`               |
 
 ## Task Sessions
 
@@ -33,5 +33,6 @@
 3. Follow `HANDOVER.md` for team/agent swap.
 
 ## Güncel Durum
-- **Durum**: Seçim geçmişi hatası (#10012) giderildi, onay bekliyor.
-- **Devir**: `HANDOVER.md` üzerinden yeni asistan yönlendirilebilir.
+- **Durum**: Kırpma Aracı (#10017) ve Seçim Değiştiriciler (#10016) profesyonel UI ve tam izolasyon ile tamamlandı, onay bekliyor.
+- **Seçim Geçmişi**: Geçmiş yönetimi stabil; Feather/Expand gibi işlemler Undo yığınına dahil edildi.
+- **Döküman İzolasyonu**: `core-patch.ts` üzerinden dökümanlar arası state sızıntısı önlendi.

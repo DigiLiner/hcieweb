@@ -41,8 +41,14 @@ New feature: Drawing tool settings (brush, pen, eraser, etc.) should be stored i
 
 #1300 AI resim düzenleme araçları eklenecek
 
+#1320 Red Eye removal eklenecek. Menüde olması yeterli. Butona gerek yok.
+
+#1321 Selection rotate, scale, move, perspective
+#1322 Cut-copy-paste ve gelişmiş seçenekler
 
 
-#10012 (BUG-DEVAM EDİYOR)Seçim undo redoya kaydedilmiyor. Seçim değiştiğinde bu da undo olabilecek şekilde yapılandırılmalı ve history olarak görülmeli. YENİ DURUM: Polygon select history'ye kaydediliyor, geri alırken görünmez oluyor. Diğer seçim araçları kaydedilmiyor.
 
-#10017 RESERVED
+#10016 seçim menüsüne feather, grow, daralma gibi ek özellikler eklenecek. Invert, feather, grow, shrink, border, fill, deselect, select all fonksiyonları aktif olarak çalışsın.
+
+#10017 crop tool eklenecek. Crop tool ile ilgili ayarlar history'ye kaydedilsin.Menüler de aktif olsun.
+

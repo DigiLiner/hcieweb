@@ -9,13 +9,15 @@
 - [ ] #1006: Core I/O & Universal Format Support. 🔴
   - [x] PNG, JPG, BMP, TGA, ICO (Import), WebP, GIF (Import worked for some).
   - [ ] Support for 30+ formats as per USER_TASKS.md.
-- [ ] #10010-10015: Resolving HCIE Application Bugs. 🟡 (Waiting to Confirm)
-- [🟡] #10010: Fix Splash Screen behavior (buttons and auto-hide). 🟡
-- [🟡] #10011: Undo/Redo isolation across document tabs. (Fixed via HistoryManager Proxy). 🟡
-- [x] #10012: Implement selection history (undo/redo for selections).
-- [x] #10013: Fully isolate undo/redo history stacks per document.
-- [x] #10014: Hide brush tip overlay when mouse leaves canvas.
-- [x] #10015: Center and fix closing behavior for New Image dialog.
+- [🟡] #10010-10017: Resolving HCIE Application Bugs. 🟡 (Waiting to Confirm)
+- [x] #10010: Fix Splash Screen behavior (buttons and auto-hide). 🟢
+- [x] #10011: Undo/Redo isolation across document tabs. (Fixed via HistoryManager Proxy). 🟢
+- [x] #10012: Implement selection history (undo/redo for selections). 🟢
+- [x] #10013: Fully isolate undo/redo history stacks per document. 🟢
+- [x] #10014: Hide brush tip overlay when mouse leaves canvas. 🟢
+- [x] #10015: Center and fix closing behavior for New Image dialog. 🟢
+- [🟡] #10016: Selection Modifiers (Feather, Expand, etc.) with history and new Slider UI. 🟡
+- [🟡] #10017: Crop tool stabilization (double-click, Enter, Handles, Solid UI, Overlay). 🟡
 - [ ] #1030: GIMP (.xcf) Save/Export support. ⚪ (Wait, plan file says #1040)
 - [ ] #1040: Krita (.kra) Save/Export support. ⚪ (Wait, plan file says #1030)
 - [ ] #1050 / #1053: Paint.NET (.pdn) Import support. ⚪

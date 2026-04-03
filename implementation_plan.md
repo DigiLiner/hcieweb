@@ -1,30 +1,29 @@
-# Selection History Stabilization Plan (V3)
+# Selection History & Advanced Tools Stabilization (V5)
 
 ## Goal
-Tüm seçim değişikliklerinin (Rect, Ellipse, Lasso, Polygon, Wand, Select All, Deselect, Invert) History paneline kaydedilmesini ve undo/redo sırasında görsel olarak (karınca yürüyüşü ile) doğru şekilde geri/ileri alınmasını sağlamak.
+Finalize the stabilization of selection history and advanced selection tools (Feather, Grow, Shrink, Border, Fill, Stroke, Crop). Ensure all actions are correctly recorded per document tab and robustly handled during undo/redo.
 
-## Research Findings
-- **Küresel Fonksiyonlar:** `hcie-tools/src/selection.js` dosyası `buildRectSelection`, `buildLassoSelection`, `selectAll` gibi kritik fonksiyonları `window` objesine atıyor.
-- **Problem:** Önceki denemelerdeki `finishDrawing` yaklaşımı, bu fonksiyonun modül içine hapsolmuş olması (ve global'e her zaman eklenmemesi) nedeniyle güvenilmezdi.
-- **Çözüm:** En temel "selection builder" fonksiyonlarını (global'dekileri) patchleyerek kaynaktan veri yakalamak.
+## Current State (V5)
+- **Document Isolation:** History stacks are isolated per tab. Switching documents correctly swaps the active `historyManager`.
+- **Event-Level Capture:** Implemented in `core-patch.ts` using `setupUniversalCapture`. This catches selection changes triggered by mouse tools (Rect, Lasso, Polygon, Magic Wand) at the event level (mousedown -> record before state, mouseup/keydown/etc -> record after change).
+- **Function Patching:** Advanced selection methods called via menus (Invert, Select All, etc.) are patched via `wrapSelectionFunctions` to capture state transitions.
 
-## User Review Required
-> [!IMPORTANT]
-> Bu yama, seçim araçlarının temel çalışma şeklini değil, sadece durum değişikliklerini izler. Performans üzerindeki etkisi minimumdur ancak her seçim işleminde History paneline bir girdi eklenmesine neden olur (beklenen davranış).
+## Missing / Fixed Items
+- [x] **Feather Selection:** Was missing implementation in `selection.ts`. Added using CSS Gaussian blur filter on a temporary canvas.
+- [x] **Crop Tool:** Finalized with handle points and **Enter** key confirmation. Integrated into history.
+- [x] **Unified Menu Linking:** All modification tools (Grow, Shrink, Border, Fill, Stroke, Feather) are linked in `menu_connections.js`.
 
-## Proposed Changes
+## Selection Logic Details
+- **SelectionAction (class):** Captures both `mask` (ImageData) and `border` (Point[][]) for high-fidelity undo/redo.
+- **Thresholding:** Marching ants continue to follow the 127 alpha threshold, even for feathered selections, while pixel-level tools (like Fill) respect the full alpha gradient.
+- **CropAction (class):** Resizes all layers and global dimensions, saving full state backups for reliable undo.
 
-### [MODIFY] [core-patch.ts](file:///home/hc/Belgeler/00_PROJECTS/Tauri/hcie/apps/web/src/core-patch.ts)
-- `SelectionAction` sınıfını (undo/redo verisini saklayan yapı) iyileştir.
-- `captureSelectionState()` metodunu daha güvenli (null-check içeren) hale getir.
-- Aşağıdaki **KÜRESEL** fonksiyonları patchle:
-    - **Seçim Araçları:** `buildRectSelection`, `buildEllipseSelection`, `buildLassoSelection`, `buildPolygonalSelection`, `magicWandSelection`.
-    - **Menü Komutları:** `selectAll`, `deselect`, `invertSelection`.
-- Her patch işleminde "Önce/Sonra" farkı varsa otomatik olarak `HistoryManager.push` yap.
-- `SelectionAction.applyState` metodunun sonunda mutlaka `renderLayers()` çağırarak UI güncellemesini zorla.
+## Verification Checklist
+1. [ ] **Feathering:** Create selection -> Select 'Modify > Feather' -> Confirm history entry -> Undo/Redo visually.
+2. [ ] **History Isolation:** Open 2 tabs -> Select in Tab A -> Switch to Tab B -> History panel should be empty for B -> Switch back -> Tab A history returns.
+3. [ ] **Crop Lifecycle:** Use Crop tool -> Resize handles -> Press Enter -> Confirm image size change -> Undo (image restores size).
+4. [ ] **Advanced Menu:** Select All -> Invert -> Grow -> Confirm each step generates a unique History entry.
 
-## Verification Plan
-1. **Araç Testleri:** Rect, Lasso ve Polygon ile seçim yap -> History panelinde girişleri kontrol et.
-2. **Menü Testleri:** "Select All" ve "Deselect" (Ctrl+D) yap -> History panelinde girişleri kontrol et.
-3. **Görsel Doğrulama:** Ctrl+Z ile geri al -> Karınca yürüyüşünün kaybolduğunu doğrula.
-4. **İleri Al (Redo):** Ctrl+Shift+Z yap -> Karınca yürüyüşünün aynen geri geldiğini doğrula.
+---
+**Status:** 🟡 Testing (Waiting for User Verification)
+**Revision:** 2026-04-03

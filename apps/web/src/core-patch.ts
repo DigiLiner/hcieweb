@@ -181,7 +181,10 @@ export function applyCorePatch() {
                 const mainCan = document.getElementById('drawingCanvas') as HTMLCanvasElement;
                 if (mainCan && w.drawSelectionBorder) {
                     const mainCtx = mainCan.getContext('2d');
-                    if (mainCtx) w.drawSelectionBorder(mainCtx);
+                    if (mainCtx) {
+                        mainCtx.clearRect(0,0,mainCan.width, mainCan.height);
+                        w.drawSelectionBorder(mainCtx);
+                    }
                 }
             }
             if (w.updateLayerPanel) w.updateLayerPanel();
@@ -202,13 +205,29 @@ export function applyCorePatch() {
     const selectionGfxMap: any = {
         'buildRectSelection': 'Dörtgen Seçim',
         'buildEllipseSelection': 'Elips Seçim',
+        'buildCircleSelection': 'Daire Seçim',
+        'buildSingleRowSelection': 'Satır Seçim',
+        'buildSingleColumnSelection': 'Sütun Seçim',
         'buildLassoSelection': 'Kement Seçim',
         'buildPolygonalSelection': 'Poligon Seçim',
+        'crop': 'Kırpma',
         'deselect': 'Seçimi Kaldır',
         'invertSelection': 'Seçimi Ters Çevir',
         'magicWandSelection': 'Sihirli Değnek',
-        'selectAll': 'Tümünü Seç'
+        'selectAll': 'Tümünü Seç',
+        'featherSelection': 'Seçim Tüy Yumuşatma',
+        'expandSelection': 'Seçimi Genişlet (Grow)',
+        'contractSelection': 'Seçimi Daralt (Shrink)',
+        'borderSelection': 'Kenarlık Seçimi'
     };
+
+    // ─── Extend Tool Definitions ────────────────────────────────
+    if (w.Tool) {
+        if (!w.Tool.CircleSelect) w.Tool.CircleSelect = { id: 'btn-circle-select', name: 'Daire Seçim' };
+        if (!w.Tool.SingleRowSelect) w.Tool.SingleRowSelect = { id: 'btn-row-select', name: 'Tek Satır Seçim' };
+        if (!w.Tool.SingleColumnSelect) w.Tool.SingleColumnSelect = { id: 'btn-col-select', name: 'Tek Sütun Seçim' };
+        if (!w.Tool.Crop) w.Tool.Crop = { id: 'btn-crop', name: 'Kırpma' };
+    }
 
     // ─── Universal Event-Level Selection Capture (V5) ───────────
     const setupUniversalCapture = () => {
@@ -361,6 +380,7 @@ export function applyCorePatch() {
             oldDoc.selectionMask = (g as any).selectionMask;
             oldDoc.selectionBorder = (g as any).selectionBorder;
             oldDoc.selectionCanvas = (g as any).selectionCanvas;
+            oldDoc.lastCropRect = (g as any).lastCropRect;
         }
 
         if (originalSwitchDocument) originalSwitchDocument(index); else g.activeDocumentIndex = index;
@@ -373,6 +393,7 @@ export function applyCorePatch() {
         (g as any).selectionBorder = doc.selectionBorder ? [...doc.selectionBorder] : [];
         (g as any).selectionCanvas = doc.selectionCanvas || null;
         (g as any).selectionPreviewBorder = []; // Reset preview on switch
+        (g as any).lastCropRect = doc.lastCropRect || null;
 
         const forceUpdate = () => {
             if (w.updateUndoRedoUI) w.updateUndoRedoUI();
