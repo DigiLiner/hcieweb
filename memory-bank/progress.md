@@ -10,6 +10,8 @@
 
 ## 🟢 Completed (USER confirmed)
 
+- [x] PWA Conversion: full manifest, service worker, and icons support. 🟢
+
 - [x] #1020: Settings Page Implementation (Multi-language, Theme, Manager). 🟢
 - [x] #1005: SVG Icon Reorganization. 🟢
 - [x] #10017: Crop tool stabilization (double-click, Enter, Handles, Solid UI, Overlay). 🟢

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // ============================================================================
 // @AI-AGENT: DO NOT MODIFY THIS FILE WITHOUT EXPLICIT USER APPROVAL.
@@ -46,7 +47,45 @@ export default defineConfig(({ mode }) => {
             next();
           });
         }
-      }
+      },
+      VitePWA({
+        registerType: 'autoUpdate',
+        injectRegister: 'auto',
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        },
+        manifest: {
+          name: 'HC Image Editor',
+          short_name: 'HCIE',
+          description: 'Advanced Online Image Editor & Layered Design Tool',
+          theme_color: '#1a1a1a',
+          background_color: '#1a1a1a',
+          display: 'standalone',
+          icons: [
+            {
+              src: 'icons/favicon-32.png',
+              sizes: '32x32',
+              type: 'image/png'
+            },
+            {
+              src: 'icons/icon-128.png',
+              sizes: '128x128',
+              type: 'image/png'
+            },
+            {
+              src: 'icons/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png'
+            },
+            {
+              src: 'icons/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable'
+            }
+          ]
+        }
+      })
     ],
 
 

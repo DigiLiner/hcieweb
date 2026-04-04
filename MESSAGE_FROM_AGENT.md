@@ -13,6 +13,7 @@
 - **Selection Modifier Slider UI (#10016-1):** Taşınabilir pencere içi Feather/Grow/Shrink ve canlı önizleme onaylandı. 🟢
 - **Selection Modifier Preview Fix (#10016-FIX):** 1000ms gecikme ve bellek koruma mantığı onaylandı. 🟢
 - **Selection History Support (#10012):** Seçim işlemleri Undo/Redo yığınına tam entegre. 🟢
+- **PWA Conversion (#PWA):** Uygulamanın PWA haline getirilmesi için gerekli yapılandırma (manifest, sw, icons) tamamlandı ve build ile doğrulandı. 🟢
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
 - *Şu an bekleyen onay bulunmamaktadır.*
@@ -23,7 +24,6 @@
 - **#1326 Eye Dropper Tool:** Renk seçici ve kısayol (I) hassas piksel okuma ile eklendi. 🟡
 - **#1327 100% Zoom Button:** StatusBar'a eklendi ve tüm zoom işlemleriyle senkronize edildi. 🟡
 - **#1328 Zoom Slider:** StatusBar'a eklendi ve interaktif kontrol sağlandı. 🟡
-- **PWA Conversion (#PWA):** Uygulamanın PWA haline getirilmesi için araştırma ve planlama aşamasında. 🔴
 - **Aşama 9 Devamı:** #1006 (Dosya formatları - Krita/Gimp Save) hazırlığı. 🔴
 
 ## ⚪ Backlog
