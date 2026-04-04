@@ -399,8 +399,8 @@ body.no-document-active #textToolOverlay {
     linear-gradient(-45deg, var(--checker-color-1) 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, var(--checker-color-1) 75%),
     linear-gradient(-45deg, transparent 75%, var(--checker-color-1) 75%);
-  background-size: 16px 16px;
-  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+  background-size: var(--checker-size, 16px) var(--checker-size, 16px);
+  background-position: 0 0, 0 calc(var(--checker-size, 16px) / 2), calc(var(--checker-size, 16px) / 2) calc(var(--checker-size, 16px) / -2), calc(var(--checker-size, 16px) / -2) 0px;
   background-color: var(--checker-color-2);
   image-rendering: pixelated;
   pointer-events: auto;
@@ -421,6 +421,42 @@ body.no-document-active #textToolOverlay {
   gap: 12px;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Zoom Slider Styling */
+#zoomSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #444;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  margin: 0 5px;
+}
+
+#zoomSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #888;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #666;
+  transition: background 0.1s;
+}
+
+#zoomSlider::-webkit-slider-thumb:hover {
+  background: #aaa;
+}
+
+#zoomSlider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #888;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #666;
 }
 
 /* Aesthetic borders for left toolbox — only draw shadow, no border extending to status bar */
@@ -1107,7 +1143,11 @@ body.no-document-active #textToolOverlay {
   white-space: nowrap;
 }
 
-.btn-cookie:hover {
-  filter: brightness(1.2);
-  transform: translateY(-1px);
-}\n/* ─── Disabled Menu States ─── */\n.menu-option.disabled {\n    opacity: 0.5;\n    cursor: default;\n    pointer-events: none;\n    filter: grayscale(1);\n}
+
+/* ─── Disabled Menu States ─── */
+.menu-option.disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+    filter: grayscale(1);
+}

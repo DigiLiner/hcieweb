@@ -1,5 +1,23 @@
+import { showSettingsModal } from './settings_ui.js';
+import { i18n } from './i18n.js';
+
 (function() {
+    window.showSettingsModal = showSettingsModal;
+    
     console.log("[UnifiedMenu] Linking logical connections...");
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            showSettingsModal();
+        }
+    });
+
+    // Initialize i18n on load
+    document.addEventListener('DOMContentLoaded', () => {
+        i18n.updateUI();
+    });
 
     /**
      * Closes all active dropdown menus.

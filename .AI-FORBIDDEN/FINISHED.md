@@ -48,4 +48,15 @@ bug: Floodfill tool not limited with selection area
 
 #1014 silgi seçili alan dışını siliyor. Halbuki oraya dokunmamalı
 
+#1060 Photoshop (.psd) dosyası export özelliği ekle (FIXED). Archive kaldır.
+
 #10017 crop tool eklenecek. Crop tool ile ilgili ayarlar history'ye kaydedilsin.Menüler de aktif olsun.
+
+#10017 crop tool eklenecek. Crop tool ile ilgili ayarlar history'ye kaydedilsin.Menüler de aktif olsun.
+
+       crop enter tuşu da çift tık da çalışmıyor. crop seçici iki resim arasında birbirine karışıyor. sadece çizildiği yerde kalmalı. crop ile select aynı şekilde yürüyen karınca gösteriyor. halbuki crop için sınırları bir dolu çizgisi olan dikdörtgen ve seçimi değiştirecek tutma noktaları olmalı
+
+#11016 seçim menüsüne feather, grow, daralma gibi ek özellikler eklenecek. Invert, feather, grow, shrink, border, fill, deselect, select all fonksiyonları aktif olarak çalışsın.  
+#10016-1-FIX-REQUEST : bu araçlar iyi çalışıyor. istediğim bir UI kolaylığı, menüden çıkan modal diyaloğa değer girerken önizleme yapılamıyor. Çünkü modal ekranı kapatıyor. taşınabilir bir pencere içinde bu ayarlar yapılsın ve hemen önizleme görünsün. ok ve cancel butonları da olsun.
+
+#1020 settings menüsü. Kullanıcının ayarlar yapabilmesi için bir settings sayfası tasarla. programın her türlü ayarı burada olacak. Fikirlerini bekliyorum. Planla ve plan klasörüne ekle 

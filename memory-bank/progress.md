@@ -4,15 +4,15 @@
 
 **Phase 9: UI/UX Polishing & Feature Implementation**
 
-- [ ] #1005: SVG Icon Reorganization. 🔴
-  - Categorizing 200+ icons into theme-based folders (tools, ui, selection, file, edit, depo).
 - [ ] #1006: Core I/O & Universal Format Support. 🔴
   - [x] Basic support (PNG, JPG, BMP, WebP, TGA, GIF, ICO) completed.
   - [ ] See `memory-bank/plans/task-1006-breakdown.md` for detailed breakdown and backlog.
-- [🟡] #10017: Crop tool stabilization (double-click, Enter, Handles, Solid UI, Overlay). 🟡 (Waiting to Confirm)
 
 ## 🟢 Completed (USER confirmed)
 
+- [x] #1020: Settings Page Implementation (Multi-language, Theme, Manager). 🟢
+- [x] #1005: SVG Icon Reorganization. 🟢
+- [x] #10017: Crop tool stabilization (double-click, Enter, Handles, Solid UI, Overlay). 🟢
 - [x] #10016: Selection Modifiers (Feather, Expand, etc.) with history and new Slider UI. 🟢
 - [x] #10016-FIX: Selection Modifier Preview Delay (1s) & OOM prevention. 🟢
 - [x] #1003: Implement Drawing tool settings persistence. 🟢

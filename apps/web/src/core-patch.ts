@@ -121,12 +121,246 @@ export function applyCorePatch() {
         return docHistories.get(doc.id);
     }
 
+    // ─── Zoom ve UI Senkronizasyonu ──────────────────────────────
+    const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
+    const zoomDisplay = document.getElementById('zoomDisplay');
+
+    const updateZoomUI = () => {
+        const zoomPercent = Math.round((g.zoom || 1) * 100);
+        if (zoomSlider) zoomSlider.value = zoomPercent.toString();
+        if (zoomDisplay) zoomDisplay.innerText = zoomPercent + '%';
+    };
+
+    if (zoomSlider) {
+        zoomSlider.addEventListener('input', () => {
+            const val = parseInt(zoomSlider.value);
+            if (w.zoomTo) w.zoomTo(val / 100);
+            else {
+                g.zoom = val / 100;
+                if (w.renderLayers) w.renderLayers();
+                if (w.updateSVGSelection) w.updateSVGSelection();
+            }
+            if (zoomDisplay) zoomDisplay.innerText = val + '%';
+        });
+    }
+
+    // Listen for custom zoom events if they exist
+    window.addEventListener('zoomChanged', updateZoomUI);
+    // Initial sync and periodic sync as fallback
+    setInterval(updateZoomUI, 1000);
+    setTimeout(updateZoomUI, 500);
+
+    // Patch original zoom functions for instant feedback
+    const originalZoomIn = w.zoomIn;
+    w.zoomIn = function() {
+        if (originalZoomIn) originalZoomIn.apply(this, arguments as any);
+        updateZoomUI();
+    };
+    const originalZoomOut = w.zoomOut;
+    w.zoomOut = function() {
+        if (originalZoomOut) originalZoomOut.apply(this, arguments as any);
+        updateZoomUI();
+    };
+    const originalActualSize = w.actualSize;
+    w.actualSize = function() {
+        if (originalActualSize) originalActualSize.apply(this, arguments as any);
+        updateZoomUI();
+    };
+
+    // ─── Araç Kısayolları ve Eye Dropper ──────────────────────────
+    const originalSelectToolShortcut = w.selectToolShortcut;
+    w.selectToolShortcut = function(toolId: string) {
+        if (toolId === 'EyeDropper') {
+            w.selectTool({ id: 'EyeDropper', name: 'Eye Dropper' });
+            return;
+        }
+        if (originalSelectToolShortcut) originalSelectToolShortcut.apply(this, arguments as any);
+    };
+
+    // ─── StatusBar Drawing Info & Snap Logic (#1324) ─────────────
+    const drawingInfo = document.getElementById('drawingInfo');
+    const startPosElem = document.getElementById('startPos');
+    const dimensionsElem = document.getElementById('dimensions');
+    const angleElem = document.getElementById('angle');
+    const radiusElem = document.getElementById('radius');
+
+    let shiftPressed = false;
+    window.addEventListener('keydown', (e) => { if (e.key === 'Shift') shiftPressed = true; });
+    window.addEventListener('keyup', (e) => { if (e.key === 'Shift') shiftPressed = false; });
+
+    const updateDrawingStatusBar = (e: MouseEvent) => {
+        if (!g.drawing || !drawingInfo) {
+            if (drawingInfo) drawingInfo.style.display = 'none';
+            return;
+        }
+
+        drawingInfo.style.display = 'flex';
+        // Use our tracked start or g.draw_start_pos
+        const start = (window as any)._drawStart || g.draw_start_pos || { x: 0, y: 0 };
+        const current = (w as any).getMousePos ? (w as any).getMousePos(e) : { x: e.offsetX, y: e.offsetY };
+        
+        let dx = current.x - start.x;
+        let dy = current.y - start.y;
+
+        const tool = g.current_tool?.id || '';
+        const isEllipse = tool.includes('ellipse') || tool.includes('circle');
+        
+        if (radiusElem) {
+            if (isEllipse) {
+                radiusElem.style.display = 'inline';
+                const rx = Math.abs(dx) / 2;
+                const ry = Math.abs(dy) / 2;
+                radiusElem.innerText = `Radius: ${Math.round(rx)} x ${Math.round(ry)}`;
+            } else {
+                radiusElem.style.display = 'none';
+            }
+        }
+
+        if (shiftPressed) {
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            const allowedAngles = [0, 30, 45, 60, 90, 120, 135, 150, 180, -30, -45, -60, -90, -120, -135, -150, -180];
+            const finalSnap = allowedAngles.reduce((prev, curr) => Math.abs(curr - angle) < Math.abs(prev - angle) ? curr : prev);
+            
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const rad = finalSnap * Math.PI / 180;
+            dx = Math.cos(rad) * dist;
+            dy = Math.sin(rad) * dist;
+            
+            if (angleElem) angleElem.innerText = `Angle: ${Math.round(finalSnap)}°`;
+        } else {
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            if (angleElem) angleElem.innerText = `Angle: ${Math.round(angle)}°`;
+        }
+
+        if (startPosElem) startPosElem.innerText = `Start: ${Math.round(start.x)}, ${Math.round(start.y)}`;
+        if (dimensionsElem) dimensionsElem.innerText = `Size: ${Math.round(Math.abs(dx))} x ${Math.round(Math.abs(dy))}`;
+        
+        // Ensure buttons visibility for vector tools
+        const isVector = tool.includes('select') || tool.includes('rect') || tool.includes('ellipse') || tool.includes('path') || tool.includes('shape');
+        const actions = drawingInfo.querySelector('.drawing-actions') as HTMLElement;
+        if (actions) actions.style.display = isVector ? 'flex' : 'none';
+    };
+
+    // ─── Eye Dropper Logic (#1326) ──────────────────────────────
+    const handleEyeDropper = (e: MouseEvent) => {
+        if (g.current_tool?.id !== 'EyeDropper') return;
+        
+        const can = document.getElementById("drawingCanvas") as HTMLCanvasElement;
+        if (!can) return;
+        
+        const ctx = can.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
+        
+        const pos = (w as any).getMousePos ? (w as any).getMousePos(e) : { x: e.offsetX, y: e.offsetY };
+        const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+        const color = `#${((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1)}`;
+        
+        g.primary_color = color;
+        const preview = document.getElementById('primary-color-preview');
+        if (preview) preview.style.backgroundColor = color;
+        
+        if (w.updateColorUI) w.updateColorUI();
+    };
+
+    // ─── Drawing Commit/Cancel Logic (#1324-3) ──────────────────
+    w.commitDrawing = function() {
+        if (g.drawing) {
+            console.log("[core-patch] Committing drawing...");
+            // Send Enter key event to canvas to trigger core commit logic if exists
+            const can = document.getElementById("drawingCanvas");
+            if (can) {
+                can.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Enter' }));
+                can.dispatchEvent(new KeyboardEvent('keyup', { 'key': 'Enter' }));
+            }
+            g.drawing = false;
+            if (drawingInfo) drawingInfo.style.display = 'none';
+            if (w.markLayersDirty) w.markLayersDirty();
+            if (w.renderLayers) w.renderLayers();
+        }
+    };
+
+    w.cancelDrawing = function() {
+        if (g.drawing) {
+            console.log("[core-patch] Cancelling drawing...");
+            // Send Escape key event
+            const can = document.getElementById("drawingCanvas");
+            if (can) {
+                can.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Escape' }));
+            }
+            g.drawing = false;
+            if (drawingInfo) drawingInfo.style.display = 'none';
+            if (w.markLayersDirty) w.markLayersDirty();
+            if (w.renderLayers) w.renderLayers();
+        }
+    };
+
+    // ─── Katman İsimlendirme (#1325) ───────────────────────────
+    const getNextLayerName = (baseName: string) => {
+        const existingNames = (layers || []).map((l: any) => l.name);
+        let counter = 1;
+        
+        // Enhanced regex to match patterns like "Base 1", "Base 01", "Base 001"
+        const regex = new RegExp(`^${baseName}\\s*(0*(\\d+))$`, 'i');
+        let maxNum = 0;
+        let originalPadding = 0;
+        
+        existingNames.forEach((name: string) => {
+            const match = name.match(regex);
+            if (match) {
+                const numStr = match[1];
+                const num = parseInt(match[2]);
+                if (num > maxNum) {
+                    maxNum = num;
+                    originalPadding = numStr.startsWith('0') ? numStr.length : 0;
+                }
+            }
+        });
+        
+        if (maxNum > 0) counter = maxNum + 1;
+        
+        // simplified format: "Vector 1" unless original padding is detected
+        if (originalPadding > 1) {
+            return `${baseName} ${counter.toString().padStart(originalPadding, '0')}`;
+        }
+        return `${baseName} ${counter}`;
+    };
+
+    const originalAddLayer = w.addLayer;
+    w.addLayer = function() {
+        const name = getNextLayerName('Layer');
+        const res = originalAddLayer ? originalAddLayer.apply(this, arguments as any) : null;
+        if (layers && layers.length > 0) {
+            layers[layers.length - 1].name = name;
+        }
+        if (w.updateLayerPanel) w.updateLayerPanel();
+        return res;
+    };
+
+    const originalAddVectorLayer = w.addVectorLayer;
+    w.addVectorLayer = function() {
+        const name = getNextLayerName('Vector');
+        const res = originalAddVectorLayer ? originalAddVectorLayer.apply(this, arguments as any) : null;
+        if (layers && layers.length > 0) {
+            layers[layers.length - 1].name = name;
+        }
+        if (w.updateLayerPanel) w.updateLayerPanel();
+        return res;
+    };
+
     // ─── Otomatik Fare Gruplaması ──────────────────────────────────
     const attachInteractionListeners = () => {
         const wrapper = document.getElementById('canvasWrapper');
         if (!wrapper) return;
 
         wrapper.addEventListener('mousedown', (e) => {
+            // Track start position accurately
+            const pos = (w as any).getMousePos ? (w as any).getMousePos(e) : { x: e.offsetX, y: e.offsetY };
+            (window as any)._drawStart = pos;
+
+            if (g.current_tool?.id === 'EyeDropper') {
+                handleEyeDropper(e);
+                return;
+            }
             const hm = (window as any).historyManager;
             if (hm && hm.beginGroup) {
                 const toolName = g.current_tool?.name || 'Çizim';
@@ -134,7 +368,15 @@ export function applyCorePatch() {
             }
         }, true);
 
+        wrapper.addEventListener('mousemove', (e) => {
+            if (g.drawing) updateDrawingStatusBar(e);
+            if (g.current_tool?.id === 'EyeDropper' && e.buttons === 1) {
+                handleEyeDropper(e);
+            }
+        }, true);
+
         window.addEventListener('mouseup', (e) => {
+            if (drawingInfo) drawingInfo.style.display = 'none';
             const hm = (window as any).historyManager;
             if (hm && hm.endGroup) {
                 setTimeout(() => hm.endGroup(), 10);
