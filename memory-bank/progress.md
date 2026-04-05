@@ -2,8 +2,14 @@
 
 ## 🔴 In Progress
 
-**Phase 9: UI/UX Polishing & Feature Implementation**
+**Phase 13: Drawing Tool Parameters & UX (#1340 - #1345)**
+- [ ] #1340: Çizim araçları için status bar üzerinde koordinat ve boyut parametreleri takibi. 🔴
+- [ ] #1341: Vektör araçları için açı parametresi desteği. 🔴
+- [ ] #1342: Raster katmanda vektör çizimi sırasında geometrik bilgi gösterimi. 🔴
+- [ ] #1344: Vektör katmanı için el ile parametre girişi ve tutma noktaları (handles). 🔴
+- [ ] #1345: Çizgi aracı için Shift tuşu ile açısal snap (0, 30, 45 katları). 🔴
 
+**Phase 9: Core I/O Desteği (#1006).**
 - [ ] #1006: Core I/O & Universal Format Support. 🔴
   - [x] Basic support (PNG, JPG, BMP, WebP, TGA, GIF, ICO) completed.
   - [ ] See `memory-bank/plans/task-1006-breakdown.md` for detailed breakdown and backlog.

@@ -1,6 +1,6 @@
 import { UIController } from '@hcie/ui-components';
-import { applyCorePatch } from './core-patch';
+import { initUICoordinator } from '../../editor/ui-coordinator';
 
 new UIController().init();
-applyCorePatch();
+initUICoordinator();
 

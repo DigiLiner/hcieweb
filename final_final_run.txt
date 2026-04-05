@@ -1,0 +1,4 @@
+
+> hcie@4.0.0 ts:build
+> tsc -b
+

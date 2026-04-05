@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <meta http-equiv="Content-Security-Policy"
-        content="script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com;" />
+        content="script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; worker-src 'self' blob:;" />
     <meta name="description"
         content="HCIE - A powerful online image editor with advanced layer support, professional border filters (Erode, Fade), and vector drawing tools. Edit and design directly in your browser." />
     <meta name="keywords"
@@ -157,6 +157,10 @@
     <script type="module" src="./apps/editor/i18n.js"></script>
     <script type="module" src="./apps/editor/settings_ui.js"></script>
     <script type="module" src="./apps/editor/menu_connections.js"></script>
+    <script type="module">
+        import { initUICoordinator } from './apps/editor/ui-coordinator.ts';
+        initUICoordinator();
+    </script>
 
     <!-- ag-psd for PSD Writing Support (Local) -->
     <script type="module" src="/ag-psd.js"></script>
@@ -1200,6 +1204,7 @@
                     <!-- Legacy hidden elements preserved just in case -->
                     <canvas id="originalCanvas" width="1000" height="600" style="display: none;"></canvas>
                     <canvas id="zoomCanvas" style="display: none;"></canvas>
+                    <canvas id="tempCanvas" width="1000" height="600" style="display: none;"></canvas>
                 </div>
             </div>
 
@@ -1336,13 +1341,13 @@
             <span id="statusMessage">Ready</span>
             <span id="mousePosition">X: 0, Y: 0</span>
             <span id="drawingInfo" style="display: none; gap: 10px; margin-left: 10px; border-left: 1px solid #555; padding-left: 10px; align-items: center;">
-                <span id="startPos">Start: 0, 0</span>
-                <span id="dimensions">Size: 0 x 0</span>
-                <span id="angle" style="margin-right: 5px;">Angle: 0°</span>
-                <span id="radius" style="display: none; margin-right: 5px;">Radius: 0</span>
+                <span style="display:flex; align-items:center; gap:2px">Start: <input type="number" id="startXInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled>, <input type="number" id="startYInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled></span>
+                <span id="dimContainer" style="display:flex; align-items:center; gap:2px">Size: <input type="number" id="widthInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled> x <input type="number" id="heightInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled></span>
+                <span id="angleContainer" style="display:flex; align-items:center; gap:2px">Angle: <input type="number" id="angleInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled>°</span>
+                <span id="radiusContainer" style="display:none; align-items:center; gap:2px">Radius: <input type="number" id="radiusInput" style="background:#333; color:white; border:1px solid #555; border-radius:2px; width:40px; font-size:11px" disabled></span>
                 <div class="drawing-actions" style="display: flex; gap: 6px; margin-left: 8px; border-left: 1px solid #555; padding-left: 8px;">
-                    <button onclick="commitDrawing()" title="Accept (Enter)" style="background: #2ea44f; color: white; border: none; padding: 2px 10px; font-size: 10px; border-radius: 2px; cursor: pointer;">Accept</button>
-                    <button onclick="cancelDrawing()" title="Cancel (Esc)" style="background: #d73a49; color: white; border: none; padding: 2px 10px; font-size: 10px; border-radius: 2px; cursor: pointer;">Cancel</button>
+                    <button id="btnCommitDrawing" title="Accept (Enter)" style="background: #2ea44f; color: white; border: none; padding: 2px 10px; font-size: 10px; border-radius: 2px; cursor: pointer;">Accept</button>
+                    <button id="btnCancelDrawing" title="Cancel (Esc)" style="background: #d73a49; color: white; border: none; padding: 2px 10px; font-size: 10px; border-radius: 2px; cursor: pointer;">Cancel</button>
                 </div>
             </span>
             <span style="flex:1"></span>
@@ -1449,7 +1454,7 @@
                 var isLocal = window.location.hostname === 'localhost' || 
                              window.location.hostname === '127.0.0.1' || 
                              window.location.protocol === 'file:';
-                var riskAcceptedAt = localStorage.getItem('hcie_risk_accepted_at');
+                var riskAcceptedAt = localStorage.getItem('hcie_risk_accepted_v_2');
                 var now = new Date().getTime();
                 
                 // Show if:
@@ -1464,7 +1469,7 @@
                 }
 
                 riskBtn.addEventListener('click', function() {
-                    localStorage.setItem('hcie_risk_accepted_at', new Date().getTime().toString());
+                    localStorage.setItem('hcie_risk_accepted_v_2', new Date().getTime().toString());
                     riskModal.style.display = 'none';
                     riskModal.classList.remove('active');
                 });
@@ -1474,14 +1479,14 @@
             var isTauri = !!(window.__TAURI__ || window.__TAURI_INTERNALS__);
             if (!isTauri) {
                 var cookieBanner = document.getElementById('cookieConsent');
-                var cookieAccepted = localStorage.getItem('hcie_cookies_accepted');
+                var cookieAccepted = localStorage.getItem('hcie_cookies_accepted_v_2');
                 if (cookieAccepted !== 'true') {
                     cookieBanner.style.display = 'flex';
                 }
                 var cookieBtn = document.getElementById('btnCookieAccept');
                 if (cookieBtn) {
                     cookieBtn.addEventListener('click', function() {
-                        localStorage.setItem('hcie_cookies_accepted', 'true');
+                        localStorage.setItem('hcie_cookies_accepted_v_2', 'true');
                         cookieBanner.style.display = 'none';
                     });
                 }
@@ -1498,6 +1503,11 @@
             if (isLocal && !window.UI_INITIALIZED) {
                 var script = document.createElement('script');
                 script.src = './main.bundle.js'; 
+                script.onload = function() {
+                    // Expose Tool class globally for HTML onclick handlers
+                    window.Tool = window.g;
+                    console.log("[DEBUG] Tool class exposed to window.Tool");
+                };
                 document.body.appendChild(script);
                 console.log("Environment: Static File Fallback - Injecting main.bundle.js");
             }

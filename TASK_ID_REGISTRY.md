@@ -7,19 +7,6 @@ Bu dosya, görev (task) numaralarını takip etmek ve çakışmaları önlemek i
 
 ---
 
-## 🏗️ Numaralandırma Sistemi (Kategoriler)
-
-| Blok Aralığı | Kategori Adı | Açıklama |
-| :--- | :--- | :--- |
-| **1000 - 1099** | **Core & I/O** | Dosya açma, kaydetme, export, motor iyileştirmeleri. |
-| **1100 - 1199** | **UI & Viewer** | Arayüz panelleri, Viewer modu, görüntüleme efektleri. |
-| **1200 - 1299** | **Processing** | Filtreler, renk ayarları, parlaklık/kontrast. |
-| **1300 - 1399** | **Advanced Tools** | AI araçları, gelişmiş seçim ve manipülasyon. |
-| **10000+** | **Internal Patches** | AI ajanları tarafından kullanılan geçici veya dahili yamalar. |
-
----
-
-## 📋 Aktif Backlog (USER_TASKS.md)
 
 ### [1000s] Core & I/O
 - [#1006] Farklı dosya formatları (Yazma altyapısı)

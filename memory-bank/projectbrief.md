@@ -1,78 +1,34 @@
+# AGENTS.md - AI Constitution & Architecture Policy
 
-HCIE Project Configuration and Dependency Map
+## 1. Language & Limits
+* **Communication:** Turkish only. **Code/Docs/Comments:** English only.
+* **The 250-Line Rule:** No source file shall exceed **250 lines**. 
+    * *Action:* Refactor/split logic into sub-modules **before** exceeding this limit.
+* **Atomic Tasks:** One change per request. Use Pure Functions; avoid side effects.
 
-The distribution of projects should follow this hierarchy to minimize AI agent errors:
+## 2. Read-Only Protection
+* **Core Library (`packages/core/src/`):** Immutable. Reference only `dist/index.d.ts`.
+* **Configurations:** `vite.config.ts`, `tsconfig.json`, `.github/` are **READ-ONLY**.
+* **Forbidden Zones:** Never access `.AI-FORBIDDEN/` or `memory-bank/memory-arsiv/`.
 
-1. hcie-shared (Layer 1: Foundation)
+## 3. Implementation & Orchestration
+* **Source of Truth:** Always read `USER_TASKS.md` first.
+* **Role:** Orchestrator. New UI logic and tool coordination go to `apps/` or root.
+* **Decoupling:** Use `hcie-shared` for interfaces. Use FOSS, offline libraries only.
 
-Responsibility: The project's "common language". Does not import any packages.
+## 4. Memory Bank & Context
+* **Isolation:** Read only the relevant task folder in `memory-bank/`.
+* **Logging:** Log every decision in `memory-bank/task-logs/` (Virtual Context Swap).
+* **Archive Rule:** No archiving/deleting without explicit user confirmation.
 
-Contents: interface, enum, type definitions, constants, mathematical helper functions (vector/matrix utils).
+## 5. Status Reporting (MESSAGE_FROM_AGENT.md)
+* 🟢 **Completed:** Only after explicit USER confirmation.
+* 🟡 **Waiting to Confirm:** Task finished; **STOP** and wait for verification.
+* 🔴 **In Progress:** Currently active.
+* **Rule #1009:** Once marked 🟡, you are **strictly forbidden** from further actions.
 
-AI Strategy: When AI wants to add a type, it should only access this package. Do not allow type definitions in other packages.
-
-2. hcie-core (Layer 2: Brain)
-
-Responsibility: Manage the application's state and business logic.
-
-Contents: State management (Zustand/Redux), undo-redo mechanism, layer hierarchy management.
-
-Dependency: hcie-shared
-
-AI Strategy: Whenever the state structure changes, show the AI only this package.
-
-3. hcie-tools & hcie-io (Layer 3: Services)
-
-Responsibility: Isolated functions.
-
-hcie-tools: Drawing tools' (pen, brush) algorithms.
-
-hcie-io: encode/decode operations for formats like PNG, JPG, PSD.
-
-Dependency: hcie-shared, hcie-core (only to read the store).
-
-AI Strategy: When adding a new tool, AI should only work within hcie-tools.
-
-4. hcie-ui-components (Layer 4A: UI Elements)
-
-Responsibility: Pure visual components.
-
-Contents: Button, Slider, ColorPicker, Sidebar, Modal.
-
-Dependency: hcie-shared. (If possible, avoid hcie-core dependency; pass data via props).
-
-AI Strategy: AI should only work here for design improvements.
-
-5. hcie-canvas-ui (Layer 4B: Orchestra)
-
-Responsibility: The main unit that all components and displays on the screen.
-
-Contents: WebGL context, event listeners (mouse/touch), render loop.
-
-Dependency: All other packages (hcie-core, hcie-tools, hcie-ui-components, hchie-shared).
-
-AI Strategy: This is the most critical place. AI should only be allowed to touch this at "connection" points (e.g., linking a new tool to a button).
-
-Dependency Flow Diagram
-
-[hcie-canvas-ui] ────────┐
-      │                  │
-      ▼                  ▼
-[hcie-tools]       [hcie-ui-components]
-[hcie-io]                │
-      │                  ▼
-      │                  │
-      ▼                  ▼
-[hcie-core] <────────────┘
-      │
-      ▼
-[hcie-shared]
-
-
-Important Rules
-
-No Circular Dependencies: hcie-core cannot import hcie-tools. Tools operate based on signals from the store inside hcie-core.
-
-Physical Isolation: When giving commands to the AI agent, prevent it from seeing the contents of other packages by saying "Base only on the hcie-tools package."
-
-Barrel Exports: Have an `index.ts` at the start of each package and export only the functions/types intended for external use.
+## 6. Debug, Events & Visual Monitoring
+* **Timestamped Debugging:** Insert timestamped markers (e.g., `[DEBUG 2026-04-05][TaskID: #123]`) in critical paths.
+* **Visual Tracking:** Take frequent screenshots to monitor UI state and verify changes visually.
+* **High-Frequency Events:** Monitor `mousedown`, `mousemove`, `mouseup`, `hover`, and `wheel` events. Implement lightweight logging for race conditions.
+* **Error Catching:** Implement frequent log points to intercept transient UI/Event errors.

@@ -1,0 +1,7 @@
+
+> hcie@4.0.0 ts:build
+> tsc -b
+
+../hcie-core/src/history.ts(298,5): error TS2717: Subsequent property declarations must have the same type.  Property 'historyManager' must be of type 'any', but here has type 'HistoryManager'.
+../hcie-io/src/formats/krita-tiles.ts(6,28): error TS7016: Could not find a declaration file for module 'lzfjs'. '/home/hc/Belgeler/00_PROJECTS/Tauri/hcie-io/node_modules/lzfjs/lzf.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/lzfjs` if it exists or add a new declaration (.d.ts) file containing `declare module 'lzfjs';`
