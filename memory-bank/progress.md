@@ -10,6 +10,8 @@
 
 ## 🟢 Completed (USER confirmed)
 
+- [x] Project Folder Cleanup: Removed junk scripts, temporary binary files, and old build artifacts. 🟢
+
 - [x] PWA Conversion: full manifest, service worker, and icons support. 🟢
 
 - [x] #1020: Settings Page Implementation (Multi-language, Theme, Manager). 🟢

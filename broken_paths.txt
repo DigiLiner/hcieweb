@@ -1,8 +1,0 @@
-ls: 'public/resources/themes/ie_color/ui/invert-colors.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/ui/BarChart.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/ui/RatingYellow.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/ui/Reload.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/ui/blur.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/ui/theme_palette.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/tools/rectangle.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok
-ls: 'public/resources/themes/ie_color/tools/crop.svg' ögesine erişilemedi: Böyle bir dosya ya da dizin yok

@@ -1,5 +1,5 @@
 # Task Status Report
-*Last updated: 2026-04-04 00:52*
+*Last updated: 2026-04-05 14:07*
 
 ## 🚀 Shared Registry: [TASK_ID_REGISTRY.md](file:///home/hc/Belgeler/00_PROJECTS/Tauri/hcie/TASK_ID_REGISTRY.md)
 *Yeni görev eklerken bu dosyadaki son ID üzerinden devam edebilirsiniz.*
@@ -16,7 +16,7 @@
 - **PWA Conversion (#PWA):** Uygulamanın PWA haline getirilmesi için gerekli yapılandırma (manifest, sw, icons) tamamlandı ve build ile doğrulandı. 🟢
 
 ## 🟡 Waiting to Confirm (finished, needs user verification)
-- *Şu an bekleyen onay bulunmamaktadır.*
+- **Project Folder Cleanup:** Kök dizindeki gereksiz debug betikleri (*.js), geçici veri dosyaları (*.bin, *.txt), eski derleme çıktıları ve **tüm arşiv klasörü** (memory-bank/memory-arsiv/) içeriği temizlendi. 🟡
 
 ## 🔴 In Progress
 - **#1324 Drawing Info & Snap:** Start (0,0 hatası giderildi), Size, Angle ve Radius gösterimi ile Shift-snap (0,30,45) eklendi. 🟡
