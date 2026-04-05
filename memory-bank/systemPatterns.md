@@ -9,8 +9,11 @@
 - **Orchestrator Pattern**: UI logic and tool coordination live in `apps/` or root, using Core as a service.
 
 ## Communication & State
-- **Event-Driven UI**: Panels sync via `CustomEvent` (`syncOpacity`, `toolChanged`).
-- **DialogHandler**: Centralized UI for prompts, alerts, and formatting to ensure premium feel.
+- **Event-Driven UI / EventBus**: Centralized `EventBus` in `@hcie/shared` manages cross-module communication (e.g., `toolChanged`, `documentSwitched`, `fillChanged`). This removes direct circular dependencies between logic and UI.
+- **Decoupled Main UI**: `hcie-canvas-ui` is split into:
+  - **`RenderingLoop`**: Handles animation frame management and canvas context management.
+  - **`EventDispatcher`**: Manages mouse/keyboard interactions and translates them into EventBus actions.
+- **DialogHandler**: Centralized UI for prompts, alerts, and formatting.
 
 ## Performance & Rendering
 - **Atomic Resize**: Central `resizeCanvas(w, h)` in `drawing_canvas.ts` ensures all layers and UI stay in sync.

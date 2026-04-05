@@ -2,19 +2,18 @@
 
 ## 🔴 In Progress
 
-**Phase 13: Drawing Tool Parameters & UX (#1340 - #1345)**
-- [ ] #1340: Çizim araçları için status bar üzerinde koordinat ve boyut parametreleri takibi. 🔴
-- [ ] #1341: Vektör araçları için açı parametresi desteği. 🔴
-- [ ] #1342: Raster katmanda vektör çizimi sırasında geometrik bilgi gösterimi. 🔴
-- [ ] #1344: Vektör katmanı için el ile parametre girişi ve tutma noktaları (handles). 🔴
-- [ ] #1345: Çizgi aracı için Shift tuşu ile açısal snap (0, 30, 45 katları). 🔴
-
-**Phase 9: Core I/O Desteği (#1006).**
+**Phase 5: Core I/O Desteği (#1006).**
 - [ ] #1006: Core I/O & Universal Format Support. 🔴
   - [x] Basic support (PNG, JPG, BMP, WebP, TGA, GIF, ICO) completed.
   - [ ] See `memory-bank/plans/task-1006-breakdown.md` for detailed breakdown and backlog.
 
 ## 🟢 Completed (USER confirmed)
+
+- [x] Phase 13: Drawing Tool Parameters & UX (#1340 - #1345): Coordinate tracking, angle support, manual input, handles, Enter/Accept and Shift-snap (0, 30, 45). 🟢
+
+- [x] Architectural Decoupling & Atomic Refactoring (Phases 1-4): `EventBus` integration, `history.ts` & `document.ts` decoupling, `hcie-canvas-ui` module split and `hcie-tools/selection.ts` atomic modularization. 🟢
+
+- [x] AGENTS.md Format Cleanup: Standardized Markdown and removed redundant lines. 🟢
 
 - [x] Project Folder Cleanup: Removed junk scripts, temporary binary files, and old build artifacts. 🟢
 

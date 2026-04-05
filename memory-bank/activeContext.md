@@ -1,16 +1,18 @@
 # Active Context - HCIE Project
 
 ## Current Focus
-Çizim araçları (#1340 - #1345) için status bar parametre takibi, açı desteği ve etkileşimli tutma noktaları (handles).
+Core I/O entegrasyonu (#1006) ve `hcie-io` modül dekuplajı (Aşama 5).
 
 ## Recent Changes (Last 24 Hours)
-- **#1324 Rendering Fix:** Raster ve Vektör çizimlerinde rendering döngüsü ve VTM yönlendirme hataları giderildi. 🟢
-- **#1020 Ayarlar Sayfası:** Merkezi ayar yönetimi ve tema sistemi tamamlandı. 🟢
+- **Phase 13 (#1340 - #1345):** Çizim araçları koordinat/boyut takibi, açı desteği, manuel form girişi ve interaktif handles tamamlandı. 🟢
+- **Atomic Refactoring (Phases 1-4):** EventBus kurulumu, renderer/event-dispatcher ayrımı ve `selection.ts` modülerleşmesi tamamlandı. 🟢
+- **#1324 Rendering & Interaction Fixes:** Raster/Vektör interacton ve farenin tuval dışı kalma sorunları giderildi. 🟢
+- **Project Folder Cleanup:** Kök dizindeki gereksiz hata dosyaları temizlendi. 🟢
 
 ## Next Steps
-1.  **#1340 - #1342:** Status bar üzerinde gerçek zamanlı koordinat, boyut ve yarıçap gösterimi implemente edilecek.
-2.  **#1344:** Vektör katmanlarında el ile parametre girişi ve tutma noktaları eklenecek.
-3.  **#1345:** Line aracı için Shift tuşu ile açısal snap (0, 30, 45 katları) eklenecek.
+1.  **Phase 5:** `hcie-io` modülünün dekuplajı ve atomik yapıya geçişi.
+2.  **#1006:** Core I/O için yeni dosya formatları (Krita (.kra), GIMP (.xcf)) kaydetme desteği.
+3.  **Phase 4.2:** `vector_tools.ts` dosyasının dekuplajı.
 
 ## Active Issues / Blockers
 - Hiçbir engelleyici (blocker) bulunmamaktadır.
