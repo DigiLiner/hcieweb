@@ -60,7 +60,20 @@ const Dictionary = {
         'common.ok': 'Tamam',
         'common.cancel': 'İptal',
         'common.apply': 'Uygula',
-        'common.reset': 'Sıfırla'
+        'common.reset': 'Sıfırla',
+        
+        'newimage.title': 'Yeni Resim',
+        'newimage.width': 'Genişlik',
+        'newimage.height': 'Yükseklik',
+        'newimage.preset': ' Hazır Ayar',
+        'newimage.bgcolor': 'Arka Plan Rengi',
+        'newimage.transparent': 'Şeffaf',
+        'newimage.create': 'Oluştur',
+        'newimage.orientation': 'Yönelim',
+        'newimage.portrait': 'Dikey',
+        'newimage.landscape': 'Yatay',
+        'newimage.preset.custom': 'Özel',
+        'newimage.preset.square': 'Kare (1024x1024)'
     },
     en: {
         'menu.file': 'File',
@@ -116,7 +129,20 @@ const Dictionary = {
         'common.ok': 'OK',
         'common.cancel': 'Cancel',
         'common.apply': 'Apply',
-        'common.reset': 'Reset'
+        'common.reset': 'Reset',
+
+        'newimage.title': 'New Image',
+        'newimage.width': 'Width',
+        'newimage.height': 'Height',
+        'newimage.preset': 'Preset',
+        'newimage.bgcolor': 'Background Color',
+        'newimage.transparent': 'Transparent',
+        'newimage.create': 'Create',
+        'newimage.orientation': 'Orientation',
+        'newimage.portrait': 'Portrait',
+        'newimage.landscape': 'Landscape',
+        'newimage.preset.custom': 'Custom',
+        'newimage.preset.square': 'Square (1024x1024)'
     },
     de: {
         'menu.file': 'Datei',

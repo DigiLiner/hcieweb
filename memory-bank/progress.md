@@ -9,7 +9,9 @@
 
 ## 🟢 Completed (USER confirmed)
 
+- [ ] #33: Checkerboard pattern theme synchronization (Dark/Light). 🟡
 - [x] Phase 13: Drawing Tool Parameters & UX (#1340 - #1345): Coordinate tracking, angle support, manual input, handles, Enter/Accept and Shift-snap (0, 30, 45). 🟢
+- [x] Stabilization & UI Refinement: Fixed Tab management (Bug #30), Startup flow/New Image modal (Bug #31), Zoom sync (Bug #32), and Bidirectional Property Synchronization. 🟢
 
 - [x] Architectural Decoupling & Atomic Refactoring (Phases 1-4): `EventBus` integration, `history.ts` & `document.ts` decoupling, `hcie-canvas-ui` module split and `hcie-tools/selection.ts` atomic modularization. 🟢
 

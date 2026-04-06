@@ -113,12 +113,26 @@ class SettingsManager {
         } else {
             html.setAttribute('data-theme', theme);
         }
+        // Force refresh of canvas settings to handle theme-dependent color defaults
+        this.applyCanvasSettings();
     }
 
     applyCanvasSettings() {
         const root = document.documentElement;
-        root.style.setProperty('--checker-color-1', this.settings.canvas.checkerColor1);
-        root.style.setProperty('--checker-color-2', this.settings.canvas.checkerColor2);
+        
+        // Fix #33: If checker colors are the default values, remove the inline style 
+        // to allow theme-aware CSS variables from styles.css to take effect.
+        if (this.settings.canvas.checkerColor1 === DEFAULT_SETTINGS.canvas.checkerColor1) {
+            root.style.removeProperty('--checker-color-1');
+        } else {
+            root.style.setProperty('--checker-color-1', this.settings.canvas.checkerColor1);
+        }
+
+        if (this.settings.canvas.checkerColor2 === DEFAULT_SETTINGS.canvas.checkerColor2) {
+            root.style.removeProperty('--checker-color-2');
+        } else {
+            root.style.setProperty('--checker-color-2', this.settings.canvas.checkerColor2);
+        }
         
         // Update checker size if needed (might require CSS var update)
         const size = this.settings.canvas.checkerSize + 'px';

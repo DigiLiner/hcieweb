@@ -16,10 +16,7 @@ The AI AGENT is strictly forbidden from modifying this file.
 #1345: Line için eğer shift basılı ise 0,30,45 derece ve katlarına açısal olarak snap yapılsın. 
 
 # BUGS
-- #30. Yeni açılan dosya için tab oluşmuyor. resimler daha önce tablarda duruyordu
-- #31 İlk açılışta 500 px resim açık olsun. Şeffaf bg olsun. Tüm Tablar kapanınca diyalog görünsün Burasının dili programla uyuşmuyor.
-- #32 Zoom slider işe yaramıyor. Yanındaki %100 zoom butonu çalışmıyor. Tıklayınca bir şey olmuyor.
-
+#33 checkerboard pattern temaya göre renk değiştirmeli. Eskiden vardı. 06/04/2026 02:24
 
 
 

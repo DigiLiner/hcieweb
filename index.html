@@ -201,15 +201,15 @@
                             <span class="shortcut"></span>
                         </div>
                         <div class="menu-divider"></div>
-                        <div class="menu-option not-implemented" title="Close the current tab or document.">
+                        <div class="menu-option" onclick="closeDocument(g.activeDocumentIndex)" title="Close the current tab or document.">
                             <div class="menu-option-content">
-                                <span data-i18n="file.close">Close</span>
+                                <span data-i18n="menu.file.close">Close</span>
                             </div>
                             <span class="shortcut">Ctrl+W</span>
                         </div>
-                        <div class="menu-option not-implemented" title="Close all active documents in the workspace.">
+                        <div class="menu-option" onclick="closeAllDocuments()" title="Close all active documents in the workspace.">
                             <div class="menu-option-content">
-                                <span>Close All</span>
+                                <span data-i18n="menu.file.closeall">Close All</span>
                             </div>
                             <span class="shortcut">Ctrl+Alt+W</span>
                         </div>
@@ -1366,56 +1366,56 @@
     <div id="newImageModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>New Image</h3>
+                <h3 data-i18n="newimage.title">New Image</h3>
                 <span class="modal-close" onclick="closeNewImageDialog()">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="dialog-row">
                     <div class="dialog-col">
-                        <label>Preset:</label>
+                        <label data-i18n="newimage.preset">Preset:</label>
                         <select id="imagePreset" onchange="applyPreset()">
-                            <option value="custom">Custom</option>
+                            <option value="custom" data-i18n="newimage.preset.custom">Custom</option>
                             <option value="hd">HD (1280x720)</option>
                             <option value="fhd">Full HD (1920x1080)</option>
                             <option value="4k">4K UHD (3840x2160)</option>
                             <option value="a4">A4 (2480x3508 @ 300dpi)</option>
-                            <option value="square">Square (1024x1024)</option>
+                            <option value="square" data-i18n="newimage.preset.square">Square (1024x1024)</option>
                         </select>
                     </div>
                 </div>
                 <div class="dialog-row">
                     <div class="dialog-col">
-                        <label>Width:</label>
+                        <label data-i18n="newimage.width">Width:</label>
                         <input type="number" id="newWidth" value="500" min="1" max="10000">
                     </div>
                     <div class="dialog-col">
-                        <label>Height:</label>
+                        <label data-i18n="newimage.height">Height:</label>
                         <input type="number" id="newHeight" value="500" min="1" max="10000">
                     </div>
                 </div>
                 <div class="dialog-row">
                     <div class="dialog-col">
-                        <label>Orientation:</label>
+                        <label data-i18n="newimage.orientation">Orientation:</label>
                         <div class="btn-group">
-                            <button id="btn-portrait" onclick="setOrientation('portrait')">Portrait</button>
+                            <button id="btn-portrait" onclick="setOrientation('portrait')" data-i18n="newimage.portrait">Portrait</button>
                             <button id="btn-landscape" class="btn-active"
-                                onclick="setOrientation('landscape')">Landscape</button>
+                                onclick="setOrientation('landscape')" data-i18n="newimage.landscape">Landscape</button>
                         </div>
                     </div>
                 </div>
                 <div class="dialog-row">
                     <div class="dialog-col">
-                        <label>Background Color:</label>
+                        <label data-i18n="newimage.bgcolor">Background Color:</label>
                         <div class="color-picker-row">
                             <input type="color" id="newBgColor" value="#ffffff">
-                            <label><input type="checkbox" id="transparentBg"> Transparent</label>
+                            <label><input type="checkbox" id="transparentBg"> <span data-i18n="newimage.transparent">Transparent</span></label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeNewImageDialog()">Cancel</button>
-                <button class="btn-ok" onclick="createNewImage()">Create</button>
+                <button class="btn-cancel" onclick="closeNewImageDialog()" data-i18n="common.cancel">Cancel</button>
+                <button class="btn-ok" onclick="createNewImage()" data-i18n="newimage.create">Create</button>
             </div>
         </div>
     </div>

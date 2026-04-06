@@ -7,25 +7,36 @@ import { g, appEvents } from '@hcie/core';
 import { EventBus } from '@hcie/shared';
 import { getHistoryForDoc } from './history-coordinator';
 
-const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
-const zoomDisplay = document.getElementById('zoomDisplay');
-
 export function updateZoomUI() {
+    const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
+    const zoomDisplay = document.getElementById('zoomDisplay');
     const zoomPercent = Math.round((g.zoom || 1) * 100);
     if (zoomSlider) zoomSlider.value = zoomPercent.toString();
     if (zoomDisplay) zoomDisplay.innerText = zoomPercent + '%';
 }
 
 export function initDocumentCoordinator() {
+    const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
+    const zoomDisplay = document.getElementById('zoomDisplay');
+
     if (zoomSlider) {
         zoomSlider.addEventListener('input', () => {
             const val = parseInt(zoomSlider.value);
-            if ((window as any).zoomTo) (window as any).zoomTo(val / 100);
-            else {
-                g.zoom = val / 100;
+            const oldZoom = g.zoom;
+            const newZoom = val / 100;
+            
+            // Standardize zoom setting
+            g.zoom = newZoom;
+
+            if ((window as any).applyZoom) {
+                (window as any).applyZoom(oldZoom, null);
+            } else {
+                console.warn('[DocumentCoordinator] window.applyZoom not found, falling back to manual refresh.');
                 EventBus.emit('RENDER_LAYERS');
-                if ((window as any).updateSVGSelection) (window as any).updateSVGSelection();
+                if (zoomDisplay) zoomDisplay.innerText = Math.round(newZoom * 100) + '%';
             }
+            
+            if ((window as any).updateSVGSelection) (window as any).updateSVGSelection();
         });
     }
 
@@ -40,58 +51,73 @@ export function initDocumentCoordinator() {
         if (doc) {
             (window as any).historyManager = getHistoryForDoc(doc.id);
             updateZoomUI();
+            
+            // Reset visual zoom to match the newly switched document's zoom
+            if ((window as any).applyZoom) {
+                (window as any).applyZoom(g.zoom, null);
+            }
         }
     });
 
     // Tab rendering implementation since core logic was removed
     (window as any).renderImageTabs = function() {
-        const container = document.getElementById('imageTabs');
-        if (!container) return;
+        // BUG FIX #30: imageTabs -> imageTabBar
+        const container = document.getElementById('imageTabBar');
+        if (!container) {
+            console.warn('[DocumentCoordinator] #imageTabBar not found');
+            return;
+        }
 
         container.innerHTML = '';
-        if (!g.documents) return;
+        if (!g.documents || g.documents.length === 0) {
+            // Signal that no documents are active
+            document.body.classList.add('no-document-active');
+            return;
+        }
         
+        document.body.classList.remove('no-document-active');
+
         g.documents.forEach((doc: any, i: number) => {
             const tab = document.createElement('div');
-            tab.className = `image-tab ${i === (g as any).activeDocumentIndex ? 'active' : ''}`;
+            tab.className = `image-tab ${i === g.activeDocumentIndex ? 'active' : ''}`;
             tab.dataset.index = i.toString();
 
             const title = document.createElement('span');
             title.className = 'image-tab-name';
             title.innerText = doc.name + (doc.modified ? '*' : '');
             
-            if (g.documents.length > 1) {
-                const closeBtn = document.createElement('span');
-                closeBtn.className = 'image-tab-close';
-                closeBtn.innerHTML = '×';
-                closeBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    if (typeof (window as any).closeDocument === 'function') {
-                        (window as any).closeDocument(i);
-                    } else if (typeof (appEvents as any)?.emit === 'function') {
-                        (appEvents as any).emit('CLOSE_DOCUMENT', { index: i });
-                    }
-                };
-                tab.appendChild(title);
-                tab.appendChild(closeBtn);
-            } else {
-                tab.appendChild(title);
-            }
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'image-tab-close';
+            closeBtn.innerHTML = '×';
+            closeBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (typeof (window as any).closeDocument === 'function') {
+                    (window as any).closeDocument(i);
+                } else {
+                    EventBus.emit('CLOSE_DOCUMENT', { index: i });
+                }
+            };
+            tab.appendChild(title);
+            tab.appendChild(closeBtn);
             
             container.appendChild(tab);
         });
 
-        document.querySelectorAll('.image-tab-name').forEach((tab: any) => {
-            const parent = tab.parentElement;
-            if (parent?.dataset.index) {
-                const idx = parseInt(parent.dataset.index);
-                tab.onclick = (e: Event) => {
-                    e.stopPropagation();
-                    if (typeof (window as any).switchDocument === 'function') {
-                        (window as any).switchDocument(idx);
-                    }
-                };
-            }
+        // Use more direct click handling
+        container.querySelectorAll('.image-tab-name').forEach((titleEl: any) => {
+            const tab = titleEl.closest('.image-tab');
+            const idx = parseInt(tab.dataset.index);
+            titleEl.onclick = (e: Event) => {
+                e.stopPropagation();
+                if (typeof (window as any).switchDocument === 'function') {
+                    (window as any).switchDocument(idx);
+                } else {
+                    EventBus.emit('SWITCH_DOCUMENT', { index: idx });
+                }
+            };
         });
     };
+    
+    // Auto-render tabs on init
+    if ((window as any).renderImageTabs) (window as any).renderImageTabs();
 }

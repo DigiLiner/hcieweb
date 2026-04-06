@@ -88,14 +88,43 @@ export function initUICoordinator() {
         if ((window as any).renderImageTabs) {
             (window as any).renderImageTabs();
         }
+        
+        // BUG FIX #31: Show "New Image" dialog if no documents left
+        if (g.documents.length === 0) {
+            if ((window as any).openNewImageDialog) {
+                (window as any).openNewImageDialog();
+            }
+        }
     });
 
     // ─── Tool Signals ────────────────────────────────────────
 
     EventBus.on('TOOL_CHANGED', (data: { toolId: string }) => {
         console.log('[UI] Signal: TOOL_CHANGED', data.toolId);
-        // Sync toolbar UI if needed
+        window.dispatchEvent(new CustomEvent('toolChanged', { detail: { tool: data.toolId } }));
     });
+
+    // ─── Startup Logic ───────────────────────────────────────
+
+    // BUG FIX #31: Initial 500px transparent canvas if empty
+    setTimeout(() => {
+        if (g.documents.length === 0) {
+            console.log('[UI-Coordinator] No documents found on startup. Creating default 500x500 transparent document.');
+            
+            // Set default values in modal first so createNewImage picks them up
+            const widthInput = document.getElementById('newWidth') as HTMLInputElement;
+            const heightInput = document.getElementById('newHeight') as HTMLInputElement;
+            const transparentBg = document.getElementById('transparentBg') as HTMLInputElement;
+            
+            if (widthInput) widthInput.value = '500';
+            if (heightInput) heightInput.value = '500';
+            if (transparentBg) transparentBg.checked = true;
+            
+            if ((window as any).createNewImage) {
+                (window as any).createNewImage();
+            }
+        }
+    }, 500); // Small delay to ensure everything is initialized
 
     console.log('[UI-Coordinator] Subscriptions active.');
 }
